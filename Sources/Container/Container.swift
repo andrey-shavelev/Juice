@@ -19,6 +19,6 @@ public class Container {
     }
     
     func resolve<TService>(_ serviceType: TService.Type) throws -> TService {        
-        return try TemporaryResolver(self).resolve(serviceType)
+        return try ContextResolver(self).resolve(serviceType)
     }
 }

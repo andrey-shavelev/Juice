@@ -9,9 +9,11 @@ final class singleInstanceTests: XCTestCase {
                 .singleInstance()
         }
         
-        let fruit = try container.resolve(Fruit.self)
+        XCTAssertNoThrow(try container.resolve(Fruit.self))
         
-        XCTAssert(fruit is Apple)
+        let apple = try container.resolve(Fruit.self)
+        
+        XCTAssert(apple is Apple)
     }
     
     func testReturnsOneInstanceForSingleInstanceService() throws {
@@ -35,10 +37,32 @@ final class singleInstanceTests: XCTestCase {
                 .singleInstance()
         }
         
-        let fruit = try container.resolve(Fruit.self) as AnyObject?
-        let apple = try container.resolve(Apple.self) as AnyObject?
+        let fruit = try container.resolve(Fruit.self) as AnyObject
+        let apple = try container.resolve(Apple.self) as AnyObject
         
         XCTAssert(fruit === apple)
+    }
+    
+    func testRegisterAndResolveSingleInstanceWithOneDependency() throws {
+        let container = Container.build { builder in
+            builder.register(singleInstance: AppleTree.self)
+                .as(AppleTree.self)
+            
+            builder.register(singleInstance: AppleFarm.self)
+                .as(AppleFarm.self)
+                .as(FruitProvider.self)
+        }
+        
+        XCTAssertNoThrow(try container.resolve(AppleFarm.self))
+        XCTAssertNoThrow(try container.resolve(FruitProvider.self))
+        XCTAssertNoThrow(try container.resolve(AppleTree.self))
+
+        let appleFarm = try container.resolve(AppleFarm.self)
+        let fruitProvider = try container.resolve(FruitProvider.self)
+        let appleTree = try container.resolve(AppleTree.self)
+        
+        XCTAssert(fruitProvider as AnyObject === appleFarm as AnyObject)
+        XCTAssert(appleFarm.tree as AnyObject === appleTree as AnyObject)
     }
 
     static var allTests = [

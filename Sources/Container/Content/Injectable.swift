@@ -9,8 +9,8 @@ public protocol Injectable{
     init()
 }
 
-public class InjectableImplementorFactory<TImplementor : Injectable> : ImplementorFactory {
-    func create(resolveDependenciesFrom temporaryResolver: TemporaryResolver) -> Any {
+public class InjectableImplementorFactory<TImplementor : Injectable> : InstanceFactory {
+    func create(resolveDependenciesFrom temporaryResolver: ContextResolver) -> Any {
         return TImplementor()
     }
 }

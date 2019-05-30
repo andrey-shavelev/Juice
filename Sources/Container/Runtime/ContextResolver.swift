@@ -5,7 +5,7 @@
 //  Created by Andrey Shavelev on 20/05/2019.
 //
 
-public struct TemporaryResolver {
+public struct ContextResolver {
     
     let container: Container
     
@@ -16,14 +16,15 @@ public struct TemporaryResolver {
     func resolve<TInstance>(_ serviceType: TInstance.Type) throws -> TInstance {
         let serviceKey = ServiceKey(for: serviceType)
         
-        guard let implementorFactory = container.registrations[serviceKey] else {
+        guard let registration = container.registrations[serviceKey] else {
             throw ContainerError.serviceNotFound(serviceType: serviceType)
         }
         
-        let rawInstance = try implementorFactory.resolve(resolveDependenciesFrom: self)
+        let rawInstance = try registration.resolve(resolveDependenciesFrom: self)
         
         guard let typedInstance = rawInstance as? TInstance else {
-            throw ContainerError.invalidType(expectedType: TInstance.self, actualType: type(of: rawInstance))
+            throw ContainerError.invalidRegistration(desiredType: TInstance.self,
+                                                     actualType: type(of: rawInstance))
         }
         
         return typedInstance

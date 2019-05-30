@@ -9,3 +9,9 @@ import blaze
 protocol Fruit {
     
 }
+
+protocol FruitProvider {
+    
+    func getFruit() -> Fruit
+    
+}

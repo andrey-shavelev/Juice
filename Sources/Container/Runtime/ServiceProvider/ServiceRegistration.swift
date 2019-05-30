@@ -7,14 +7,14 @@
 
 class ServiceRegistration {
     
-    let factory: ImplementorFactory
+    let factory: InstanceFactory
     var instance: Any?
     
-    init(factory: ImplementorFactory) {
+    init(factory: InstanceFactory) {
         self.factory = factory
     }
     
-    func resolve(resolveDependenciesFrom temporaryResolver: TemporaryResolver) throws -> Any {
+    func resolve(resolveDependenciesFrom temporaryResolver: ContextResolver) throws -> Any {
         
         if let notNullInstance = instance
         {

@@ -11,9 +11,9 @@ public protocol InjectableWithParameter{
     init(_ parameter: TParameter)
 }
 
-public class InjectableImplementorFactoryWithParameter<TImplementor : InjectableWithParameter> : ImplementorFactory {
+public class InjectableImplementorFactoryWithParameter<TImplementor : InjectableWithParameter> : InstanceFactory {
     
-    func create(resolveDependenciesFrom temporaryResolver: TemporaryResolver) throws -> Any {
+    func create(resolveDependenciesFrom temporaryResolver: ContextResolver) throws -> Any {
         return TImplementor(
             try temporaryResolver.resolve(TImplementor.TParameter.self))
     }

@@ -9,16 +9,29 @@ public class ContainerBuilder {
     
     internal var registrations = [ServiceKey : ServiceRegistration]()
     
-    func register<TImplementor: Injectable>(type: TImplementor.Type) -> RegistrationBuilder<TImplementor> {
-        return RegistrationBuilder(self)
+    func register<Type: Injectable>(type: Type.Type) -> TypeRegistrationBuilder {
+        return register(type: type, with: InjectableImplementorFactory<Type>())
     }
     
-    func register<TImplementor: InjectableWithParameter>(type: TImplementor.Type) -> RegistrationBuilderWithParameter<TImplementor> {
-        
-        return RegistrationBuilderWithParameter(self)
+    func register<Type: InjectableWithParameter>(type: Type.Type) -> TypeRegistrationBuilder {
+        return register(type: type, with: InjectableImplementorFactoryWithParameter<Type>())
+    }
+    
+    func register<Type>(type: Type.Type, with factory: InstanceFactory) -> TypeRegistrationBuilder {
+        return TypeRegistrationBuilder(self, factory)
     }
     
     func build() -> Container {
         return Container(registrations)
+    }
+}
+
+extension ContainerBuilder {
+    func register<Type: Injectable>(singleInstance: Type.Type) -> TypeRegistrationBuilder {
+        return register(type: singleInstance).singleInstance()
+    }
+    
+    func register<Type: InjectableWithParameter>(singleInstance: Type.Type) -> TypeRegistrationBuilder {
+        return register(type: singleInstance).singleInstance()
     }
 }
