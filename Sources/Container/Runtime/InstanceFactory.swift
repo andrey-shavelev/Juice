@@ -6,5 +6,5 @@
 //
 
 internal protocol InstanceFactory {
-    func create(resolveDependenciesFrom temporaryResolver: ContextResolver) throws -> Any
+    func create(resolveDependenciesFrom contextResolver: ContextResolver) throws -> Any
 }

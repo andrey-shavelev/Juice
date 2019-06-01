@@ -45,21 +45,21 @@ final class singleInstanceTests: XCTestCase {
     
     func testRegisterAndResolveSingleInstanceWithOneDependency() throws {
         let container = Container.build { builder in
-            builder.register(singleInstance: AppleTree.self)
-                .as(AppleTree.self)
+            builder.register(singleInstance: AppleGarden.self)
+                .as(AppleGarden.self)
             
-            builder.register(singleInstance: AppleFarm.self)
-                .as(AppleFarm.self)
+            builder.register(singleInstance: AppleFarmer.self)
+                .as(AppleFarmer.self)
                 .as(FruitProvider.self)
         }
         
-        XCTAssertNoThrow(try container.resolve(AppleFarm.self))
+        XCTAssertNoThrow(try container.resolve(AppleFarmer.self))
         XCTAssertNoThrow(try container.resolve(FruitProvider.self))
-        XCTAssertNoThrow(try container.resolve(AppleTree.self))
+        XCTAssertNoThrow(try container.resolve(AppleGarden.self))
 
-        let appleFarm = try container.resolve(AppleFarm.self)
+        let appleFarm = try container.resolve(AppleFarmer.self)
         let fruitProvider = try container.resolve(FruitProvider.self)
-        let appleTree = try container.resolve(AppleTree.self)
+        let appleTree = try container.resolve(AppleGarden.self)
         
         XCTAssert(fruitProvider as AnyObject === appleFarm as AnyObject)
         XCTAssert(appleFarm.tree as AnyObject === appleTree as AnyObject)
@@ -67,10 +67,10 @@ final class singleInstanceTests: XCTestCase {
     
     func testRegisterAndResolveSingleInstanceWithTwoDependencies() throws {
         let container = Container.build { builder in
-            builder.register(singleInstance: AppleTree.self)
-                .as(AppleTree.self)
+            builder.register(singleInstance: AppleGarden.self)
+                .as(AppleGarden.self)
             
-            builder.register(singleInstance: AppleFarm.self)
+            builder.register(singleInstance: AppleFarmer.self)
                 .as(FruitProvider.self)
             
             builder.register(singleInstance: JuiceFactory.self)
@@ -84,7 +84,7 @@ final class singleInstanceTests: XCTestCase {
         
         let juiceFactory = try container.resolve(JuiceFactory.self)
         
-        XCTAssert(juiceFactory.fruitProvider is AppleFarm)
+        XCTAssert(juiceFactory.fruitProvider is AppleFarmer)
         XCTAssert(juiceFactory.storage is CoolAndDryPlace)
     }
 

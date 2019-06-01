@@ -12,7 +12,7 @@ class Apple: Fruit, Injectable {
     }    
 }
 
-class AppleTree : Injectable{
+class AppleGarden : Injectable{
     
     required init() {
     }
@@ -22,10 +22,10 @@ class AppleTree : Injectable{
     }
 }
 
-class AppleFarm: FruitProvider, InjectableWithParameter {
-    let tree: AppleTree
+class AppleFarmer: FruitProvider, InjectableWithParameter {
+    let tree: AppleGarden
     
-    required init(_ tree: AppleTree) {
+    required init(_ tree: AppleGarden) {
         self.tree = tree
     }
     

@@ -9,6 +9,10 @@ public class ContainerBuilder {
     
     internal var registrations = [ServiceKey : ServiceRegistration]()
     
+    func register<Type>(type: Type.Type, with factory: InstanceFactory) -> TypeRegistrationBuilder {
+        return TypeRegistrationBuilder(self, factory)
+    }
+    
     func register<Type: Injectable>(type: Type.Type) -> TypeRegistrationBuilder {
         return register(type: type, with: InjectableFactory<Type>())
     }
@@ -21,8 +25,8 @@ public class ContainerBuilder {
         return register(type: type, with: InjectableFactoryWithTwoParameters<Type>())
     }
     
-    func register<Type>(type: Type.Type, with factory: InstanceFactory) -> TypeRegistrationBuilder {
-        return TypeRegistrationBuilder(self, factory)
+    func register<Type: InjectableWithThreeParameters>(type: Type.Type) -> TypeRegistrationBuilder {
+        return register(type: type, with: InjectableFactoryWithThreeParameters<Type>())
     }
     
     func build() -> Container {
