@@ -33,3 +33,30 @@ class AppleFarm: FruitProvider, InjectableWithParameter {
         return tree.yield()
     }
 }
+
+class CoolAndDryPlace: JuiceStorage, Injectable {
+    var juice: Juice?
+    
+    required init() {
+    }
+    
+    func put(juice: Juice) {
+        self.juice = juice
+    }
+    
+    func get() -> Juice? {
+        let juice = self.juice
+        self.juice = nil
+        return juice
+    }
+}
+
+class JuiceFactory: InjectableWithTwoParameters {
+    let fruitProvider: FruitProvider
+    let storage: JuiceStorage
+    
+    required init(_ fruitProvider: FruitProvider, _ juiceStorage: JuiceStorage) {
+        self.fruitProvider = fruitProvider
+        self.storage = juiceStorage
+    }
+}

@@ -64,8 +64,34 @@ final class singleInstanceTests: XCTestCase {
         XCTAssert(fruitProvider as AnyObject === appleFarm as AnyObject)
         XCTAssert(appleFarm.tree as AnyObject === appleTree as AnyObject)
     }
+    
+    func testRegisterAndResolveSingleInstanceWithTwoDependencies() throws {
+        let container = Container.build { builder in
+            builder.register(singleInstance: AppleTree.self)
+                .as(AppleTree.self)
+            
+            builder.register(singleInstance: AppleFarm.self)
+                .as(FruitProvider.self)
+            
+            builder.register(singleInstance: JuiceFactory.self)
+                .as(JuiceFactory.self)
+            
+            builder.register(singleInstance: CoolAndDryPlace.self)
+                .as(JuiceStorage.self)
+        }
+        
+        XCTAssertNoThrow(try container.resolve(JuiceFactory.self))
+        
+        let juiceFactory = try container.resolve(JuiceFactory.self)
+        
+        XCTAssert(juiceFactory.fruitProvider is AppleFarm)
+        XCTAssert(juiceFactory.storage is CoolAndDryPlace)
+    }
 
     static var allTests = [
-        ("registersAndResolvesSingleInstanceService", testRegistersAndResolvesSingleInstanceService),
+        ("testRegistersAndResolvesSingleInstanceService",
+         "testReturnsOneInstanceForSingleInstanceService",
+         "testReturnsOneInstanceForSingleInstanceResolvedAsDifferentService",
+         "testRegisterAndResolveSingleInstanceWithOneDependency"),
     ]
 }
