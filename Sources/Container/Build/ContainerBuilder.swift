@@ -7,26 +7,30 @@
 
 public class ContainerBuilder {
     
-    internal var registrations = [ServiceKey : ServiceRegistration]()
+    var registrations = [ServiceKey : ServiceRegistration]()
     
-    func register<Type>(type: Type.Type, with factory: InstanceFactory) -> TypeRegistrationBuilder {
-        return TypeRegistrationBuilder(self, factory)
+    func register<Type>(type: Type.Type, createdWith factory: InstanceFactory) -> TypeRegistrationBuilder {
+        return TypeRegistrationBuilder(self, factory, type)
     }
     
     func register<Type: Injectable>(type: Type.Type) -> TypeRegistrationBuilder {
-        return register(type: type, with: InjectableFactory<Type>())
+        return register(type: type, createdWith: InjectableFactory<Type>())
     }
     
     func register<Type: InjectableWithParameter>(type: Type.Type) -> TypeRegistrationBuilder {
-        return register(type: type, with: InjectableFactoryWithParameter<Type>())
+        return register(type: type, createdWith: InjectableFactoryWithParameter<Type>())
     }
     
     func register<Type: InjectableWithTwoParameters>(type: Type.Type) -> TypeRegistrationBuilder {
-        return register(type: type, with: InjectableFactoryWithTwoParameters<Type>())
+        return register(type: type, createdWith: InjectableFactoryWithTwoParameters<Type>())
     }
     
     func register<Type: InjectableWithThreeParameters>(type: Type.Type) -> TypeRegistrationBuilder {
-        return register(type: type, with: InjectableFactoryWithThreeParameters<Type>())
+        return register(type: type, createdWith: InjectableFactoryWithThreeParameters<Type>())
+    }
+    
+    func register<Type: InjectableWithFourParameters>(type: Type.Type) -> TypeRegistrationBuilder {
+        return register(type: type, createdWith: InjectableFactoryWithFourParameters<Type>())
     }
     
     func build() -> Container {
@@ -35,15 +39,23 @@ public class ContainerBuilder {
 }
 
 extension ContainerBuilder {
-    func register<Type: Injectable>(singleInstance: Type.Type) -> TypeRegistrationBuilder {
-        return register(type: singleInstance).singleInstance()
+    func register<Type: Injectable>(singleInstance type: Type.Type) -> TypeRegistrationBuilder {
+        return register(type: type).singleInstance()
     }
     
-    func register<Type: InjectableWithParameter>(singleInstance: Type.Type) -> TypeRegistrationBuilder {
-        return register(type: singleInstance).singleInstance()
+    func register<Type: InjectableWithParameter>(singleInstance type: Type.Type) -> TypeRegistrationBuilder {
+        return register(type: type).singleInstance()
     }
     
-    func register<Type: InjectableWithTwoParameters>(singleInstance: Type.Type) -> TypeRegistrationBuilder {
-        return register(type: singleInstance).singleInstance()
+    func register<Type: InjectableWithTwoParameters>(singleInstance type: Type.Type) -> TypeRegistrationBuilder {
+        return register(type: type).singleInstance()
+    }
+
+    func register<Type: InjectableWithThreeParameters>(singleInstance type: Type.Type) -> TypeRegistrationBuilder {
+        return register(type: type).singleInstance()
+    }
+    
+    func register<Type: InjectableWithFourParameters>(singleInstance type: Type.Type) -> TypeRegistrationBuilder {
+        return register(type: type).singleInstance()
     }
 }

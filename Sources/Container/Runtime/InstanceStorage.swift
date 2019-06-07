@@ -17,7 +17,7 @@ class InstanceStorage<TInstance> {
             let createdInstance = try factory.create(resolveDependenciesFrom: resolver)
             
             guard let typedInstance = createdInstance as? TInstance else {
-                throw ContainerError.invalidRegistration(desiredType: TInstance.self,
+                throw ContainerRuntimeError.invalidRegistration(desiredType: TInstance.self,
                                                          actualType: type(of: createdInstance))
             }
             

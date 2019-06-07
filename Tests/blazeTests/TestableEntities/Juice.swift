@@ -6,6 +6,27 @@
 //
 import blaze
 
+protocol Fruit {
+    
+}
+
+protocol FruitProvider {
+    
+    func getFruit() -> Fruit
+    
+}
+
+protocol JuiceStorage {
+    func put(juice: Juice)
+    func get() -> Juice?
+}
+
+protocol Juice {
+    
+    func getIngridients() -> [Fruit]
+    
+}
+
 class Apple: Fruit, Injectable {
     
     required init() {
