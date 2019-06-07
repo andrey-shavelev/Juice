@@ -13,7 +13,7 @@ public struct ContextResolver {
         self.container = container
     }
     
-    func resolve<TInstance>(_ serviceType: TInstance.Type) throws -> TInstance {
+    public func resolve<TInstance>(_ serviceType: TInstance.Type) throws -> TInstance {
         let serviceKey = ServiceKey(for: serviceType)
         
         guard let registration = container.registrations[serviceKey] else {

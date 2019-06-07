@@ -109,13 +109,12 @@ public class InjectableFactoryWithFiveParameters<Type : InjectableWithFiveParame
     }
 }
 
-public protocol CustomInjectable {
-    
-    init(receiveDependenciesFrom contextResolver: ContextResolver)
+public protocol CustomInjectable {    
+    init(receiveDependenciesFrom contextResolver: ContextResolver) throws
 }
 
 public class CustomInjectableFactory<Type : CustomInjectable> : InstanceFactory {
     func create(resolveDependenciesFrom contextResolver: ContextResolver) throws -> Any {
-        return Type(receiveDependenciesFrom: contextResolver)
+        return try Type(receiveDependenciesFrom: contextResolver)
     }
 }

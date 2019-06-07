@@ -70,3 +70,41 @@ class ServiceWithFourParameters : InjectableWithFourParameters {
         self.fourthDependency = fourthParameter
     }
 }
+
+class ServiceWithFiveParameters : InjectableWithFiveParameters {
+    let firstDependency: FirstDependency
+    let secondDependency: SecondDependency
+    let thirdDependency: ThirdDependency
+    let fourthDependency: FourthDependency
+    let fithDependency: FithDependency
+    
+    required init(_ firstParameter: FirstDependency,
+                  _ secondParameter: SecondDependency,
+                  _ thirdParameter: ThirdDependency,
+                  _ fourthParameter: FourthDependency,
+                  _ fithParameter: FithDependency) {
+        self.firstDependency = firstParameter
+        self.secondDependency = secondParameter
+        self.thirdDependency = thirdParameter
+        self.fourthDependency = fourthParameter
+        self.fithDependency = fithParameter
+    }
+}
+
+class ServiceWithCustomParameters: CustomInjectable {
+    let firstDependency: FirstDependency
+    let secondDependency: SecondDependency
+    let thirdDependency: ThirdDependency
+    let fourthDependency: FourthDependency
+    let fithDependency: FithDependency
+    let sixthDependency: SixthDependency
+    
+    required init(receiveDependenciesFrom contextResolver: ContextResolver) throws {
+        firstDependency = try contextResolver.resolve(FirstDependency.self)
+        secondDependency = try contextResolver.resolve(SecondDependency.self)
+        thirdDependency = try contextResolver.resolve(ThirdDependency.self)
+        fourthDependency = try contextResolver.resolve(FourthDependency.self)
+        fithDependency = try contextResolver.resolve(FithDependency.self)
+        sixthDependency = try contextResolver.resolve(SixthDependency.self)
+    }
+}

@@ -122,6 +122,48 @@ final class singleInstanceTests: XCTestCase {
         XCTAssertNoThrow(try container.resolve(ServiceWithFourParameters.self))
     }
 
+    func testRegisterAndResolveSingleInstanceWithFiveDependencies() throws {
+        let container = Container.build { builder in
+            builder.register(singleInstance: ServiceWithFiveParameters.self)
+                .asSelf()
+            
+            builder.register(singleInstance: FirstDependency.self)
+                .asSelf()
+            builder.register(singleInstance: SecondDependency.self)
+                .asSelf()
+            builder.register(singleInstance: ThirdDependency.self)
+                .asSelf()
+            builder.register(singleInstance: FourthDependency.self)
+                .asSelf()
+            builder.register(singleInstance: FithDependency.self)
+                .asSelf()
+        }
+        
+        XCTAssertNoThrow(try container.resolve(ServiceWithFiveParameters.self))
+    }
+    
+    func testRegisterAndResolveSingleInstanceWithCustomDependencies() throws {
+        let container = Container.build { builder in
+            builder.register(singleInstance: ServiceWithCustomParameters.self)
+                .asSelf()
+            
+            builder.register(singleInstance: FirstDependency.self)
+                .asSelf()
+            builder.register(singleInstance: SecondDependency.self)
+                .asSelf()
+            builder.register(singleInstance: ThirdDependency.self)
+                .asSelf()
+            builder.register(singleInstance: FourthDependency.self)
+                .asSelf()
+            builder.register(singleInstance: FithDependency.self)
+                .asSelf()
+            builder.register(singleInstance: SixthDependency.self)
+                .asSelf()
+        }
+        
+        XCTAssertNoThrow(try container.resolve(ServiceWithCustomParameters.self))
+    }
+    
     static var allTests = [
         ("testRegistersAndResolvesSingleInstanceService",
          "testReturnsOneInstanceForSingleInstanceService",
@@ -129,6 +171,7 @@ final class singleInstanceTests: XCTestCase {
          "testRegisterAndResolveSingleInstanceWithOneDependency",
          "testRegisterAndResolveSingleInstanceWithTwoDependencies",
          "testRegisterAndResolveSingleInstanceWithThreeDependencies",
-         "testRegisterAndResolveSingleInstanceWithFourDependencies"),
+         "testRegisterAndResolveSingleInstanceWithFourDependencies",
+         "testRegisterAndResolveSingleInstanceWithFiveDependencies"),
     ]
 }

@@ -33,6 +33,14 @@ public class ContainerBuilder {
         return register(type: type, createdWith: InjectableFactoryWithFourParameters<Type>())
     }
     
+    func register<Type: InjectableWithFiveParameters>(type: Type.Type) -> TypeRegistrationBuilder {
+        return register(type: type, createdWith: InjectableFactoryWithFiveParameters<Type>())
+    }
+    
+    func register<Type: CustomInjectable>(type: Type.Type) -> TypeRegistrationBuilder {
+        return register(type: type, createdWith: CustomInjectableFactory<Type>())
+    }
+    
     func build() -> Container {
         return Container(registrations)
     }
@@ -58,4 +66,11 @@ extension ContainerBuilder {
     func register<Type: InjectableWithFourParameters>(singleInstance type: Type.Type) -> TypeRegistrationBuilder {
         return register(type: type).singleInstance()
     }
-}
+    
+    func register<Type: InjectableWithFiveParameters>(singleInstance type: Type.Type) -> TypeRegistrationBuilder {
+        return register(type: type).singleInstance()
+    }
+    
+    func register<Type: CustomInjectable>(singleInstance type: Type.Type) -> TypeRegistrationBuilder {
+        return register(type: type).singleInstance()
+    }}
