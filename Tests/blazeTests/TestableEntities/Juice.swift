@@ -33,6 +33,24 @@ class Apple: Fruit, Injectable {
     }    
 }
 
+class Orange: Fruit, Injectable {
+    
+    required init() {
+    }
+}
+
+class Pear: Fruit, Injectable {
+    
+    required init() {
+    }
+}
+
+class Banana: Fruit, Injectable {
+    
+    required init() {
+    }
+}
+
 class AppleGarden : Injectable{
     
     required init() {
@@ -80,4 +98,14 @@ class JuiceFactory: InjectableWithTwoParameters {
         self.fruitProvider = fruitProvider
         self.storage = juiceStorage
     }
+}
+
+class FruitBasket : Injectable {
+    
+    var apple: Apple!
+    var orange: Orange?
+    
+    required init() {
+    }
+    
 }

@@ -14,13 +14,13 @@ public struct ContextResolver {
     }
     
     public func resolve<TInstance>(_ serviceType: TInstance.Type) throws -> TInstance {
-        let serviceKey = ServiceKey(for: serviceType)
+        let serviceKey = TypeKey(for: serviceType)
         
         guard let registration = container.registrations[serviceKey] else {
             throw ContainerRuntimeError.serviceNotFound(serviceType: serviceType)
         }
         
-        let rawInstance = try registration.resolve(resolveDependenciesFrom: self)
+        let rawInstance = try registration.resolveServiceInstance(withDependenciesResolvedFrom: self)
         
         guard let typedInstance = rawInstance as? TInstance else {
             throw ContainerRuntimeError.invalidRegistration(desiredType: TInstance.self,

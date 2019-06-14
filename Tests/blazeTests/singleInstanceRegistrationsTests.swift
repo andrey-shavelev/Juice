@@ -1,7 +1,7 @@
 import XCTest
 @testable import blaze
 
-final class singleInstanceTests: XCTestCase {
+final class singleInstanceRegistrationsTests: XCTestCase {
     func testRegistersAndResolvesSingleInstanceService() throws {
         let container = Container.build { builder in
             builder.register(type: Apple.self)
@@ -163,15 +163,4 @@ final class singleInstanceTests: XCTestCase {
         
         XCTAssertNoThrow(try container.resolve(ServiceWithCustomParameters.self))
     }
-    
-    static var allTests = [
-        ("testRegistersAndResolvesSingleInstanceService",
-         "testReturnsOneInstanceForSingleInstanceService",
-         "testReturnsOneInstanceForSingleInstanceResolvedAsDifferentService",
-         "testRegisterAndResolveSingleInstanceWithOneDependency",
-         "testRegisterAndResolveSingleInstanceWithTwoDependencies",
-         "testRegisterAndResolveSingleInstanceWithThreeDependencies",
-         "testRegisterAndResolveSingleInstanceWithFourDependencies",
-         "testRegisterAndResolveSingleInstanceWithFiveDependencies"),
-    ]
 }

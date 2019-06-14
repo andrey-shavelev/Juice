@@ -5,14 +5,14 @@
 //  Created by Andrey Shavelev on 21/05/2019.
 //
 
-public struct ServiceKey : Hashable {
-    private let type: Any.Type
+public struct TypeKey : Hashable {
+    let type: Any.Type
     
     init(for type: Any.Type) {
         self.type = type
     }
     
-    public static func == (lhs: ServiceKey, rhs: ServiceKey) -> Bool {
+    public static func == (lhs: TypeKey, rhs: TypeKey) -> Bool {
         return lhs.type == rhs.type
     }
     

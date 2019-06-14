@@ -5,35 +5,45 @@
 //  Created by Andrey Shavelev on 21/05/2019.
 //
 
-public struct TypeRegistrationBuilder {
+public struct TypeRegistrationBuilder<Type> {
     let builder: ContainerBuilder
-    let serviceRegistration: ServiceRegistration
-    let instanceType: Any.Type
+    let serviceRegistration: TypedServiceRegistration
     
-    init(_ builder: ContainerBuilder,
-         _ implementorFactory: InstanceFactory,
-         _ instanceType: Any.Type) {
+    internal init(
+        serverRegistration: TypedServiceRegistration,
+        builder: ContainerBuilder) {
+        self.serviceRegistration = serverRegistration
         self.builder = builder
-        self.serviceRegistration = ServiceRegistration(factory: implementorFactory)
-        self.instanceType = instanceType
     }
     
     @discardableResult
     public func `as`<TService>(_ serviceType: TService.Type) -> TypeRegistrationBuilder {
-        let serviceKey = ServiceKey(for: serviceType)
-        builder.registrations[serviceKey] = serviceRegistration
+        let serviceKey = TypeKey(for: serviceType)
+        builder.registrationsDictionary[serviceKey] = serviceRegistration
         return self
     }
     
     @discardableResult
     public func asSelf() -> TypeRegistrationBuilder {
-        let serviceKey = ServiceKey(for: instanceType)
-        builder.registrations[serviceKey] = serviceRegistration
+        builder.registrationsDictionary[TypeKey(for: Type.self)] = serviceRegistration
         return self
     }
     
     @discardableResult
     public func singleInstance() -> TypeRegistrationBuilder {
+        serviceRegistration.serviceKind = .container
+        return self
+    }
+    
+    @discardableResult
+    func instancePerDependency() -> TypeRegistrationBuilder {
+        serviceRegistration.serviceKind = .dependency
+        return self
+    }
+    
+    @discardableResult
+    public func injectDependency<PropertyType>(into keyPath: WritableKeyPath<Type, PropertyType?>) -> TypeRegistrationBuilder {
+        serviceRegistration.propertyInjectors.append(TypedPropertyInjector<Type, PropertyType>(keyPath))
         return self
     }
 }

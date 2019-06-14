@@ -6,7 +6,7 @@
 //
 
 public class Container {
-    let registrations: [ServiceKey : ServiceRegistration]
+    let registrations: [TypeKey : ServiceRegistration]
     
     class func build(_ buildFunc: (ContainerBuilder) -> Void) -> Container {
         let builder = ContainerBuilder()
@@ -14,7 +14,7 @@ public class Container {
         return builder.build()
     }
     
-    init(_ registrations: [ServiceKey : ServiceRegistration]) {
+    init(_ registrations: [TypeKey : ServiceRegistration]) {
         self.registrations = registrations
     }
     
