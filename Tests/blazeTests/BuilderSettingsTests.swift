@@ -7,6 +7,6 @@
 import XCTest
 @testable import blaze
 
-final class basicRegistrationsTests: XCTestCase {
+final class BasicRegistrationsTests: XCTestCase {
 
 }

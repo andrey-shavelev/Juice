@@ -5,12 +5,12 @@
 //  Created by Andrey Shavelev on 14/06/2019.
 //
 
-class TypedServiceRegistration: ServiceRegistration {
+class DynamicInstanceRegistration: ServiceRegistration {
     
     let factory: InstanceFactory
     var propertyInjectors = [PropertyInjector]()
     var instance: Any?
-    var serviceKind = InstanceScope.default
+    var serviceKind = DynamicInstanceScope.default
     
     init(factory: InstanceFactory) {
         self.factory = factory

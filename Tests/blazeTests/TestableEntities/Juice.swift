@@ -107,5 +107,16 @@ class FruitBasket : Injectable {
     
     required init() {
     }
+}
+
+class FreshJuice : InjectableWithParameter, Juice {    
+    let fruit: Fruit
     
+    required init(_ fruit: Fruit) {
+        self.fruit = fruit
+    }
+    
+    func getIngridients() -> [Fruit] {
+        return [fruit]
+    }
 }

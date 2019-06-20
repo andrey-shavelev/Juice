@@ -1,12 +1,12 @@
 import XCTest
 @testable import blaze
 
-final class singleInstanceRegistrationsTests: XCTestCase {
+final class SingleInstanceDynamicRegistrationsTests: XCTestCase {
     func testRegistersAndResolvesSingleInstanceService() throws {
-        let container = Container.build { builder in
-            builder.register(type: Apple.self)
-                .as(Fruit.self)
+        let container = Container { builder in
+            builder.register(injectable: Apple.self)
                 .singleInstance()
+                .as(Fruit.self)
         }
         
         XCTAssertNoThrow(try container.resolve(Fruit.self))
@@ -17,10 +17,10 @@ final class singleInstanceRegistrationsTests: XCTestCase {
     }
     
     func testReturnsOneInstanceForSingleInstanceService() throws {
-        let container = Container.build { builder in
-            builder.register(type: Apple.self)
-                .as(Fruit.self)
+        let container = Container { builder in
+            builder.register(injectable: Apple.self)
                 .singleInstance()
+                .as(Fruit.self)
         }
         
         let firstFruit = try container.resolve(Fruit.self) as AnyObject?
@@ -30,11 +30,11 @@ final class singleInstanceRegistrationsTests: XCTestCase {
     }
     
     func testReturnsOneInstanceForSingleInstanceResolvedAsDifferentService () throws {
-        let container = Container.build { builder in
-            builder.register(type: Apple.self)
+        let container = Container { builder in
+            builder.register(injectable: Apple.self)
+                .singleInstance()
                 .as(Fruit.self)
                 .asSelf()
-                .singleInstance()
         }
         
         let fruit = try container.resolve(Fruit.self) as AnyObject
@@ -44,11 +44,13 @@ final class singleInstanceRegistrationsTests: XCTestCase {
     }
     
     func testRegisterAndResolveSingleInstanceWithOneDependency() throws {
-        let container = Container.build { builder in
-            builder.register(singleInstance: AppleGarden.self)
+        let container = Container { builder in
+            builder.register(injectable: AppleGarden.self)
+                .singleInstance()
                 .asSelf()
             
-            builder.register(singleInstance: AppleFarmer.self)
+            builder.register(injectable: AppleFarmer.self)
+                .singleInstance()
                 .asSelf()
                 .as(FruitProvider.self)
         }
@@ -66,17 +68,21 @@ final class singleInstanceRegistrationsTests: XCTestCase {
     }
     
     func testRegisterAndResolveSingleInstanceWithTwoDependencies() throws {
-        let container = Container.build { builder in
-            builder.register(singleInstance: AppleGarden.self)
+        let container = Container { builder in
+            builder.register(injectable: AppleGarden.self)
+                .singleInstance()
                 .asSelf()
             
-            builder.register(singleInstance: AppleFarmer.self)
+            builder.register(injectable: AppleFarmer.self)
+                .singleInstance()
                 .as(FruitProvider.self)
             
-            builder.register(singleInstance: JuiceFactory.self)
+            builder.register(injectable: JuiceFactory.self)
+                .singleInstance()
                 .asSelf()
             
-            builder.register(singleInstance: CoolAndDryPlace.self)
+            builder.register(injectable: CoolAndDryPlace.self)
+                .singleInstance()
                 .as(JuiceStorage.self)
         }
         
@@ -89,15 +95,19 @@ final class singleInstanceRegistrationsTests: XCTestCase {
     }
     
     func testRegisterAndResolveSingleInstanceWithThreeDependencies() throws {
-        let container = Container.build { builder in
-            builder.register(singleInstance: ServiceWithThreeParameters.self)
+        let container = Container { builder in
+            builder.register(injectable: ServiceWithThreeParameters.self)
+                .singleInstance()
                 .asSelf()
             
-            builder.register(singleInstance: FirstDependency.self)
+            builder.register(injectable: FirstDependency.self)
+                .singleInstance()
                 .asSelf()
-            builder.register(singleInstance: SecondDependency.self)
+            builder.register(injectable: SecondDependency.self)
+                .singleInstance()
                 .asSelf()
-            builder.register(singleInstance: ThirdDependency.self)
+            builder.register(injectable: ThirdDependency.self)
+                .singleInstance()
                 .asSelf()
         }
         
@@ -105,17 +115,22 @@ final class singleInstanceRegistrationsTests: XCTestCase {
     }
     
     func testRegisterAndResolveSingleInstanceWithFourDependencies() throws {
-        let container = Container.build { builder in
-            builder.register(singleInstance: ServiceWithFourParameters.self)
+        let container = Container { builder in
+            builder.register(injectable: ServiceWithFourParameters.self)
+                .singleInstance()
                 .asSelf()
             
-            builder.register(singleInstance: FirstDependency.self)
+            builder.register(injectable: FirstDependency.self)
+                .singleInstance()
                 .asSelf()
-            builder.register(singleInstance: SecondDependency.self)
+            builder.register(injectable: SecondDependency.self)
+                .singleInstance()
                 .asSelf()
-            builder.register(singleInstance: ThirdDependency.self)
+            builder.register(injectable: ThirdDependency.self)
+                .singleInstance()
                 .asSelf()
-            builder.register(singleInstance: FourthDependency.self)
+            builder.register(injectable: FourthDependency.self)
+                .singleInstance()
                 .asSelf()
         }
         
@@ -123,19 +138,25 @@ final class singleInstanceRegistrationsTests: XCTestCase {
     }
 
     func testRegisterAndResolveSingleInstanceWithFiveDependencies() throws {
-        let container = Container.build { builder in
-            builder.register(singleInstance: ServiceWithFiveParameters.self)
+        let container = Container { builder in
+            builder.register(injectable: ServiceWithFiveParameters.self)
+                .singleInstance()
                 .asSelf()
             
-            builder.register(singleInstance: FirstDependency.self)
+            builder.register(injectable: FirstDependency.self)
+                .singleInstance()
                 .asSelf()
-            builder.register(singleInstance: SecondDependency.self)
+            builder.register(injectable: SecondDependency.self)
+                .singleInstance()
                 .asSelf()
-            builder.register(singleInstance: ThirdDependency.self)
+            builder.register(injectable: ThirdDependency.self)
+                .singleInstance()
                 .asSelf()
-            builder.register(singleInstance: FourthDependency.self)
+            builder.register(injectable: FourthDependency.self)
+                .singleInstance()
                 .asSelf()
-            builder.register(singleInstance: FithDependency.self)
+            builder.register(injectable: FithDependency.self)
+                .singleInstance()
                 .asSelf()
         }
         
@@ -143,21 +164,28 @@ final class singleInstanceRegistrationsTests: XCTestCase {
     }
     
     func testRegisterAndResolveSingleInstanceWithCustomDependencies() throws {
-        let container = Container.build { builder in
-            builder.register(singleInstance: ServiceWithCustomParameters.self)
+        let container = Container { builder in
+            builder.register(injectable: ServiceWithCustomParameters.self)
+                .singleInstance()
                 .asSelf()
             
-            builder.register(singleInstance: FirstDependency.self)
+            builder.register(injectable: FirstDependency.self)
+                .singleInstance()
                 .asSelf()
-            builder.register(singleInstance: SecondDependency.self)
+            builder.register(injectable: SecondDependency.self)
+                .singleInstance()
                 .asSelf()
-            builder.register(singleInstance: ThirdDependency.self)
+            builder.register(injectable: ThirdDependency.self)
+                .singleInstance()
                 .asSelf()
-            builder.register(singleInstance: FourthDependency.self)
+            builder.register(injectable: FourthDependency.self)
+                .singleInstance()
                 .asSelf()
-            builder.register(singleInstance: FithDependency.self)
+            builder.register(injectable: FithDependency.self)
+                .singleInstance()
                 .asSelf()
-            builder.register(singleInstance: SixthDependency.self)
+            builder.register(injectable: SixthDependency.self)
+                .singleInstance()
                 .asSelf()
         }
         

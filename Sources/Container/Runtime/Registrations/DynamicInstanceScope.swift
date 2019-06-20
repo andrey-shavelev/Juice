@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum InstanceScope{
+enum DynamicInstanceScope{
     case `default`
     case container
     case dependency

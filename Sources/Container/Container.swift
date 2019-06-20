@@ -8,14 +8,11 @@
 public class Container {
     let registrations: [TypeKey : ServiceRegistration]
     
-    class func build(_ buildFunc: (ContainerBuilder) -> Void) -> Container {
+    init(_ buildFunc: (ContainerBuilder) -> Void) {
         let builder = ContainerBuilder()
         buildFunc(builder)
-        return builder.build()
-    }
-    
-    init(_ registrations: [TypeKey : ServiceRegistration]) {
-        self.registrations = registrations
+        
+        self.registrations = builder.build()
     }
     
     func resolve<TService>(_ serviceType: TService.Type) throws -> TService {        

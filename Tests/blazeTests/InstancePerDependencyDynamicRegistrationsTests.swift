@@ -8,10 +8,10 @@
 import XCTest
 @testable import blaze
 
-final class instancePerDependencyRegistrationsTests: XCTestCase {
+final class InstancePerDependencyDynamicRegistrationsTests: XCTestCase {
     func testRegistersAndResolvesSingleInstanceService() throws {
-        let container = Container.build { builder in
-            builder.register(type: Apple.self)
+        let container = Container { builder in
+            builder.register(injectable: Apple.self)
                 .instancePerDependency()
                 .asSelf()
         }

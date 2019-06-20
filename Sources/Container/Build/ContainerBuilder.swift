@@ -10,82 +10,58 @@ public class ContainerBuilder {
     var registrationsDictionary = [TypeKey : ServiceRegistration]()
     var registrations = [ServiceRegistration]()
     
-    func register<Type>(type: Type.Type, createdWith factory: InstanceFactory) -> TypeRegistrationBuilder<Type> {
-        let typedServiceRegistration = TypedServiceRegistration(factory: factory)
-        registrations.append(typedServiceRegistration)
-        return TypeRegistrationBuilder<Type>(
-            serverRegistration: typedServiceRegistration,
-            builder: self)
+    func register<Type>(type: Type.Type, createdWith factory: InstanceFactory) -> DynamicInstaceScopeSelector<Type> {
+        
+        let dynamicServiceRegistration = DynamicInstanceRegistration(factory: factory)
+        registrations.append(dynamicServiceRegistration)
+        
+        return DynamicInstaceScopeSelector<Type>(serviceRegistration: dynamicServiceRegistration, builder: self)
     }
     
-    func register<Type: Injectable>(type: Type.Type) -> TypeRegistrationBuilder<Type> {
+    public func register<Type: Injectable>(injectable type: Type.Type) -> DynamicInstaceScopeSelector<Type> {
         return register(type: type, createdWith: InjectableFactory<Type>())
     }
     
-    func register<Type: InjectableWithParameter>(type: Type.Type) -> TypeRegistrationBuilder<Type> {
+    public func register<Type: InjectableWithParameter>(injectable type: Type.Type) -> DynamicInstaceScopeSelector<Type> {
         return register(type: type, createdWith: InjectableFactoryWithParameter<Type>())
     }
     
-    func register<Type: InjectableWithTwoParameters>(type: Type.Type) -> TypeRegistrationBuilder<Type> {
+    public func register<Type: InjectableWithTwoParameters>(injectable type: Type.Type) -> DynamicInstaceScopeSelector<Type> {
         return register(type: type, createdWith: InjectableFactoryWithTwoParameters<Type>())
     }
     
-    func register<Type: InjectableWithThreeParameters>(type: Type.Type) -> TypeRegistrationBuilder<Type> {
+    public func register<Type: InjectableWithThreeParameters>(injectable type: Type.Type) -> DynamicInstaceScopeSelector<Type> {
         return register(type: type, createdWith: InjectableFactoryWithThreeParameters<Type>())
     }
     
-    func register<Type: InjectableWithFourParameters>(type: Type.Type) -> TypeRegistrationBuilder<Type> {
+    public func register<Type: InjectableWithFourParameters>(injectable type: Type.Type) -> DynamicInstaceScopeSelector<Type> {
         return register(type: type, createdWith: InjectableFactoryWithFourParameters<Type>())
     }
     
-    func register<Type: InjectableWithFiveParameters>(type: Type.Type) -> TypeRegistrationBuilder<Type> {
+    public func register<Type: InjectableWithFiveParameters>(injectable type: Type.Type) -> DynamicInstaceScopeSelector<Type> {
         return register(type: type, createdWith: InjectableFactoryWithFiveParameters<Type>())
     }
     
-    func register<Type: CustomInjectable>(type: Type.Type) -> TypeRegistrationBuilder<Type> {
+    public func register<Type: CustomInjectable>(injectable type: Type.Type) -> DynamicInstaceScopeSelector<Type> {
         return register(type: type, createdWith: CustomInjectableFactory<Type>())
     }
     
-    func build() -> Container {
-        return Container(registrationsDictionary)
-    }
-}
-
-extension ContainerBuilder {
-    
-    @discardableResult
-    func register<Type: Injectable>(singleInstance type: Type.Type) -> TypeRegistrationBuilder<Type> {
-        return register(type: type).singleInstance()
+    public func register<Type>(instance: Type) -> StaticInstanceRegistrationBuilder<Type> {
+        let staticInstanceRegistration = StaticInstanceRegistration(instance: instance)
+        registrations.append(staticInstanceRegistration)
+        
+        return StaticInstanceRegistrationBuilder<Type>(
+            serviceRegistration: staticInstanceRegistration,
+            builder: self)
     }
     
-    @discardableResult
-    func register<Type: InjectableWithParameter>(singleInstance type: Type.Type) -> TypeRegistrationBuilder<Type> {
-        return register(type: type).singleInstance()
+    public func register<Type>(autofactoryFor type: Type.Type) {
+        register(injectable: Factory<Type>.self)
+            .instancePerDependency()
+            .asSelf()
     }
     
-    @discardableResult
-    func register<Type: InjectableWithTwoParameters>(singleInstance type: Type.Type) -> TypeRegistrationBuilder<Type> {
-        return register(type: type).singleInstance()
+    func build() -> [TypeKey : ServiceRegistration] {
+        return registrationsDictionary
     }
-
-    @discardableResult
-    func register<Type: InjectableWithThreeParameters>(singleInstance type: Type.Type) -> TypeRegistrationBuilder<Type> {
-        return register(type: type).singleInstance()
-    }
-    
-    @discardableResult
-    func register<Type: InjectableWithFourParameters>(singleInstance type: Type.Type) -> TypeRegistrationBuilder<Type> {
-        return register(type: type).singleInstance()
-    }
-    
-    @discardableResult
-    func register<Type: InjectableWithFiveParameters>(singleInstance type: Type.Type) -> TypeRegistrationBuilder<Type> {
-        return register(type: type).singleInstance()
-    }
-    
-    @discardableResult
-    func register<Type: CustomInjectable>(singleInstance type: Type.Type) -> TypeRegistrationBuilder<Type> {
-        return register(type: type).singleInstance()
-    }
-    
 }

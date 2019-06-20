@@ -5,6 +5,6 @@
 //  Created by Andrey Shavelev on 20/05/2019.
 //
 
-internal protocol InstanceFactory {
+protocol InstanceFactory {
     func create(resolveDependenciesFrom contextResolver: ContextResolver) throws -> Any
 }

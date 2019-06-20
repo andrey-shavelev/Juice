@@ -1,5 +1,5 @@
 //
-//  TemporaryResolver.swift
+//  ContextResolver
 //  blaze
 //
 //  Created by Andrey Shavelev on 20/05/2019.

@@ -7,17 +7,21 @@
 import XCTest
 @testable import blaze
 
-final class propertyInjectionTests: XCTestCase {
+final class PropertyInjectionTests: XCTestCase {
     
     func testInjectsSingleInstancesIntoProperty() throws {
-        let container = Container.build { builder in
-            builder.register(singleInstance: Apple.self).asSelf()
-            builder.register(singleInstance: Orange.self).asSelf()
-            builder.register(singleInstance: FruitBasket.self)
+        let container = Container { builder in
+            builder.register(injectable: Apple.self)
+                .singleInstance()
+                .asSelf()
+            builder.register(injectable: Orange.self)
+                .singleInstance()
+                .asSelf()
+            builder.register(injectable: FruitBasket.self)
+                .singleInstance()
                 .asSelf()
                 .injectDependency(into: \.apple)
-                .injectDependency(into: \.orange)
-            
+                .injectDependency(into: \.orange)            
         }
         
         XCTAssertNoThrow(try container.resolve(FruitBasket.self))
