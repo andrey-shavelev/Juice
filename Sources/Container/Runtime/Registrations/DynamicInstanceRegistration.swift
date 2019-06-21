@@ -16,39 +16,39 @@ class DynamicInstanceRegistration: ServiceRegistration {
         self.factory = factory
     }
     
-    func resolveServiceInstance(withDependenciesResolvedFrom resolver: ContextResolver) throws -> Any {
+    func resolveServiceInstance(withDependenciesResolvedFrom scope: Scope) throws -> Any {
         switch serviceKind {
         case .default, .container:
-            return try resolveSingleInstance(resolver)
+            return try resolveSingleInstance(scope)
         case .dependency:
-            return try resolveInstancePerDependency(resolver)
+            return try resolveInstancePerDependency(scope)
         }
     }
     
-    private func resolveSingleInstance(_ resolver: ContextResolver) throws -> Any {
+    private func resolveSingleInstance(_ scope: Scope) throws -> Any {
         if let notNullInstance = instance
         {
             return notNullInstance
         }
         
-        let instance = try CreateInstance(resolver)
+        let instance = try CreateInstance(scope)
         self.instance = instance
         return instance
     }
     
-    private func resolveInstancePerDependency(_ resolver: ContextResolver) throws -> Any {
-        return try CreateInstance(resolver)
+    private func resolveInstancePerDependency(_ scope: Scope) throws -> Any {
+        return try CreateInstance(scope)
     }
     
-    private func CreateInstance(_ resolver: ContextResolver) throws -> Any {
-        let instance = try factory.create(resolveDependenciesFrom: resolver)
-        try InjectProperties(instance, resolver)
+    private func CreateInstance(_ scope: Scope) throws -> Any {
+        let instance = try factory.create(withDependenciesResolvedFrom: scope)
+        try InjectProperties(instance, scope)
         return instance
     }
     
-    private func InjectProperties(_ instance: Any, _ resolver: ContextResolver) throws {
+    private func InjectProperties(_ instance: Any, _ scope: Scope) throws {
         for propertyInjector in propertyInjectors {
-            try propertyInjector.inject(into: instance, resolveFrom: resolver)
+            try propertyInjector.inject(into: instance, resolveFrom: scope)
         }
     }
 }

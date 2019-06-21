@@ -120,3 +120,18 @@ class FreshJuice : InjectableWithParameter, Juice {
         return [fruit]
     }
 }
+
+class Chocolate : InjectableWithParameter {
+    
+    enum Kind {
+        case milk
+        case dark
+        case white
+    }
+    
+    let kind: Kind
+    
+    required init(_ kind: Kind) {
+        self.kind = kind
+    }
+}

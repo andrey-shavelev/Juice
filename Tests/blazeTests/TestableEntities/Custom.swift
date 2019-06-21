@@ -99,12 +99,12 @@ class ServiceWithCustomParameters: CustomInjectable {
     let fithDependency: FithDependency
     let sixthDependency: SixthDependency
     
-    required init(receiveDependenciesFrom contextResolver: ContextResolver) throws {
-        firstDependency = try contextResolver.resolve(FirstDependency.self)
-        secondDependency = try contextResolver.resolve(SecondDependency.self)
-        thirdDependency = try contextResolver.resolve(ThirdDependency.self)
-        fourthDependency = try contextResolver.resolve(FourthDependency.self)
-        fithDependency = try contextResolver.resolve(FithDependency.self)
-        sixthDependency = try contextResolver.resolve(SixthDependency.self)
+    required init(receiveDependenciesFrom scope: Scope) throws {
+        firstDependency = try scope.resolve(FirstDependency.self)
+        secondDependency = try scope.resolve(SecondDependency.self)
+        thirdDependency = try scope.resolve(ThirdDependency.self)
+        fourthDependency = try scope.resolve(FourthDependency.self)
+        fithDependency = try scope.resolve(FithDependency.self)
+        sixthDependency = try scope.resolve(SixthDependency.self)
     }
 }

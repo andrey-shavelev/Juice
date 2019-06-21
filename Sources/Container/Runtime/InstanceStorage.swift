@@ -10,11 +10,11 @@ import Foundation
 class InstanceStorage<TInstance> {
     var instance: TInstance?
     
-    func getOrCreate(with factory: InstanceFactory, resolveDependenciesFrom resolver: ContextResolver) throws -> TInstance {
+    func getOrCreate(with factory: InstanceFactory, withDependenciesResolvedFrom scope: Scope) throws -> TInstance {
         
         guard let notNullInstance = instance else {
             
-            let createdInstance = try factory.create(resolveDependenciesFrom: resolver)
+            let createdInstance = try factory.create(withDependenciesResolvedFrom: scope)
             
             guard let typedInstance = createdInstance as? TInstance else {
                 throw ContainerRuntimeError.invalidRegistration(desiredType: TInstance.self,

@@ -6,5 +6,12 @@
 //
 
 public protocol Scope {
-    func resolve<TInstance>(_ serviceType: TInstance.Type) throws -> TInstance
+    func resolve<Service>(_ serviceType: Service.Type) throws -> Service
+    func resolve<Service>(_ serviceType: Service.Type, withParameters parameters: [Any]) throws -> Service
+}
+
+public extension Scope {
+    func resolve<Service>(_ serviceType: Service.Type, withParameters parameters: Any...) throws -> Service {
+        return try resolve(serviceType, withParameters: parameters)
+    }
 }

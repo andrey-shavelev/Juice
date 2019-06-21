@@ -6,7 +6,7 @@
 //
 
 protocol PropertyInjector {
-    func inject(into instance: Any, resolveFrom resolver: ContextResolver) throws
+    func inject(into instance: Any, resolveFrom scope: Scope) throws
 }
 
 struct TypedPropertyInjector<Type, Value>: PropertyInjector{
@@ -17,8 +17,8 @@ struct TypedPropertyInjector<Type, Value>: PropertyInjector{
         self.propertyPath = propertyPath
     }
  
-    func inject(into instance: Any, resolveFrom resolver: ContextResolver) throws {
+    func inject(into instance: Any, resolveFrom scope: Scope) throws {
         var typedInstance = instance as! Type   
-        typedInstance[keyPath: propertyPath] = try resolver.resolve(Value.self)
+        typedInstance[keyPath: propertyPath] = try scope.resolve(Value.self)
     }
 }

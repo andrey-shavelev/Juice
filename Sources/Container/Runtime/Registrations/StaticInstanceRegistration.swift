@@ -13,7 +13,7 @@ class StaticInstanceRegistration<Type>: ServiceRegistration {
         self.instance = instance
     }
     
-    func resolveServiceInstance(withDependenciesResolvedFrom resolver: ContextResolver) throws -> Any {
+    func resolveServiceInstance(withDependenciesResolvedFrom scope: Scope) throws -> Any {
         return instance
     }  
     
