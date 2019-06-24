@@ -61,6 +61,10 @@ public class ContainerBuilder {
             .asSelf()
     }
     
+    func register<Type>(factory: @escaping (Scope) -> Type) -> DynamicInstaceScopeSelector<Type> {
+        return register(type: Type.self, createdWith: DelegatingFactory(factory))
+    }
+    
     func build() -> [TypeKey : ServiceRegistration] {
         return registrationsDictionary
     }

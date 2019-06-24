@@ -17,11 +17,11 @@ protocol FruitProvider {
 }
 
 protocol JuiceStorage {
-    func put(juice: Juice)
-    func get() -> Juice?
+    func put(juice: SingleFuitJuice)
+    func get() -> SingleFuitJuice?
 }
 
-protocol Juice {
+protocol SingleFuitJuice {
     
     func getIngridients() -> [Fruit]
     
@@ -34,12 +34,6 @@ class Apple: Fruit, Injectable {
 }
 
 class Orange: Fruit, Injectable {
-    
-    required init() {
-    }
-}
-
-class Pear: Fruit, Injectable {
     
     required init() {
     }
@@ -74,16 +68,16 @@ class AppleFarmer: FruitProvider, InjectableWithParameter {
 }
 
 class CoolAndDryPlace: JuiceStorage, Injectable {
-    var juice: Juice?
+    var juice: SingleFuitJuice?
     
     required init() {
     }
     
-    func put(juice: Juice) {
+    func put(juice: SingleFuitJuice) {
         self.juice = juice
     }
     
-    func get() -> Juice? {
+    func get() -> SingleFuitJuice? {
         let juice = self.juice
         self.juice = nil
         return juice
@@ -109,7 +103,7 @@ class FruitBasket : Injectable {
     }
 }
 
-class FreshJuice : InjectableWithParameter, Juice {    
+class FreshJuice : InjectableWithParameter, SingleFuitJuice {    
     let fruit: Fruit
     
     required init(_ fruit: Fruit) {
@@ -133,5 +127,71 @@ class Chocolate : InjectableWithParameter {
     
     required init(_ kind: Kind) {
         self.kind = kind
+    }
+}
+
+protocol Berry {
+}
+
+class Raspbery: Berry, Injectable {
+    required init() {
+    }
+}
+
+class Blueberry: Berry, Injectable {
+    required init() {
+    }
+}
+
+class Strawberry: Berry, Injectable {
+    required init() {
+    }
+}
+
+class Water {
+    let temperatureCelsius: Int
+    
+    init(temperatureCelsius: Int) {
+        self.temperatureCelsius = temperatureCelsius
+    }
+}
+
+class Smothy: InjectableWithThreeParameters {    
+    let water: Water
+    let fruit: Fruit
+    let berry: Berry
+    
+    required init(_ fruit: Fruit, _ berry: Berry, _ water: Water) {
+        self.berry = berry
+        self.fruit = fruit
+        self.water = water
+    }
+}
+
+enum Country {
+    case Japan
+    case USA
+}
+
+class Pear: Fruit, InjectableWithParameter {
+    
+    let countryOfOrigin: Country
+    
+    required init(_ countryOfOrigin: Country) {
+        self.countryOfOrigin = countryOfOrigin
+    }
+}
+
+class PackedJuice : InjectableWithTwoParameters, SingleFuitJuice {
+    let fruit: Fruit
+    let countryOfOrigin: Country
+    
+    required init(_ fruit: Fruit, _ countryOfOrigin: Country) {
+        self.fruit = fruit
+        self.countryOfOrigin = countryOfOrigin
+    }
+    
+    func getIngridients() -> [Fruit] {
+        return [fruit]
     }
 }
