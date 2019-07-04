@@ -182,7 +182,7 @@ class Pear: Fruit, InjectableWithParameter {
     }
 }
 
-class PackedJuice : InjectableWithTwoParameters, SingleFuitJuice {
+class PackedJuice : InjectableWithTwoParameters {
     let fruit: Fruit
     let countryOfOrigin: Country
     
@@ -193,5 +193,13 @@ class PackedJuice : InjectableWithTwoParameters, SingleFuitJuice {
     
     func getIngridients() -> [Fruit] {
         return [fruit]
+    }
+}
+
+class HomeMadeJuice : CustomInjectable {
+    let fruit: Fruit
+    
+    required init(receiveDependenciesFrom scope: Scope) throws {
+        fruit = try scope.resolve(Fruit.self)
     }
 }

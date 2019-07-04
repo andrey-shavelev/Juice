@@ -107,7 +107,7 @@ public class InjectableFactoryWithFiveParameters<Type : InjectableWithFiveParame
 }
 
 public protocol CustomInjectable {    
-    init(receiveDependenciesFrom contextResolver: Scope) throws
+    init(receiveDependenciesFrom scope: Scope) throws
 }
 
 public class CustomInjectableFactory<Type : CustomInjectable> : InstanceFactory {

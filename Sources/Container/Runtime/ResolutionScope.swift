@@ -6,7 +6,12 @@
 //
 
 public struct ResolutionScope : Scope {
-    let container: Container
+    
+    public var isValid: Bool {
+        return container != nil
+    }
+    
+    weak var container: Container?
     
     init(_ container: Container) {
         self.container = container
@@ -18,11 +23,15 @@ public struct ResolutionScope : Scope {
     
     public func resolve<Service>(_ serviceType: Service.Type, withParameters parameters: [Any]) throws -> Service {
         return try resolveInternal(serviceType,
-                                   withDependenciesResolvedFrom: ParameterizedResolutionScope(parent: self, parameters: parameters))
+                                   withDependenciesResolvedFrom: ParameterizedResolutionScope(parentScope: self, parameters: parameters))
     }
     
     func resolveInternal<TInstance>(_ serviceType: TInstance.Type,
                                     withDependenciesResolvedFrom scope: Scope) throws -> TInstance {
+        guard let container = container else {
+            throw ContainerRuntimeError.invalidScope()
+        }
+        
         let serviceKey = TypeKey(for: serviceType)
         
         guard let registration = container.registrations[serviceKey] else {

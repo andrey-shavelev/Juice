@@ -108,3 +108,12 @@ class ServiceWithCustomParameters: CustomInjectable {
         sixthDependency = try scope.resolve(SixthDependency.self)
     }
 }
+
+class CustomInjectableThatHoldsReferenceToScope: CustomInjectable {
+    
+    let scope: Scope
+    
+    required init(receiveDependenciesFrom scope: Scope) throws {
+        self.scope = scope
+    }
+}

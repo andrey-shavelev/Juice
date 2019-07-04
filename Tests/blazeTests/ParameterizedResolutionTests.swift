@@ -65,4 +65,22 @@ final class ParameterizedResolutionTests: XCTestCase {
         XCTAssertEqual(Country.USA, juice.countryOfOrigin)
         XCTAssertEqual(Country.Japan, (juice.fruit as! Pear).countryOfOrigin)
     }
+    
+    func testCustomInjectableCanResolveParametersFromResolutionScope() throws {
+        let container = Container { builder in
+            builder.register(injectable: HomeMadeJuice.self)
+                .singleInstance()
+                .asSelf()
+        }
+        
+        let fruit: Fruit = Apple()
+        XCTAssertNoThrow(try container.resolve(HomeMadeJuice.self, withParameters: fruit))
+        
+        let juice = try container.resolve(HomeMadeJuice.self, withParameters: fruit)
+        XCTAssertTrue(fruit as! Apple === juice.fruit as! Apple)
+    }
+    
+    func testCorrectlyResolvesDependencyWithParametersFromAParametrizedResolutionScope() throws {
+        
+    }
 }

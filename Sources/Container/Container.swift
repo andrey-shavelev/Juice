@@ -7,6 +7,8 @@
 
 public class Container : Scope {
     
+    public var isValid = true
+    
     let registrations: [TypeKey : ServiceRegistration]
     
     init(_ buildFunc: (ContainerBuilder) -> Void) {

@@ -8,26 +8,46 @@
 import Foundation
 
 class ParameterizedResolutionScope : Scope {
-    let parent: Scope
+    
+    var isValid: Bool {
+        return parentScope?.isValid == true
+    }
+    let parentScope: Scope?
     let parameters: [Any]
     
-    init(parent: Scope, parameters: [Any]) {
-        self.parent = parent
+    init(parentScope: Scope, parameters: [Any]) {
+        self.parentScope = parentScope
         self.parameters = parameters
     }
     
     func resolve<Service>(_ serviceType: Service.Type, withParameters parameters: [Any]) throws -> Service {
+        guard let parentScope = parentScope else {
+            throw ContainerRuntimeError.invalidScope()
+        }
+        guard parentScope.isValid else {
+            throw ContainerRuntimeError.invalidScope()
+        }
+
         if let parameter = resolveParameter(serviceType) {
             return parameter
         }
-        return try parent.resolve(serviceType, withParameters: parameters)
+        
+        return try parentScope.resolve(serviceType, withParameters: parameters)
     }    
     
     func resolve<TInstance>(_ serviceType: TInstance.Type) throws -> TInstance {
+        guard let parentScope = parentScope else {
+            throw ContainerRuntimeError.invalidScope()
+        }
+        guard parentScope.isValid else {
+            throw ContainerRuntimeError.invalidScope()
+        }
+
         if let parameter = resolveParameter(serviceType) {
             return parameter
         }
-        return try parent.resolve(serviceType)
+        
+        return try parentScope.resolve(serviceType)
     }
     
     func resolveParameter<Parameter>(_ parameterType: Parameter.Type) -> Parameter? {
