@@ -6,5 +6,7 @@
 //
 
 protocol ServiceRegistration {
-    func resolveServiceInstance(withDependenciesResolvedFrom scope: Scope) throws -> Any
+    func resolveServiceInstance(
+        storageLocator: InstanceStorageLocator,
+        scopeLocator: ResolutionScopeLocator) throws -> Any
 }

@@ -7,10 +7,10 @@
 
 public struct DynamicInstanceRegistrationBuilder<Type> {
     let builder: ContainerBuilder
-    let serviceRegistration: DynamicInstanceRegistration
+    let serviceRegistration: DynamicInstanceRegistration<Type>
     
     internal init(
-        serviceRegistration: DynamicInstanceRegistration,
+        serviceRegistration: DynamicInstanceRegistration<Type>,
         builder: ContainerBuilder) {
         self.serviceRegistration = serviceRegistration
         self.builder = builder

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ParameterizedResolutionScope : Scope {
+struct ParameterizedResolutionScope : Scope {
     
     var isValid: Bool {
         return parentScope?.isValid == true
@@ -15,11 +15,11 @@ class ParameterizedResolutionScope : Scope {
     let parentScope: Scope?
     let parameters: [Any]
     
-    init(parentScope: Scope, parameters: [Any]) {
+    init(_ parentScope: Scope, _ parameters: [Any]) {
         self.parentScope = parentScope
         self.parameters = parameters
     }
-    
+
     func resolve<Service>(_ serviceType: Service.Type, withParameters parameters: [Any]) throws -> Service {
         guard let parentScope = parentScope else {
             throw ContainerRuntimeError.invalidScope()

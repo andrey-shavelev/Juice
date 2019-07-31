@@ -6,5 +6,5 @@
 //
 
 protocol InstanceFactory {
-    func create(withDependenciesResolvedFrom scope: Scope) throws -> Any
+    func create(withDependenciesFrom scope: Scope) throws -> Any
 }

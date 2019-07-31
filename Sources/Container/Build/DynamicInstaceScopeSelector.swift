@@ -9,24 +9,27 @@ import Foundation
 
 public struct DynamicInstaceScopeSelector<Type> {
     let builder: ContainerBuilder
-    let serviceRegistration: DynamicInstanceRegistration
+    let serviceRegistration: DynamicInstanceRegistration<Type>
     
     internal init(
-        serviceRegistration: DynamicInstanceRegistration,
+        serviceRegistration: DynamicInstanceRegistration<Type>,
         builder: ContainerBuilder) {
         self.serviceRegistration = serviceRegistration
         self.builder = builder
     }
     
-    @discardableResult
     public func singleInstance() -> DynamicInstanceRegistrationBuilder<Type> {
-        serviceRegistration.serviceKind = .container
+        serviceRegistration.kind = .perScope(key: builder.scopeKey)
         return DynamicInstanceRegistrationBuilder(serviceRegistration: serviceRegistration, builder: builder)
     }
     
-    @discardableResult
-    func instancePerDependency() -> DynamicInstanceRegistrationBuilder<Type> {
-        serviceRegistration.serviceKind = .dependency
+    public func instancePerDependency() -> DynamicInstanceRegistrationBuilder<Type> {
+        serviceRegistration.kind = .perDependency
+        return DynamicInstanceRegistrationBuilder(serviceRegistration: serviceRegistration, builder: builder)
+    }
+    
+    public func instancePerScope() -> DynamicInstanceRegistrationBuilder<Type> {
+        serviceRegistration.kind = .perScope(key: ScopeKey.any)
         return DynamicInstanceRegistrationBuilder(serviceRegistration: serviceRegistration, builder: builder)
     }
 }

@@ -10,7 +10,7 @@ public protocol Injectable{
 }
 
 public class InjectableFactory<Type : Injectable> : InstanceFactory {
-    func create(withDependenciesResolvedFrom scope: Scope) throws -> Any {
+    func create(withDependenciesFrom scope: Scope) throws -> Any {
         return Type()
     }
 }
@@ -22,7 +22,7 @@ public protocol InjectableWithParameter{
 }
 
 public class InjectableFactoryWithParameter<Type : InjectableWithParameter> : InstanceFactory {
-    func create(withDependenciesResolvedFrom scope: Scope) throws -> Any {
+    func create(withDependenciesFrom scope: Scope) throws -> Any {
         return Type(try scope.resolve(Type.ParameterType.self))
     }
 }
@@ -35,7 +35,7 @@ public protocol InjectableWithTwoParameters{
 }
 
 public class InjectableFactoryWithTwoParameters<Type : InjectableWithTwoParameters> : InstanceFactory {
-    func create(withDependenciesResolvedFrom scope: Scope) throws -> Any {
+    func create(withDependenciesFrom scope: Scope) throws -> Any {
         return Type(
             try scope.resolve(Type.FirstParameterType.self),
             try scope.resolve(Type.SecondParameterType.self)
@@ -54,7 +54,7 @@ public protocol InjectableWithThreeParameters{
 }
 
 public class InjectableFactoryWithThreeParameters<Type : InjectableWithThreeParameters> : InstanceFactory {
-    func create(withDependenciesResolvedFrom scope: Scope) throws -> Any {
+    func create(withDependenciesFrom scope: Scope) throws -> Any {
         return Type(try scope.resolve(Type.FirstParameterType.self),
                     try scope.resolve(Type.SecondParameterType.self),
                     try scope.resolve(Type.ThirdParameterType.self))
@@ -74,7 +74,7 @@ public protocol InjectableWithFourParameters{
 }
 
 public class InjectableFactoryWithFourParameters<Type : InjectableWithFourParameters> : InstanceFactory {
-    func create(withDependenciesResolvedFrom scope: Scope) throws -> Any {
+    func create(withDependenciesFrom scope: Scope) throws -> Any {
         return Type(try scope.resolve(Type.FirstParameterType.self),
                     try scope.resolve(Type.SecondParameterType.self),
                     try scope.resolve(Type.ThirdParameterType.self),
@@ -97,7 +97,7 @@ public protocol InjectableWithFiveParameters{
 }
 
 public class InjectableFactoryWithFiveParameters<Type : InjectableWithFiveParameters> : InstanceFactory {
-    func create(withDependenciesResolvedFrom scope: Scope) throws -> Any {
+    func create(withDependenciesFrom scope: Scope) throws -> Any {
         return Type(try scope.resolve(Type.FirstParameterType.self),
                     try scope.resolve(Type.SecondParameterType.self),
                     try scope.resolve(Type.ThirdParameterType.self),
@@ -111,7 +111,7 @@ public protocol CustomInjectable {
 }
 
 public class CustomInjectableFactory<Type : CustomInjectable> : InstanceFactory {
-    func create(withDependenciesResolvedFrom scope: Scope) throws -> Any {
+    func create(withDependenciesFrom scope: Scope) throws -> Any {
         return try Type(receiveDependenciesFrom: scope)
     }
 }

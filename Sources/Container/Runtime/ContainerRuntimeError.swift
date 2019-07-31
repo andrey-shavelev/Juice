@@ -11,6 +11,8 @@ public struct ContainerRuntimeError: Error {
         case invalidRegistration(desiredType: Any.Type, actualType: Any.Type)
         case serviceNotFound(serviceType: Any.Type)
         case invalidScope
+        case missingScopeDefinition
+        case scopeNotFound(scopeKey: ScopeKey)
     }
     
     public let message: String
@@ -36,6 +38,16 @@ extension ContainerRuntimeError {
     static func invalidScope() -> ContainerRuntimeError {
         return ContainerRuntimeError(message: "Parent scope was dealocated and its child scope could not be used to resolve dependencies. This error may indicate that a class, that keeps a reference to a scope, has a wrong lifecycle and lives longer than its scope. In case if it is intended, please check if scope is still valid using isValid property.",
             errorType: .invalidScope)
+    }
+
+    static func scopeNotFound(scopeKey: ScopeKey) -> ContainerRuntimeError {
+        return ContainerRuntimeError(message: "Could not find scope for a key:\(scopeKey).",
+                errorType: .scopeNotFound(scopeKey: scopeKey))
+    }
+
+    // TODO to be removed and replaced buy a container-build-time error
+    static func missingScopeDefinition(serviceType: Any.Type) -> ContainerRuntimeError {
+        return ContainerRuntimeError(message: "Dynamic instance scope must be defined for \(serviceType)", errorType: .missingScopeDefinition)
     }
 }
 

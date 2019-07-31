@@ -9,10 +9,15 @@ public class ContainerBuilder {
     
     var registrationsDictionary = [TypeKey : ServiceRegistration]()
     var registrations = [ServiceRegistration]()
+    let scopeKey: ScopeKey
+    
+    init(scopeKey: ScopeKey) {
+        self.scopeKey = scopeKey
+    }
     
     func register<Type>(type: Type.Type, createdWith factory: InstanceFactory) -> DynamicInstaceScopeSelector<Type> {
         
-        let dynamicServiceRegistration = DynamicInstanceRegistration(factory: factory)
+        let dynamicServiceRegistration = DynamicInstanceRegistration<Type>(factory: factory)
         registrations.append(dynamicServiceRegistration)
         
         return DynamicInstaceScopeSelector<Type>(serviceRegistration: dynamicServiceRegistration, builder: self)
