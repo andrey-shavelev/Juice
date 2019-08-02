@@ -14,11 +14,7 @@ public class Container : Scope, InstanceStorage, InstanceStorageLocator {
     let parent: Container?
 
     init(_ buildFunc: (ContainerBuilder) -> Void) {
-
-        let builder = ContainerBuilder(scopeKey: key)
-        buildFunc(builder)
-
-        self.registrations = builder.build()
+        self.registrations = ContainerBuilder(scopeKey: key).build(buildFunc)
         self.parent = nil
     }
 
@@ -27,16 +23,25 @@ public class Container : Scope, InstanceStorage, InstanceStorageLocator {
         self.registrations = [TypeKey: ServiceRegistration]()
     }
 
+    private init(_ parent: Container, _ buildFunc: (ContainerBuilder) -> Void){
+        self.parent = parent
+        self.registrations = ContainerBuilder(scopeKey: key).build(buildFunc)
+    }
+
+    public func createChildScope() -> Scope {
+        return Container(self)
+    }
+
+    public func createChildScope(_ buildFunc: (ContainerBuilder) -> Void) -> Scope {
+        return Container(self, buildFunc)
+    }
+
     public func resolve<TService>(_ serviceType: TService.Type) throws -> TService {
         return try ResolutionScope(self).resolve(serviceType)
     }
 
     public func resolve<Service>(_ serviceType: Service.Type, withParameters parameters: [Any]) throws -> Service {
         return try ResolutionScope(self).resolve(serviceType, withParameters: parameters)
-    }
-
-    public func openChildScope() -> Scope {
-        return Container(self)
     }
 
     func getOrCreate<Instance>(instanceOfType type: Instance.Type,

@@ -18,7 +18,7 @@ final class InstancePerScopeRegistrationsTests: XCTestCase {
         }
         
         let orangeFromRootScope = try container.resolve(Orange.self)
-        let childScope = container.openChildScope()
+        let childScope = container.createChildScope()
         let orangeFromChildScope = try childScope.resolve(Orange.self)
         
         XCTAssertFalse(orangeFromRootScope === orangeFromChildScope)
@@ -31,7 +31,7 @@ final class InstancePerScopeRegistrationsTests: XCTestCase {
                 .asSelf()
         }
         
-        let childScope = container.openChildScope()
+        let childScope = container.createChildScope()
         
         let orange = try childScope.resolve(Orange.self)
         let sameOrange = try childScope.resolve(Orange.self)

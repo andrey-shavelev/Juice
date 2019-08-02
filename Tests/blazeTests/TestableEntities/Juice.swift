@@ -17,13 +17,13 @@ protocol FruitProvider {
 }
 
 protocol JuiceStorage {
-    func put(juice: SingleFuitJuice)
-    func get() -> SingleFuitJuice?
+    func put(juice: SingleFruitJuice)
+    func get() -> SingleFruitJuice?
 }
 
-protocol SingleFuitJuice {
+protocol SingleFruitJuice {
     
-    func getIngridients() -> [Fruit]
+    func getIngredients() -> [Fruit]
     
 }
 
@@ -68,16 +68,16 @@ class AppleFarmer: FruitProvider, InjectableWithParameter {
 }
 
 class CoolAndDryPlace: JuiceStorage, Injectable {
-    var juice: SingleFuitJuice?
+    var juice: SingleFruitJuice?
     
     required init() {
     }
     
-    func put(juice: SingleFuitJuice) {
+    func put(juice: SingleFruitJuice) {
         self.juice = juice
     }
     
-    func get() -> SingleFuitJuice? {
+    func get() -> SingleFruitJuice? {
         let juice = self.juice
         self.juice = nil
         return juice
@@ -103,14 +103,14 @@ class FruitBasket : Injectable {
     }
 }
 
-class FreshJuice : InjectableWithParameter, SingleFuitJuice {    
+class FreshJuice : InjectableWithParameter, SingleFruitJuice {
     let fruit: Fruit
     
     required init(_ fruit: Fruit) {
         self.fruit = fruit
     }
     
-    func getIngridients() -> [Fruit] {
+    func getIngredients() -> [Fruit] {
         return [fruit]
     }
 }
@@ -156,7 +156,7 @@ class Water {
     }
 }
 
-class Smothy: InjectableWithThreeParameters {    
+class Smoothie: InjectableWithThreeParameters {
     let water: Water
     let fruit: Fruit
     let berry: Berry

@@ -37,12 +37,12 @@ final class ParameterizedResolutionTests: XCTestCase {
             builder.register(injectable: Strawberry.self)
                 .instancePerDependency()
                 .as(Berry.self)
-            builder.register(injectable: Smothy.self)
+            builder.register(injectable: Smoothie.self)
                 .instancePerDependency()
                 .asSelf()
         }
         
-        XCTAssertNoThrow(try container.resolve(Smothy.self, withParameters: Water(temperatureCelsius: 18)))
+        XCTAssertNoThrow(try container.resolve(Smoothie.self, withParameters: Water(temperatureCelsius: 18)))
     }
     
     func testParametersAreUsedOnlyForServiceIntselfAndNotUsedForItsDependencies() throws {

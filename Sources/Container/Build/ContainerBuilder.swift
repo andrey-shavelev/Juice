@@ -70,7 +70,8 @@ public class ContainerBuilder {
         return register(type: Type.self, createdWith: DelegatingFactory(factory))
     }
     
-    func build() -> [TypeKey : ServiceRegistration] {
+    func build(_ buildFunc: (ContainerBuilder) -> Void) -> [TypeKey : ServiceRegistration] {
+        buildFunc(self)
         return registrationsDictionary
     }
 }
