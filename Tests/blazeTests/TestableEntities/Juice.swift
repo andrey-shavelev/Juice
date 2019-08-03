@@ -191,7 +191,7 @@ class PackedJuice : InjectableWithTwoParameters {
         self.countryOfOrigin = countryOfOrigin
     }
     
-    func getIngridients() -> [Fruit] {
+    func getIngredients() -> [Fruit] {
         return [fruit]
     }
 }

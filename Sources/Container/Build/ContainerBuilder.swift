@@ -60,12 +60,6 @@ public class ContainerBuilder {
             builder: self)
     }
     
-    public func register<Type>(autofactoryFor type: Type.Type) {
-        register(injectable: Factory<Type>.self)
-            .instancePerDependency()
-            .asSelf()
-    }
-    
     func register<Type>(factory: @escaping (Scope) -> Type) -> DynamicInstaceScopeSelector<Type> {
         return register(type: Type.self, createdWith: DelegatingFactory(factory))
     }
