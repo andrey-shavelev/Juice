@@ -8,17 +8,17 @@
 import XCTest
 @testable import blaze
 
-final class InstancePerScopeRegistrationsTests: XCTestCase {
+final class InstancePerContainerRegistrationsTests: XCTestCase {
     
     func testResolvesDifferentInstanceOfInstancePerScopeServiceForChildScope() throws {
         let container = Container { builder in
             builder.register(injectable: Orange.self)
-                .instancePerScope()
+                .instancePerContainer()
                 .asSelf()
         }
         
         let orangeFromRootScope = try container.resolve(Orange.self)
-        let childScope = container.createChildScope()
+        let childScope = container.createChildContainer()
         let orangeFromChildScope = try childScope.resolve(Orange.self)
         
         XCTAssertFalse(orangeFromRootScope === orangeFromChildScope)
@@ -27,11 +27,11 @@ final class InstancePerScopeRegistrationsTests: XCTestCase {
     func testResolvesSameInstanceOfInstancePerScopeServiceWhenResolvedFromSameScope() throws {
         let container = Container { builder in
             builder.register(injectable: Orange.self)
-                .instancePerScope()
+                .instancePerContainer()
                 .asSelf()
         }
         
-        let childScope = container.createChildScope()
+        let childScope = container.createChildContainer()
         
         let orange = try childScope.resolve(Orange.self)
         let sameOrange = try childScope.resolve(Orange.self)

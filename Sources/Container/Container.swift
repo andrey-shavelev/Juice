@@ -10,30 +10,30 @@ public class Container : Scope, InstanceStorage, InstanceStorageLocator {
 
     let registrations: [TypeKey: ServiceRegistration]
     var instances = [TypeKey: Any]()
-    let key = ScopeKey.unique(key: UniqueScopeKey())
+    let key: ScopeKey
     let parent: Container?
 
-    init(_ buildFunc: (ContainerBuilder) -> Void) {
-        self.registrations = ContainerBuilder(scopeKey: key).build(buildFunc)
-        self.parent = nil
+    convenience init(_ buildFunc: (ContainerBuilder) -> Void) {
+        self.init(parent: nil, name: nil, buildFunc: buildFunc)
     }
 
-    private init(_ parent: Container){
+    private init(parent: Container?, name: String? = nil, buildFunc: (ContainerBuilder) -> Void){
         self.parent = parent
-        self.registrations = [TypeKey: ServiceRegistration]()
-    }
-
-    private init(_ parent: Container, _ buildFunc: (ContainerBuilder) -> Void){
-        self.parent = parent
+        if let name = name {
+            self.key = .named(name: name)
+        }
+        else {
+            self.key = .unique(key: UniqueScopeKey())
+        }
         self.registrations = ContainerBuilder(scopeKey: key).build(buildFunc)
     }
 
-    public func createChildScope() -> Scope {
-        return Container(self)
+    public func createChildContainer(name: String? = nil) -> Container {
+        return Container(parent: self, name: name, buildFunc: { _ in })
     }
 
-    public func createChildScope(_ buildFunc: (ContainerBuilder) -> Void) -> Scope {
-        return Container(self, buildFunc)
+    public func createChildContainer(name: String? = nil, _ buildFunc: (ContainerBuilder) -> Void) -> Container {
+        return Container(parent: self, buildFunc: buildFunc)
     }
 
     public func resolve<TService>(_ serviceType: TService.Type) throws -> TService {

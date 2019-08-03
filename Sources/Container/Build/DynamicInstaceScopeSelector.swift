@@ -28,8 +28,13 @@ public struct DynamicInstaceScopeSelector<Type> {
         return DynamicInstanceRegistrationBuilder(serviceRegistration: serviceRegistration, builder: builder)
     }
     
-    public func instancePerScope() -> DynamicInstanceRegistrationBuilder<Type> {
+    public func instancePerContainer() -> DynamicInstanceRegistrationBuilder<Type> {
         serviceRegistration.kind = .perScope(key: ScopeKey.any)
+        return DynamicInstanceRegistrationBuilder(serviceRegistration: serviceRegistration, builder: builder)
+    }
+
+    public func instancePerContainer(name: String) -> DynamicInstanceRegistrationBuilder<Type> {
+        serviceRegistration.kind = .perScope(key: ScopeKey.named(name: name))
         return DynamicInstanceRegistrationBuilder(serviceRegistration: serviceRegistration, builder: builder)
     }
 }
