@@ -5,7 +5,7 @@
 //  Created by Andrey Shavelev on 21/05/2019.
 //
 
-public class Container : Scope, InstanceStorage, InstanceStorageLocator {
+public class Container: Scope, InstanceStorage, InstanceStorageLocator {
     public var isValid = true
 
     let registrations: [TypeKey: ServiceRegistration]
@@ -17,12 +17,11 @@ public class Container : Scope, InstanceStorage, InstanceStorageLocator {
         self.init(parent: nil, name: nil, buildFunc: buildFunc)
     }
 
-    private init(parent: Container?, name: String? = nil, buildFunc: (ContainerBuilder) -> Void){
+    private init(parent: Container?, name: String? = nil, buildFunc: (ContainerBuilder) -> Void) {
         self.parent = parent
         if let name = name {
             self.key = .named(name: name)
-        }
-        else {
+        } else {
             self.key = .unique(key: UniqueScopeKey())
         }
         self.registrations = ContainerBuilder(scopeKey: key).build(buildFunc)
@@ -67,8 +66,8 @@ public class Container : Scope, InstanceStorage, InstanceStorageLocator {
     func findContainer(matchingKey key: ScopeKey) -> Container? {
         var result: Container? = self
 
-        while (result != nil){
-            if (result?.key.matches(key) == true){
+        while (result != nil) {
+            if (result?.key.matches(key) == true) {
                 return result;
             }
 

@@ -12,12 +12,12 @@ final class InstancePerDependencyDynamicRegistrationsTests: XCTestCase {
     func testRegistersAndResolvesSingleInstanceService() throws {
         let container = Container { builder in
             builder.register(injectable: Apple.self)
-                .instancePerDependency()
-                .asSelf()
+                    .instancePerDependency()
+                    .asSelf()
         }
-        
+
         XCTAssertNoThrow(try container.resolve(Apple.self))
-        
+
         let firstApple = try container.resolve(Apple.self)
         let secondApple = try container.resolve(Apple.self)
 

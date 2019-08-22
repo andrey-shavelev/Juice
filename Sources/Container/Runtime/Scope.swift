@@ -8,7 +8,7 @@
 public protocol Scope {
     func resolve<Service>(_ serviceType: Service.Type) throws -> Service
     func resolve<Service>(_ serviceType: Service.Type, withParameters parameters: [Any]) throws -> Service
-    
+
     var isValid: Bool { get }
 }
 

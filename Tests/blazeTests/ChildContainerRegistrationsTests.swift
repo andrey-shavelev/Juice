@@ -10,18 +10,18 @@ final class ChildContainerRegistrationsTests: XCTestCase {
     func testRedeclaredInstancePerScopeIsResolvedWithingChildScopeAndItsChildren() throws {
         let container = Container {
             $0.register(injectable: Orange.self)
-                .instancePerDependency()
-                .as(Fruit.self)
+                    .instancePerDependency()
+                    .as(Fruit.self)
 
             $0.register(injectable: FreshJuice.self)
-                .instancePerDependency()
-                .asSelf()
+                    .instancePerDependency()
+                    .asSelf()
         }
 
-        let childContainer = container.createChildContainer{
+        let childContainer = container.createChildContainer {
             $0.register(injectable: Apple.self)
-                .instancePerDependency()
-                .as(Fruit.self)
+                    .instancePerDependency()
+                    .as(Fruit.self)
         }
 
         XCTAssertNoThrow(try childContainer.resolve(FreshJuice.self))
@@ -31,7 +31,7 @@ final class ChildContainerRegistrationsTests: XCTestCase {
         XCTAssert(juice.fruit is Apple)
     }
 
-    func testSingleInstanceRegisteredInParentScopeReceivesItsDependenciesFromParentScope() throws  {
+    func testSingleInstanceRegisteredInParentScopeReceivesItsDependenciesFromParentScope() throws {
         let container = Container {
             $0.register(injectable: Orange.self)
                     .instancePerDependency()
@@ -42,7 +42,7 @@ final class ChildContainerRegistrationsTests: XCTestCase {
                     .asSelf()
         }
 
-        let childContainer = container.createChildContainer{
+        let childContainer = container.createChildContainer {
             $0.register(injectable: Apple.self)
                     .instancePerDependency()
                     .as(Fruit.self)
@@ -125,21 +125,21 @@ final class ChildContainerRegistrationsTests: XCTestCase {
         XCTAssert(gardenFreshJuice !== innerZenFreshJuice)
     }
 
-    func testSingleInstaanceCustomInjectableResolvedFromChildContainerReceivesCorrectResolutionScope() throws {
-    // TODO add test with parameters
+    func testSingleInstanceCustomInjectableResolvedFromChildContainerReceivesCorrectResolutionScope() throws {
+        // TODO add test with parameters
         let container = Container {
             $0.register(injectable: HomeMadeJuice.self)
-                .singleInstance()
-                .asSelf()
+                    .singleInstance()
+                    .asSelf()
             $0.register(injectable: Apple.self)
-                .instancePerDependency()
-                .as(Fruit.self)
+                    .instancePerDependency()
+                    .as(Fruit.self)
         }
 
         let childContainer = container.createChildContainer {
             $0.register(injectable: Orange.self)
-                .instancePerDependency()
-                .as(Fruit.self)
+                    .instancePerDependency()
+                    .as(Fruit.self)
         }
 
         let juice = try childContainer.resolve(HomeMadeJuice.self)

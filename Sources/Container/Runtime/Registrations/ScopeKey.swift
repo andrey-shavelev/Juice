@@ -9,7 +9,7 @@ public enum ScopeKey {
     case any
     case unique(key: UniqueScopeKey)
     case named(name: String)
-    
+
     func matches(_ otherKey: ScopeKey) -> Bool {
         switch (self, otherKey) {
         case (.any, _):

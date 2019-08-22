@@ -7,14 +7,14 @@
 
 import Foundation
 
-struct ParameterizedResolutionScope : Scope {
-    
+struct ParameterizedResolutionScope: Scope {
+
     var isValid: Bool {
         return parentScope?.isValid == true
     }
     let parentScope: Scope?
     let parameters: [Any]
-    
+
     init(_ parentScope: Scope, _ parameters: [Any]) {
         self.parentScope = parentScope
         self.parameters = parameters
@@ -31,10 +31,10 @@ struct ParameterizedResolutionScope : Scope {
         if let parameter = resolveParameter(serviceType) {
             return parameter
         }
-        
+
         return try parentScope.resolve(serviceType, withParameters: parameters)
-    }    
-    
+    }
+
     func resolve<TInstance>(_ serviceType: TInstance.Type) throws -> TInstance {
         guard let parentScope = parentScope else {
             throw ContainerRuntimeError.invalidScope()
@@ -46,10 +46,10 @@ struct ParameterizedResolutionScope : Scope {
         if let parameter = resolveParameter(serviceType) {
             return parameter
         }
-        
+
         return try parentScope.resolve(serviceType)
     }
-    
+
     func resolveParameter<Parameter>(_ parameterType: Parameter.Type) -> Parameter? {
         for parameter in parameters {
             let typedParameter = parameter as? Parameter
@@ -59,5 +59,5 @@ struct ParameterizedResolutionScope : Scope {
         }
         return nil
     }
-    
+
 }

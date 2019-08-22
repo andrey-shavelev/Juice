@@ -9,19 +9,19 @@ import XCTest
 @testable import blaze
 
 final class StaticInstanceRegistrationsTests: XCTestCase {
-    
+
     func testRegistrationOfInstance() throws {
         let apple = Apple()
         let container = Container { builder in
             builder.register(instance: apple)
-                .asSelf()
+                    .asSelf()
         }
-        
+
         XCTAssertNoThrow(try container.resolve(Apple.self))
-        
+
         let appleFromContainer = try container.resolve(Apple.self)
-        
+
         XCTAssert(apple === appleFromContainer)
     }
-    
+
 }

@@ -7,30 +7,30 @@
 
 public struct DynamicInstanceRegistrationBuilder<Type> {
     let builder: ContainerBuilder
-    let serviceRegistration: DynamicInstanceRegistration<Type>
-    
+    let registrationPrototype: DynamicInstanceRegistrationPrototype<Type>
+
     internal init(
-        serviceRegistration: DynamicInstanceRegistration<Type>,
-        builder: ContainerBuilder) {
-        self.serviceRegistration = serviceRegistration
+            registrationPrototype: DynamicInstanceRegistrationPrototype<Type>,
+            builder: ContainerBuilder) {
+        self.registrationPrototype = registrationPrototype
         self.builder = builder
     }
-    
+
     @discardableResult
     public func `as`<TService>(_ serviceType: TService.Type) -> DynamicInstanceRegistrationBuilder {
-        builder.registrationsDictionary[TypeKey(for: serviceType)] = serviceRegistration
+        registrationPrototype.services.append(serviceType)
         return self
     }
-    
+
     @discardableResult
     public func asSelf() -> DynamicInstanceRegistrationBuilder {
-        builder.registrationsDictionary[TypeKey(for: Type.self)] = serviceRegistration
+        registrationPrototype.services.append(Type.self)
         return self
     }
-    
+
     @discardableResult
     public func injectDependency<PropertyType>(into keyPath: WritableKeyPath<Type, PropertyType?>) -> DynamicInstanceRegistrationBuilder {
-        serviceRegistration.propertyInjectors.append(TypedPropertyInjector<Type, PropertyType>(keyPath))
+        registrationPrototype.propertyInjectors.append(TypedPropertyInjector<Type, PropertyType>(keyPath))
         return self
     }
 }

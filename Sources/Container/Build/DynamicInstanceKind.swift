@@ -6,7 +6,6 @@
 //
 
 enum DynamicInstanceKind {
-    case `default`
     case perDependency
     case perScope(key: ScopeKey)
 }
