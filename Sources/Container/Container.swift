@@ -46,17 +46,17 @@ public class Container: Scope, InstanceStorage, InstanceStorageLocator {
     func getOrCreate<Instance>(instanceOfType type: Instance.Type,
                                usingFactory factory: InstanceFactory,
                                withDependenciesFrom scope: Scope) throws
-                    -> (InstanceFlag, Any) {
+                    -> Any {
         // TODO if one class registered twice with different services it should return two different instances
         let typeKey = TypeKey(for: type)
 
         if let existingInstance = instances[typeKey] {
-            return (.existing, existingInstance)
+            return existingInstance
         }
 
         let newInstance = try factory.create(withDependenciesFrom: scope)
         instances[typeKey] = newInstance
-        return (.new, newInstance)
+        return newInstance
     }
 
     func findRegistration(matchingKey serviceKey: TypeKey) -> ServiceRegistration? {

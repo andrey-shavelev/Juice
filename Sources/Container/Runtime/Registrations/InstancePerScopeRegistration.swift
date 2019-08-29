@@ -22,6 +22,6 @@ class InstancePerScopeRegistration<ServiceType>: ServiceRegistration {
         return try storageForInstance.getOrCreate(
                 instanceOfType: ServiceType.self,
                 usingFactory: factory,
-                withDependenciesFrom: scopeForDependencies).1
+                withDependenciesFrom: scopeForDependencies)
     }
 }

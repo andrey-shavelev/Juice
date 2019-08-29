@@ -9,12 +9,6 @@ protocol InstanceStorage {
 
     func getOrCreate<Instance>(instanceOfType type: Instance.Type,
                                usingFactory factory: InstanceFactory,
-                               withDependenciesFrom scope: Scope) throws -> (InstanceFlag, Any)
+                               withDependenciesFrom scope: Scope) throws -> Any
 
-}
-
-// TODO must be removed, with additional logic for new instances moved to InstanceFactory
-enum InstanceFlag {
-    case new
-    case existing
 }
