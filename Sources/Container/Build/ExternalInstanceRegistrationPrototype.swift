@@ -8,9 +8,11 @@ class ExternalInstanceRegistrationPrototype<Type>: ServiceRegistrationPrototype 
 
     var services = [Any.Type]()
     let instance: Type
+    let serviceProviderType: Any.Type
 
     init(instance: Type) {
         self.instance = instance
+        self.serviceProviderType = Type.self
     }
 
     func build() -> ServiceRegistration {

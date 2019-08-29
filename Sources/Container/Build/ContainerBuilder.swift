@@ -15,10 +15,10 @@ public class ContainerBuilder {
     }
 
     func register<Type>(type: Type.Type, createdWith factory: InstanceFactory) -> DynamicInstanceScopeSelector<Type> {
-        let dynamicServiceRegistration = DynamicInstanceRegistrationPrototype<Type>(factory: factory)
+        let dynamicServiceRegistration = DynamicInstanceRegistrationPrototype<Type>(factory: factory, scopeKey: scopeKey)
         registrationPrototypes.append(dynamicServiceRegistration)
 
-        return DynamicInstanceScopeSelector<Type>(registrationPrototype: dynamicServiceRegistration, builder: self)
+        return DynamicInstanceScopeSelector<Type>(registrationPrototype: dynamicServiceRegistration)
     }
 
     public func register<Type: Injectable>(injectable type: Type.Type) -> DynamicInstanceScopeSelector<Type> {
@@ -49,21 +49,30 @@ public class ContainerBuilder {
         return register(type: type, createdWith: CustomInjectableFactory<Type>())
     }
 
-    public func register<Type>(instance: Type) -> StaticInstanceRegistrationBuilder<Type> {
+    public func register<Type>(instance: Type) -> ExternalInstanceRegistrationBuilder<Type> {
         let staticInstanceRegistration = ExternalInstanceRegistrationPrototype(instance: instance)
         registrationPrototypes.append(staticInstanceRegistration)
 
-        return StaticInstanceRegistrationBuilder<Type>(
-                serviceRegistration: staticInstanceRegistration,
-                builder: self)
+        return ExternalInstanceRegistrationBuilder<Type>(registrationPrototype: staticInstanceRegistration)
     }
 
     func register<Type>(factory: @escaping (Scope) -> Type) -> DynamicInstanceScopeSelector<Type> {
         return register(type: Type.self, createdWith: DelegatingFactory(factory))
     }
 
-    func build(_ buildFunc: (ContainerBuilder) -> Void) -> [TypeKey: ServiceRegistration] {
+    func build(_ buildFunc: (ContainerBuilder) -> Void) throws -> [TypeKey: ServiceRegistration] {
         buildFunc(self)
-        return registrationsDictionary
+
+        var registrations = [TypeKey: ServiceRegistration]()
+
+        for registrationPrototype in registrationPrototypes {
+            let serviceRegistration: ServiceRegistration = try registrationPrototype.build()
+
+            for serviceType in registrationPrototype.services {
+                registrations[TypeKey(for: serviceType)] = serviceRegistration
+            }
+        }
+
+        return registrations
     }
 }

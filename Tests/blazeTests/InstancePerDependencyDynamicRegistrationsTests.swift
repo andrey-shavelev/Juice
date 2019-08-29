@@ -10,7 +10,7 @@ import XCTest
 
 final class InstancePerDependencyDynamicRegistrationsTests: XCTestCase {
     func testRegistersAndResolvesSingleInstanceService() throws {
-        let container = Container { builder in
+        let container = try Container { builder in
             builder.register(injectable: Apple.self)
                     .instancePerDependency()
                     .asSelf()

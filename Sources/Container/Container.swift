@@ -13,26 +13,26 @@ public class Container: Scope, InstanceStorage, InstanceStorageLocator {
     let key: ScopeKey
     let parent: Container?
 
-    convenience init(_ buildFunc: (ContainerBuilder) -> Void) {
-        self.init(parent: nil, name: nil, buildFunc: buildFunc)
+    convenience init(_ buildFunc: (ContainerBuilder) -> Void) throws {
+        try self.init(parent: nil, name: nil, buildFunc: buildFunc)
     }
 
-    private init(parent: Container?, name: String? = nil, buildFunc: (ContainerBuilder) -> Void) {
+    private init(parent: Container?, name: String? = nil, buildFunc: (ContainerBuilder) -> Void) throws {
         self.parent = parent
         if let name = name {
             self.key = .named(name: name)
         } else {
             self.key = .unique(key: UniqueScopeKey())
         }
-        self.registrations = ContainerBuilder(scopeKey: key).build(buildFunc)
+        self.registrations = try ContainerBuilder(scopeKey: key).build(buildFunc)
     }
 
-    public func createChildContainer(name: String? = nil) -> Container {
-        return Container(parent: self, name: name, buildFunc: { _ in })
+    public func createChildContainer(name: String? = nil) throws -> Container {
+        return try Container(parent: self, name: name, buildFunc: { _ in })
     }
 
-    public func createChildContainer(name: String? = nil, _ buildFunc: (ContainerBuilder) -> Void) -> Container {
-        return Container(parent: self, buildFunc: buildFunc)
+    public func createChildContainer(name: String? = nil, _ buildFunc: (ContainerBuilder) -> Void) throws -> Container {
+        return try Container(parent: self, buildFunc: buildFunc)
     }
 
     public func resolve<TService>(_ serviceType: TService.Type) throws -> TService {

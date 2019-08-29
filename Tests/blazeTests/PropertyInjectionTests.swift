@@ -11,7 +11,7 @@ import XCTest
 final class PropertyInjectionTests: XCTestCase {
 
     func testInjectsSingleInstancesIntoProperty() throws {
-        let container = Container { builder in
+        let container = try Container { builder in
             builder.register(injectable: Apple.self)
                     .singleInstance()
                     .asSelf()

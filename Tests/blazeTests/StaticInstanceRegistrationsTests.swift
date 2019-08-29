@@ -12,7 +12,7 @@ final class StaticInstanceRegistrationsTests: XCTestCase {
 
     func testRegistrationOfInstance() throws {
         let apple = Apple()
-        let container = Container { builder in
+        let container = try Container { builder in
             builder.register(instance: apple)
                     .asSelf()
         }

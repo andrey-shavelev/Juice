@@ -6,14 +6,10 @@
 //
 
 public struct DynamicInstanceRegistrationBuilder<Type> {
-    let builder: ContainerBuilder
     let registrationPrototype: DynamicInstanceRegistrationPrototype<Type>
 
-    internal init(
-            registrationPrototype: DynamicInstanceRegistrationPrototype<Type>,
-            builder: ContainerBuilder) {
+    internal init(registrationPrototype: DynamicInstanceRegistrationPrototype<Type>) {
         self.registrationPrototype = registrationPrototype
-        self.builder = builder
     }
 
     @discardableResult

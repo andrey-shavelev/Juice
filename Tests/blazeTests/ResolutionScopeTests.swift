@@ -11,7 +11,7 @@ import XCTest
 final class ResolutionScopeTests: XCTestCase {
 
     func testResolutionScopeHoldsWeakReferenceToMainScope() throws {
-        var container: Container? = Container { builder in
+        var container: Container? = try Container { builder in
             builder.register(injectable: CustomInjectableThatHoldsReferenceToScope.self)
                     .instancePerDependency()
                     .asSelf()
@@ -26,7 +26,7 @@ final class ResolutionScopeTests: XCTestCase {
     }
 
     func testResolutionScopeBecomesInvalidAfterMainScopeIsDeallocated() throws {
-        var container: Container? = Container { builder in
+        var container: Container? = try Container { builder in
             builder.register(injectable: CustomInjectableThatHoldsReferenceToScope.self)
                     .instancePerDependency()
                     .asSelf()
@@ -39,7 +39,7 @@ final class ResolutionScopeTests: XCTestCase {
     }
 
     func testParametrizedResolutionScopeHoldsWeakReferenceToMainScope() throws {
-        var container: Container? = Container { builder in
+        var container: Container? = try Container { builder in
             builder.register(injectable: CustomInjectableThatHoldsReferenceToScope.self)
                     .instancePerDependency()
                     .asSelf()
@@ -55,7 +55,7 @@ final class ResolutionScopeTests: XCTestCase {
     }
 
     func testParametrizedResolutionScopeBecomesInvalidAfterMainScopeIsDeallocated() throws {
-        var container: Container? = Container { builder in
+        var container: Container? = try Container { builder in
             builder.register(injectable: CustomInjectableThatHoldsReferenceToScope.self)
                     .instancePerDependency()
                     .asSelf()
@@ -69,7 +69,7 @@ final class ResolutionScopeTests: XCTestCase {
     }
 
     func testInvalidResolutionScopeThrowsErrorWhenResolvingDependency() throws {
-        var container: Container? = Container { builder in
+        var container: Container? = try Container { builder in
             builder.register(injectable: Apple.self)
                     .instancePerDependency()
                     .asSelf()
@@ -86,7 +86,7 @@ final class ResolutionScopeTests: XCTestCase {
     }
 
     func testInvalidParametrizedResolutionScopeThrowsErrorWhenResolvingDependency() throws {
-        var container: Container? = Container { builder in
+        var container: Container? = try Container { builder in
             builder.register(injectable: Apple.self)
                     .instancePerDependency()
                     .asSelf()

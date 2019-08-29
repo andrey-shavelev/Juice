@@ -11,7 +11,7 @@ import XCTest
 final class ParameterizedResolutionTests: XCTestCase {
 
     func testPassesParameterToInstancePerDependency() throws {
-        let container = Container { builder in
+        let container = try Container { builder in
 
             builder.register(injectable: Chocolate.self)
                     .instancePerDependency()
@@ -28,7 +28,7 @@ final class ParameterizedResolutionTests: XCTestCase {
     }
 
     func testMissingParameterAreResolvedFromScope() throws {
-        let container = Container { builder in
+        let container = try Container { builder in
 
             builder.register(injectable: Banana.self)
                     .instancePerDependency()
@@ -45,7 +45,7 @@ final class ParameterizedResolutionTests: XCTestCase {
     }
 
     func testParametersAreUsedOnlyForServiceItselfAndNotUsedForItsDependencies() throws {
-        let container = Container { builder in
+        let container = try Container { builder in
 
             builder.register(instance: Country.Japan)
                     .asSelf()
@@ -66,7 +66,7 @@ final class ParameterizedResolutionTests: XCTestCase {
     }
 
     func testCustomInjectableCanResolveParametersFromResolutionScope() throws {
-        let container = Container { builder in
+        let container = try Container { builder in
             builder.register(injectable: HomeMadeJuice.self)
                     .singleInstance()
                     .asSelf()

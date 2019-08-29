@@ -9,4 +9,5 @@ protocol ServiceRegistrationPrototype {
     func build() throws -> ServiceRegistration
 
     var services: [Any.Type] { get }
+    var serviceProviderType: Any.Type { get }
 }

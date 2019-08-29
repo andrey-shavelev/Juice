@@ -8,33 +8,29 @@
 import Foundation
 
 public struct DynamicInstanceScopeSelector<Type> {
-    let builder: ContainerBuilder
     let registrationPrototype: DynamicInstanceRegistrationPrototype<Type>
 
-    internal init(
-            registrationPrototype: DynamicInstanceRegistrationPrototype<Type>,
-            builder: ContainerBuilder) {
+    internal init(registrationPrototype: DynamicInstanceRegistrationPrototype<Type>) {
         self.registrationPrototype = registrationPrototype
-        self.builder = builder
     }
 
     public func singleInstance() -> DynamicInstanceRegistrationBuilder<Type> {
-        registrationPrototype.kind = .perScope(key: builder.scopeKey)
-        return DynamicInstanceRegistrationBuilder(registrationPrototype: registrationPrototype, builder: builder)
+        registrationPrototype.kind = .perScope(key: registrationPrototype.scopeKey)
+        return DynamicInstanceRegistrationBuilder(registrationPrototype: registrationPrototype)
     }
 
     public func instancePerDependency() -> DynamicInstanceRegistrationBuilder<Type> {
         registrationPrototype.kind = .perDependency
-        return DynamicInstanceRegistrationBuilder(registrationPrototype: registrationPrototype, builder: builder)
+        return DynamicInstanceRegistrationBuilder(registrationPrototype: registrationPrototype)
     }
 
     public func instancePerContainer() -> DynamicInstanceRegistrationBuilder<Type> {
         registrationPrototype.kind = .perScope(key: ScopeKey.any)
-        return DynamicInstanceRegistrationBuilder(registrationPrototype: registrationPrototype, builder: builder)
+        return DynamicInstanceRegistrationBuilder(registrationPrototype: registrationPrototype)
     }
 
     public func instancePerContainer(name: String) -> DynamicInstanceRegistrationBuilder<Type> {
         registrationPrototype.kind = .perScope(key: ScopeKey.named(name: name))
-        return DynamicInstanceRegistrationBuilder(registrationPrototype: registrationPrototype, builder: builder)
+        return DynamicInstanceRegistrationBuilder(registrationPrototype: registrationPrototype)
     }
 }

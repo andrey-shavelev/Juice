@@ -3,7 +3,7 @@ import XCTest
 
 final class SingleInstanceDynamicRegistrationsTests: XCTestCase {
     func testRegistersAndResolvesSingleInstanceService() throws {
-        let container = Container { builder in
+        let container = try Container { builder in
             builder.register(injectable: Apple.self)
                     .singleInstance()
                     .as(Fruit.self)
@@ -17,7 +17,7 @@ final class SingleInstanceDynamicRegistrationsTests: XCTestCase {
     }
 
     func testReturnsOneInstanceForSingleInstanceService() throws {
-        let container = Container { builder in
+        let container = try Container { builder in
             builder.register(injectable: Apple.self)
                     .singleInstance()
                     .as(Fruit.self)
@@ -30,7 +30,7 @@ final class SingleInstanceDynamicRegistrationsTests: XCTestCase {
     }
 
     func testReturnsOneInstanceForSingleInstanceResolvedAsDifferentService() throws {
-        let container = Container { builder in
+        let container = try Container { builder in
             builder.register(injectable: Apple.self)
                     .singleInstance()
                     .as(Fruit.self)
@@ -44,7 +44,7 @@ final class SingleInstanceDynamicRegistrationsTests: XCTestCase {
     }
 
     func testRegisterAndResolveSingleInstanceWithOneDependency() throws {
-        let container = Container { builder in
+        let container = try Container { builder in
             builder.register(injectable: AppleGarden.self)
                     .singleInstance()
                     .asSelf()
@@ -68,7 +68,7 @@ final class SingleInstanceDynamicRegistrationsTests: XCTestCase {
     }
 
     func testRegisterAndResolveSingleInstanceWithTwoDependencies() throws {
-        let container = Container { builder in
+        let container = try Container { builder in
             builder.register(injectable: AppleGarden.self)
                     .singleInstance()
                     .asSelf()
@@ -95,7 +95,7 @@ final class SingleInstanceDynamicRegistrationsTests: XCTestCase {
     }
 
     func testRegisterAndResolveSingleInstanceWithThreeDependencies() throws {
-        let container = Container { builder in
+        let container = try Container { builder in
             builder.register(injectable: ServiceWithThreeParameters.self)
                     .singleInstance()
                     .asSelf()
@@ -115,7 +115,7 @@ final class SingleInstanceDynamicRegistrationsTests: XCTestCase {
     }
 
     func testRegisterAndResolveSingleInstanceWithFourDependencies() throws {
-        let container = Container { builder in
+        let container = try Container { builder in
             builder.register(injectable: ServiceWithFourParameters.self)
                     .singleInstance()
                     .asSelf()
@@ -138,7 +138,7 @@ final class SingleInstanceDynamicRegistrationsTests: XCTestCase {
     }
 
     func testRegisterAndResolveSingleInstanceWithFiveDependencies() throws {
-        let container = Container { builder in
+        let container = try Container { builder in
             builder.register(injectable: ServiceWithFiveParameters.self)
                     .singleInstance()
                     .asSelf()
@@ -164,7 +164,7 @@ final class SingleInstanceDynamicRegistrationsTests: XCTestCase {
     }
 
     func testRegisterAndResolveSingleInstanceWithCustomDependencies() throws {
-        let container = Container { builder in
+        let container = try Container { builder in
             builder.register(injectable: ServiceWithCustomParameters.self)
                     .singleInstance()
                     .asSelf()

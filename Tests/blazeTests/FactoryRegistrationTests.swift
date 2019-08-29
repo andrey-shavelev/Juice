@@ -10,7 +10,7 @@ import XCTest
 
 final class FactoryRegistrationsTests: XCTestCase {
     func testRegisterAndResolveSingleInstanceCreatedByFactory() throws {
-        let container = Container { builder in
+        let container = try Container { builder in
 
             builder.register { scope in
                         Apple()
@@ -23,7 +23,7 @@ final class FactoryRegistrationsTests: XCTestCase {
     }
 
     func testRegisterAndResolveInstancePerDependencyCreatedByFactory() throws {
-        let container = Container { builder in
+        let container = try Container { builder in
 
             builder.register { scope in
                         Apple()

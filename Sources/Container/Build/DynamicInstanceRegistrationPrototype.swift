@@ -10,9 +10,13 @@ class DynamicInstanceRegistrationPrototype<Type>: ServiceRegistrationPrototype {
     var propertyInjectors: [PropertyInjector] = []
     var kind: DynamicInstanceKind?
     var services: [Any.Type] = []
+    let scopeKey: ScopeKey
+    let serviceProviderType: Any.Type
 
-    init(factory: InstanceFactory) {
+    init(factory: InstanceFactory, scopeKey: ScopeKey) {
         self.factory = factory
+        self.scopeKey = scopeKey
+        self.serviceProviderType = Type.self
     }
 
     func build() throws -> ServiceRegistration {
