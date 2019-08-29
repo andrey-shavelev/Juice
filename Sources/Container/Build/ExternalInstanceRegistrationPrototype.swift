@@ -4,18 +4,21 @@
 
 import Foundation
 
-class ExternalInstanceRegistrationPrototype<Type>: ServiceRegistrationPrototype {
+class ExternalInstanceRegistrationPrototype<Type: AnyObject>: ServiceRegistrationPrototype {
 
     var services = [Any.Type]()
     let instance: Type
-    let serviceProviderType: Any.Type
+    var ownedByContainer = false
 
     init(instance: Type) {
         self.instance = instance
-        self.serviceProviderType = Type.self
     }
 
     func build() -> ServiceRegistration {
-        return ExternalInstanceRegistration<Type>(instance: self.instance)
+        if (ownedByContainer) {
+            return OwnedExternalInstanceRegistration(instance: self.instance)
+        }
+
+        return UnownedExternalInstanceRegistration(instance: self.instance)
     }
 }

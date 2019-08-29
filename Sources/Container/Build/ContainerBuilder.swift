@@ -21,6 +21,40 @@ public class ContainerBuilder {
         return DynamicInstanceScopeSelector<Type>(registrationPrototype: dynamicServiceRegistration)
     }
 
+    public func register<Type: AnyObject>(instance: Type) -> ExternalInstanceRegistrationBuilder<Type> {
+        let registrationPrototype = ExternalInstanceRegistrationPrototype(instance: instance)
+        registrationPrototypes.append(registrationPrototype)
+        return ExternalInstanceRegistrationBuilder<Type>(registrationPrototype: registrationPrototype)
+    }
+
+    public func register<Type: Any>(value: Type) -> ValueRegistrationBuilder<Type> {
+        let registrationPrototype = ValueRegistrationPrototype(value: value)
+        registrationPrototypes.append(registrationPrototype)
+        return ValueRegistrationBuilder<Type>(registrationPrototype: registrationPrototype)
+    }
+
+    func register<Type>(factory: @escaping (Scope) -> Type) -> DynamicInstanceScopeSelector<Type> {
+        return register(type: Type.self, createdWith: DelegatingFactory(factory))
+    }
+
+    func build(_ buildFunc: (ContainerBuilder) -> Void) throws -> [TypeKey: ServiceRegistration] {
+        buildFunc(self)
+
+        var registrations = [TypeKey: ServiceRegistration]()
+
+        for registrationPrototype in registrationPrototypes {
+            let serviceRegistration: ServiceRegistration = try registrationPrototype.build()
+
+            for serviceType in registrationPrototype.services {
+                registrations[TypeKey(for: serviceType)] = serviceRegistration
+            }
+        }
+
+        return registrations
+    }
+}
+
+extension ContainerBuilder {
     public func register<Type: Injectable>(injectable type: Type.Type) -> DynamicInstanceScopeSelector<Type> {
         return register(type: type, createdWith: InjectableFactory<Type>())
     }
@@ -47,32 +81,5 @@ public class ContainerBuilder {
 
     public func register<Type: CustomInjectable>(injectable type: Type.Type) -> DynamicInstanceScopeSelector<Type> {
         return register(type: type, createdWith: CustomInjectableFactory<Type>())
-    }
-
-    public func register<Type>(instance: Type) -> ExternalInstanceRegistrationBuilder<Type> {
-        let staticInstanceRegistration = ExternalInstanceRegistrationPrototype(instance: instance)
-        registrationPrototypes.append(staticInstanceRegistration)
-
-        return ExternalInstanceRegistrationBuilder<Type>(registrationPrototype: staticInstanceRegistration)
-    }
-
-    func register<Type>(factory: @escaping (Scope) -> Type) -> DynamicInstanceScopeSelector<Type> {
-        return register(type: Type.self, createdWith: DelegatingFactory(factory))
-    }
-
-    func build(_ buildFunc: (ContainerBuilder) -> Void) throws -> [TypeKey: ServiceRegistration] {
-        buildFunc(self)
-
-        var registrations = [TypeKey: ServiceRegistration]()
-
-        for registrationPrototype in registrationPrototypes {
-            let serviceRegistration: ServiceRegistration = try registrationPrototype.build()
-
-            for serviceType in registrationPrototype.services {
-                registrations[TypeKey(for: serviceType)] = serviceRegistration
-            }
-        }
-
-        return registrations
     }
 }

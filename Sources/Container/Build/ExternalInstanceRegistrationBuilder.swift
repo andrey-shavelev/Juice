@@ -5,7 +5,7 @@
 //  Created by Andrey Shavelev on 20/06/2019.
 //
 
-public struct ExternalInstanceRegistrationBuilder<Type> {
+public struct ExternalInstanceRegistrationBuilder<Type: AnyObject> {
     let registrationPrototype: ExternalInstanceRegistrationPrototype<Type>
 
     internal init(registrationPrototype: ExternalInstanceRegistrationPrototype<Type>) {
@@ -21,6 +21,12 @@ public struct ExternalInstanceRegistrationBuilder<Type> {
     @discardableResult
     public func asSelf() -> ExternalInstanceRegistrationBuilder<Type> {
         registrationPrototype.services.append(Type.self)
+        return self
+    }
+
+    @discardableResult
+    public func ownedByContainer() -> ExternalInstanceRegistrationBuilder<Type> {
+        registrationPrototype.ownedByContainer = true
         return self
     }
 }

@@ -47,7 +47,7 @@ final class ParameterizedResolutionTests: XCTestCase {
     func testParametersAreUsedOnlyForServiceItselfAndNotUsedForItsDependencies() throws {
         let container = try Container { builder in
 
-            builder.register(instance: Country.Japan)
+            builder.register(value: Country.Japan)
                     .asSelf()
             builder.register(injectable: Pear.self)
                     .instancePerDependency()
