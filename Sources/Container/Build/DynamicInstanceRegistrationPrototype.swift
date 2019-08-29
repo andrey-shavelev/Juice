@@ -25,11 +25,15 @@ class DynamicInstanceRegistrationPrototype<Type>: ServiceRegistrationPrototype {
             throw ContainerRuntimeError.missingScopeDefinition(serviceType: Type.self)
         }
 
+        let actualFactory = propertyInjectors.count == 0
+                ? factory
+                : PropertyInjectingFactoryWrapper(innerFactory: factory, propertyInjectors: propertyInjectors)
+
         switch (kind) {
         case .perDependency:
-            return InstancePerDependencyRegistration<Type>(factory: factory, propertyInjectors: propertyInjectors)
+            return InstancePerDependencyRegistration<Type>(factory: actualFactory)
         case .perScope(let key):
-            return InstancePerScopeRegistration<Type>(factory: factory, scopeKey: key, propertyInjectors: propertyInjectors)
+            return InstancePerScopeRegistration<Type>(factory: actualFactory, scopeKey: key)
         }
     }
 }

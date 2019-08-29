@@ -13,7 +13,7 @@ protocol InstanceStorage {
 
 }
 
-// TODO must be removed, with all logic additional logic for new instances moved to InstanceFactory
+// TODO must be removed, with additional logic for new instances moved to InstanceFactory
 enum InstanceFlag {
     case new
     case existing
