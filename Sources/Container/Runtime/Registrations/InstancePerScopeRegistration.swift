@@ -5,10 +5,12 @@
 class InstancePerScopeRegistration<ServiceType>: ServiceRegistration {
     let factory: InstanceFactory
     let scopeKey: ScopeKey
+    let storageKey: StorageKey
 
-    init(factory: InstanceFactory, scopeKey: ScopeKey) {
+    init(factory: InstanceFactory, scopeKey: ScopeKey, storageKey: StorageKey) {
         self.factory = factory
         self.scopeKey = scopeKey
+        self.storageKey = storageKey
     }
 
     func resolveServiceInstance(storageLocator: InstanceStorageLocator,
@@ -20,7 +22,7 @@ class InstancePerScopeRegistration<ServiceType>: ServiceRegistration {
             throw ContainerRuntimeError.scopeNotFound(scopeKey: scopeKey)
         }
         return try storageForInstance.getOrCreate(
-                instanceOfType: ServiceType.self,
+                storageKey: storageKey,
                 usingFactory: factory,
                 withDependenciesFrom: scopeForDependencies)
     }

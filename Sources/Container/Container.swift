@@ -9,7 +9,7 @@ public class Container: Scope, InstanceStorage, InstanceStorageLocator {
     public var isValid = true
 
     let registrations: [TypeKey: ServiceRegistration]
-    var instances = [TypeKey: Any]()
+    var instances = [StorageKey: Any]()
     let key: ScopeKey
     let parent: Container?
 
@@ -43,19 +43,17 @@ public class Container: Scope, InstanceStorage, InstanceStorageLocator {
         return try ResolutionScope(self).resolve(serviceType, withParameters: parameters)
     }
 
-    func getOrCreate<Instance>(instanceOfType type: Instance.Type,
+    func getOrCreate(storageKey: StorageKey,
                                usingFactory factory: InstanceFactory,
                                withDependenciesFrom scope: Scope) throws
                     -> Any {
-        // TODO if one class registered twice with different services it should return two different instances
-        let typeKey = TypeKey(for: type)
 
-        if let existingInstance = instances[typeKey] {
+        if let existingInstance = instances[storageKey] {
             return existingInstance
         }
 
         let newInstance = try factory.create(withDependenciesFrom: scope)
-        instances[typeKey] = newInstance
+        instances[storageKey] = newInstance
         return newInstance
     }
 

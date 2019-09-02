@@ -7,7 +7,7 @@
 
 protocol InstanceStorage {
 
-    func getOrCreate<Instance>(instanceOfType type: Instance.Type,
+    func getOrCreate(storageKey: StorageKey,
                                usingFactory factory: InstanceFactory,
                                withDependenciesFrom scope: Scope) throws -> Any
 

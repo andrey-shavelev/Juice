@@ -191,4 +191,20 @@ final class SingleInstanceDynamicRegistrationsTests: XCTestCase {
 
         XCTAssertNoThrow(try container.resolve(ServiceWithCustomParameters.self))
     }
+
+    func testResolvesTwoDifferentInstancesIfOneTypeRegisteredTwice() throws {
+        let container = try Container { builder in
+            builder.register(injectable: Orange.self)
+                .singleInstance()
+                .asSelf()
+            builder.register(injectable: Orange.self)
+                .singleInstance()
+                .as(Fruit.self)
+        }
+
+        let fruit = try container.resolve(Fruit.self) as! Orange
+        let orange = try container.resolve(Orange.self)
+
+        XCTAssert(fruit !== orange)
+    }
 }

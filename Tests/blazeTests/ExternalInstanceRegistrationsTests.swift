@@ -8,7 +8,7 @@
 import XCTest
 @testable import blaze
 
-final class StaticInstanceRegistrationsTests: XCTestCase {
+final class ExternalInstanceRegistrationsTests: XCTestCase {
 
     func testRegistrationOfInstance() throws {
         let apple = Apple()

@@ -28,6 +28,7 @@ public class ContainerBuilder {
     }
 
     public func register<Type: Any>(value: Type) -> ValueRegistrationBuilder<Type> {
+        // must throw if not value
         let registrationPrototype = ValueRegistrationPrototype(value: value)
         registrationPrototypes.append(registrationPrototype)
         return ValueRegistrationBuilder<Type>(registrationPrototype: registrationPrototype)

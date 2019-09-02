@@ -11,10 +11,12 @@ class DynamicInstanceRegistrationPrototype<Type>: ServiceRegistrationPrototype {
     var kind: DynamicInstanceKind?
     var services: [Any.Type] = []
     let scopeKey: ScopeKey
+    let storageKey: StorageKey
 
     init(factory: InstanceFactory, scopeKey: ScopeKey) {
         self.factory = factory
         self.scopeKey = scopeKey
+        self.storageKey = StorageKey()
     }
 
     func build() throws -> ServiceRegistration {
@@ -31,7 +33,10 @@ class DynamicInstanceRegistrationPrototype<Type>: ServiceRegistrationPrototype {
         case .perDependency:
             return InstancePerDependencyRegistration<Type>(factory: actualFactory)
         case .perScope(let key):
-            return InstancePerScopeRegistration<Type>(factory: actualFactory, scopeKey: key)
+            return InstancePerScopeRegistration<Type>(
+                    factory: actualFactory,
+                    scopeKey: key,
+                    storageKey: storageKey)
         }
     }
 }
