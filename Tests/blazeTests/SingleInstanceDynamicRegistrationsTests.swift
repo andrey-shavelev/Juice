@@ -45,53 +45,51 @@ final class SingleInstanceDynamicRegistrationsTests: XCTestCase {
 
     func testRegisterAndResolveSingleInstanceWithOneDependency() throws {
         let container = try Container { builder in
-            builder.register(injectable: AppleGarden.self)
+            builder.register(injectable: FreshJuice.self)
                     .singleInstance()
-                    .asSelf()
+                    .as(Juice.self)
 
-            builder.register(injectable: AppleFarmer.self)
+            builder.register(injectable: Orange.self)
                     .singleInstance()
+                    .as(Fruit.self)
                     .asSelf()
-                    .as(FruitProvider.self)
         }
 
-        XCTAssertNoThrow(try container.resolve(AppleFarmer.self))
-        XCTAssertNoThrow(try container.resolve(FruitProvider.self))
-        XCTAssertNoThrow(try container.resolve(AppleGarden.self))
+        XCTAssertNoThrow(try container.resolve(Juice.self))
 
-        let appleFarm = try container.resolve(AppleFarmer.self)
-        let fruitProvider = try container.resolve(FruitProvider.self)
-        let appleTree = try container.resolve(AppleGarden.self)
+        let orangeJuice = try container.resolve(Juice.self)
+        let orange = try container.resolve(Orange.self)
 
-        XCTAssert(fruitProvider as AnyObject === appleFarm as AnyObject)
-        XCTAssert(appleFarm.tree as AnyObject === appleTree as AnyObject)
+        XCTAssert(orangeJuice.fruit is Orange)
+        XCTAssert(orangeJuice.fruit as! Orange === orange)
     }
 
     func testRegisterAndResolveSingleInstanceWithTwoDependencies() throws {
         let container = try Container { builder in
-            builder.register(injectable: AppleGarden.self)
+            builder.register(injectable: Compote.self)
                     .singleInstance()
                     .asSelf()
 
-            builder.register(injectable: AppleFarmer.self)
-                    .singleInstance()
-                    .as(FruitProvider.self)
-
-            builder.register(injectable: JuiceFactory.self)
+            builder.register(injectable: Pear.self)
                     .singleInstance()
                     .asSelf()
+                    .as(Fruit.self)
 
-            builder.register(injectable: CoolAndDryPlace.self)
+            builder.register(injectable: Cloves.self)
                     .singleInstance()
-                    .as(JuiceStorage.self)
+                    .asSelf()
+                    .as(Spice.self)
         }
 
-        XCTAssertNoThrow(try container.resolve(JuiceFactory.self))
+        XCTAssertNoThrow(try container.resolve(Compote.self))
 
-        let juiceFactory = try container.resolve(JuiceFactory.self)
+        let compote = try container.resolve(Compote.self)
+        let pear = try container.resolve(Pear.self)
 
-        XCTAssert(juiceFactory.fruitProvider is AppleFarmer)
-        XCTAssert(juiceFactory.storage is CoolAndDryPlace)
+        XCTAssert(compote.fruit is Pear)
+        XCTAssert(compote.spice is Cloves)
+        XCTAssert(compote.fruit as! Pear === pear)
+        XCTAssert(compote.spice is Cloves)
     }
 
     func testRegisterAndResolveSingleInstanceWithThreeDependencies() throws {
@@ -155,7 +153,7 @@ final class SingleInstanceDynamicRegistrationsTests: XCTestCase {
             builder.register(injectable: FourthDependency.self)
                     .singleInstance()
                     .asSelf()
-            builder.register(injectable: FithDependency.self)
+            builder.register(injectable: FifthDependency.self)
                     .singleInstance()
                     .asSelf()
         }
@@ -181,7 +179,7 @@ final class SingleInstanceDynamicRegistrationsTests: XCTestCase {
             builder.register(injectable: FourthDependency.self)
                     .singleInstance()
                     .asSelf()
-            builder.register(injectable: FithDependency.self)
+            builder.register(injectable: FifthDependency.self)
                     .singleInstance()
                     .asSelf()
             builder.register(injectable: SixthDependency.self)

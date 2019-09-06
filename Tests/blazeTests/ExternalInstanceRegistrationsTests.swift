@@ -24,4 +24,35 @@ final class ExternalInstanceRegistrationsTests: XCTestCase {
         XCTAssert(apple === appleFromContainer)
     }
 
+    func testDoesNotKeepAReferenceToExternalInstanceByDefault() throws {
+        var orange: Orange? = Orange()
+
+        let container = try Container { builder in
+            builder.register(instance: orange!)
+                    .asSelf()
+        }
+
+        weak var weakReferenceToOrange = try container.resolve(Orange.self)
+
+        XCTAssertNotNil(weakReferenceToOrange)
+
+        orange = nil
+
+        XCTAssertNil(weakReferenceToOrange)
+    }
+
+    func testKeepsAReferenceToExternalInstanceIfConfigured() throws {
+        var orange: Orange? = Orange()
+
+        let container = try Container { builder in
+            builder.register(instance: orange!)
+                    .asSelf()
+                    .ownedByContainer()
+        }
+
+        weak var weakReferenceToOrange = try container.resolve(Orange.self)
+        orange = nil
+
+        XCTAssertNotNil(weakReferenceToOrange)
+    }
 }

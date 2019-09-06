@@ -5,7 +5,6 @@
 import Foundation
 
 class DynamicInstanceRegistrationPrototype<Type>: ServiceRegistrationPrototype {
-
     var factory: InstanceFactory
     var propertyInjectors: [PropertyInjector] = []
     var kind: DynamicInstanceKind?

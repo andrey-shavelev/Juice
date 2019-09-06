@@ -12,26 +12,26 @@ final class PropertyInjectionTests: XCTestCase {
 
     func testInjectsSingleInstancesIntoProperty() throws {
         let container = try Container { builder in
-            builder.register(injectable: Apple.self)
+            builder.register(injectable: Pear.self)
                     .singleInstance()
                     .asSelf()
-            builder.register(injectable: Orange.self)
+                    .as(Fruit.self)
+            builder.register(injectable: Ginger.self)
+                    .singleInstance()
+                    .as(Spice.self)
+            builder.register(injectable: Jam.self)
                     .singleInstance()
                     .asSelf()
-            builder.register(injectable: FruitBasket.self)
-                    .singleInstance()
-                    .asSelf()
-                    .injectDependency(into: \.apple)
-                    .injectDependency(into: \.orange)
+                    .injectDependency(into: \.fruit)
+                    .injectDependency(into: \.spice)
         }
 
-        XCTAssertNoThrow(try container.resolve(FruitBasket.self))
+        XCTAssertNoThrow(try container.resolve(Jam.self))
 
-        let basket = try container.resolve(FruitBasket.self)
-        let apple = try container.resolve(Apple.self)
-        let orange = try container.resolve(Orange.self)
+        let jam = try container.resolve(Jam.self)
+        let pear = try container.resolve(Pear.self)
 
-        XCTAssert(apple === basket.apple)
-        XCTAssert(orange === basket.orange)
+        XCTAssert(pear === jam.fruit as! Pear)
+        XCTAssert(jam.spice is Ginger)
     }
 }

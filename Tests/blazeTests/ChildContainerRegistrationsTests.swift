@@ -126,7 +126,6 @@ final class ChildContainerRegistrationsTests: XCTestCase {
     }
 
     func testSingleInstanceCustomInjectableResolvedFromChildContainerReceivesCorrectResolutionScope() throws {
-        // TODO add test with parameters
         let container = try Container {
             $0.register(injectable: HomeMadeJuice.self)
                     .singleInstance()

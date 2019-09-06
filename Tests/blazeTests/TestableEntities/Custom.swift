@@ -28,7 +28,7 @@ class FourthDependency: Injectable {
     }
 }
 
-class FithDependency: Injectable {
+class FifthDependency: Injectable {
     required init() {
     }
 }
@@ -39,7 +39,6 @@ class SixthDependency: Injectable {
 }
 
 class ServiceWithThreeParameters: InjectableWithThreeParameters {
-
     let firstDependency: FirstDependency
     let secondDependency: SecondDependency
     let thirdDependency: ThirdDependency
@@ -76,13 +75,13 @@ class ServiceWithFiveParameters: InjectableWithFiveParameters {
     let secondDependency: SecondDependency
     let thirdDependency: ThirdDependency
     let fourthDependency: FourthDependency
-    let fithDependency: FithDependency
+    let fithDependency: FifthDependency
 
     required init(_ firstParameter: FirstDependency,
                   _ secondParameter: SecondDependency,
                   _ thirdParameter: ThirdDependency,
                   _ fourthParameter: FourthDependency,
-                  _ fithParameter: FithDependency) {
+                  _ fithParameter: FifthDependency) {
         self.firstDependency = firstParameter
         self.secondDependency = secondParameter
         self.thirdDependency = thirdParameter
@@ -96,7 +95,7 @@ class ServiceWithCustomParameters: CustomInjectable {
     let secondDependency: SecondDependency
     let thirdDependency: ThirdDependency
     let fourthDependency: FourthDependency
-    let fithDependency: FithDependency
+    let fithDependency: FifthDependency
     let sixthDependency: SixthDependency
 
     required init(receiveDependenciesFrom scope: Scope) throws {
@@ -104,7 +103,7 @@ class ServiceWithCustomParameters: CustomInjectable {
         secondDependency = try scope.resolve(SecondDependency.self)
         thirdDependency = try scope.resolve(ThirdDependency.self)
         fourthDependency = try scope.resolve(FourthDependency.self)
-        fithDependency = try scope.resolve(FithDependency.self)
+        fithDependency = try scope.resolve(FifthDependency.self)
         sixthDependency = try scope.resolve(SixthDependency.self)
     }
 }
@@ -116,4 +115,7 @@ class CustomInjectableThatHoldsReferenceToScope: CustomInjectable {
     required init(receiveDependenciesFrom scope: Scope) throws {
         self.scope = scope
     }
+}
+
+struct WrongSingleInstanceType {
 }

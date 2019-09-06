@@ -12,7 +12,6 @@ final class ParameterizedResolutionTests: XCTestCase {
 
     func testPassesParameterToInstancePerDependency() throws {
         let container = try Container { builder in
-
             builder.register(injectable: Chocolate.self)
                     .instancePerDependency()
                     .asSelf()
@@ -29,40 +28,40 @@ final class ParameterizedResolutionTests: XCTestCase {
 
     func testMissingParameterAreResolvedFromScope() throws {
         let container = try Container { builder in
-
-            builder.register(injectable: Banana.self)
+            builder.register(injectable: Apple.self)
                     .instancePerDependency()
                     .as(Fruit.self)
-            builder.register(injectable: Strawberry.self)
-                    .instancePerDependency()
-                    .as(Berry.self)
-            builder.register(injectable: Smoothie.self)
+            builder.register(injectable: Compote.self)
                     .instancePerDependency()
                     .asSelf()
         }
 
-        XCTAssertNoThrow(try container.resolve(Smoothie.self, withParameters: Water(temperatureCelsius: 18)))
+        XCTAssertNoThrow(try container.resolve(Compote.self, withParameters: Cinnamon()))
     }
 
     func testParametersAreUsedOnlyForServiceItselfAndNotUsedForItsDependencies() throws {
         let container = try Container { builder in
-
-            builder.register(value: Country.Japan)
-                    .asSelf()
-            builder.register(injectable: Pear.self)
+            builder.register(injectable: Orange.self)
                     .instancePerDependency()
                     .as(Fruit.self)
-            builder.register(injectable: PackedJuice.self)
+            builder.register(injectable: FreshJuice.self)
+                    .instancePerDependency()
+                    .as(Juice.self)
+            builder.register(injectable: Strawberry.self)
+                    .instancePerDependency()
+                    .as(Berry.self)
+            builder.register(injectable: FreshMorningSmoothie.self)
                     .instancePerDependency()
                     .asSelf()
         }
 
-        XCTAssertNoThrow(try container.resolve(PackedJuice.self, withParameters: Country.USA))
+        XCTAssertNoThrow(try container.resolve(FreshMorningSmoothie.self, withParameters: Banana.self))
 
-        let juice = try container.resolve(PackedJuice.self, withParameters: Country.USA)
+        let smoothie = try container.resolve(FreshMorningSmoothie.self, withParameters: Banana.self)
+        let freshJuice = smoothie.juice as! FreshJuice
 
-        XCTAssertEqual(Country.USA, juice.countryOfOrigin)
-        XCTAssertEqual(Country.Japan, (juice.fruit as! Pear).countryOfOrigin)
+        XCTAssert(smoothie.fruit is Orange)
+        XCTAssert(freshJuice.fruit is Orange)
     }
 
     func testCustomInjectableCanResolveParametersFromResolutionScope() throws {
