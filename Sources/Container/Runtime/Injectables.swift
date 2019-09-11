@@ -20,7 +20,7 @@ public protocol InjectableWithParameter {
 
     init(_ parameter: ParameterType)
 }
-typealias InjectableWith1Parameter = InjectableWithParameter
+public typealias InjectableWith1Parameter = InjectableWithParameter
 
 public class InjectableFactoryWithParameter<Type: InjectableWithParameter>: InstanceFactory {
     func create(withDependenciesFrom scope: Scope) throws -> Any {
@@ -34,7 +34,8 @@ public protocol InjectableWithTwoParameters {
 
     init(_ firstParameter: FirstParameterType, _ secondParameter: SecondParameterType)
 }
-typealias InjectableWith2Parameters = InjectableWithTwoParameters
+
+public typealias InjectableWith2Parameters = InjectableWithTwoParameters
 
 public class InjectableFactoryWithTwoParameters<Type: InjectableWithTwoParameters>: InstanceFactory {
     func create(withDependenciesFrom scope: Scope) throws -> Any {
@@ -54,7 +55,7 @@ public protocol InjectableWithThreeParameters {
          _ secondParameter: SecondParameterType,
          _ thirdParameter: ThirdParameterType)
 }
-typealias InjectableWith3Parameters = InjectableWithThreeParameters
+public typealias InjectableWith3Parameters = InjectableWithThreeParameters
 
 public class InjectableFactoryWithThreeParameters<Type: InjectableWithThreeParameters>: InstanceFactory {
     func create(withDependenciesFrom scope: Scope) throws -> Any {
@@ -63,7 +64,7 @@ public class InjectableFactoryWithThreeParameters<Type: InjectableWithThreeParam
                 try scope.resolve(Type.ThirdParameterType.self))
     }
 }
-typealias InjectableWith4Parameters = InjectableWithFourParameters
+public typealias InjectableWith4Parameters = InjectableWithFourParameters
 
 public protocol InjectableWithFourParameters {
     associatedtype FirstParameterType
@@ -76,7 +77,6 @@ public protocol InjectableWithFourParameters {
          _ thirdParameter: ThirdParameterType,
          _ fourthParameter: FourthParameterType)
 }
-typealias InjectableWith5Parameters = InjectableWithFiveParameters
 
 public class InjectableFactoryWithFourParameters<Type: InjectableWithFourParameters>: InstanceFactory {
     func create(withDependenciesFrom scope: Scope) throws -> Any {
@@ -86,6 +86,8 @@ public class InjectableFactoryWithFourParameters<Type: InjectableWithFourParamet
                 try scope.resolve(Type.FourthParameterType.self))
     }
 }
+
+public typealias InjectableWith5Parameters = InjectableWithFiveParameters
 
 public protocol InjectableWithFiveParameters {
     associatedtype FirstParameterType
@@ -112,11 +114,11 @@ public class InjectableFactoryWithFiveParameters<Type: InjectableWithFiveParamet
 }
 
 public protocol CustomInjectable {
-    init(receiveDependenciesFrom scope: Scope) throws
+    init(inScope scope: Scope) throws
 }
 
 public class CustomInjectableFactory<Type: CustomInjectable>: InstanceFactory {
     func create(withDependenciesFrom scope: Scope) throws -> Any {
-        return try Type(receiveDependenciesFrom: scope)
+        return try Type(inScope: scope)
     }
 }

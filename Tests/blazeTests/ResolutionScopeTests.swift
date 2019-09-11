@@ -103,3 +103,10 @@ final class ResolutionScopeTests: XCTestCase {
         XCTAssertThrowsError(try strongReference.scope.resolve(Apple.self))
     }
 }
+
+class CustomInjectableThatHoldsReferenceToScope: CustomInjectable {
+    let scope: Scope
+    required init(inScope scope: Scope) throws {
+        self.scope = scope
+    }
+}

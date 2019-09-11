@@ -8,7 +8,7 @@
 public class Factory<Type>: CustomInjectable {
     let scope: Scope
 
-    public required init(receiveDependenciesFrom scope: Scope) throws {
+    public required init(inScope scope: Scope) throws {
         self.scope = try scope.resolve(Scope.self)
     }
 

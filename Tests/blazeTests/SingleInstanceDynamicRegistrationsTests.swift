@@ -94,100 +94,105 @@ final class SingleInstanceDynamicRegistrationsTests: XCTestCase {
 
     func testRegisterAndResolveSingleInstanceWithThreeDependencies() throws {
         let container = try Container { builder in
-            builder.register(injectable: ServiceWithThreeParameters.self)
+            builder.register(injectable: FreshMorningSmoothie.self)
                     .singleInstance()
-                    .asSelf()
+                    .as(Smoothie.self)
 
-            builder.register(injectable: FirstDependency.self)
+            builder.register(injectable: Orange.self)
                     .singleInstance()
-                    .asSelf()
-            builder.register(injectable: SecondDependency.self)
+                    .as(Fruit.self)
+            builder.register(injectable: Strawberry.self)
                     .singleInstance()
-                    .asSelf()
-            builder.register(injectable: ThirdDependency.self)
+                    .as(Berry.self)
+            builder.register(injectable: FreshJuice.self)
                     .singleInstance()
-                    .asSelf()
+                    .as(Juice.self)
         }
 
-        XCTAssertNoThrow(try container.resolve(ServiceWithThreeParameters.self))
+        XCTAssertNoThrow(try container.resolve(Smoothie.self))
     }
 
     func testRegisterAndResolveSingleInstanceWithFourDependencies() throws {
         let container = try Container { builder in
-            builder.register(injectable: ServiceWithFourParameters.self)
+            builder.register(injectable: Cocktail.self)
                     .singleInstance()
                     .asSelf()
-
-            builder.register(injectable: FirstDependency.self)
+            builder.register(injectable: Apple.self)
+                    .singleInstance()
+                    .as(Fruit.self)
+            builder.register(injectable: FreshJuice.self)
+                    .singleInstance()
+                    .as(Juice.self)
+            builder.register(injectable: Lime.self)
                     .singleInstance()
                     .asSelf()
-            builder.register(injectable: SecondDependency.self)
+            builder.register(injectable: Sugar.self)
                     .singleInstance()
-                    .asSelf()
-            builder.register(injectable: ThirdDependency.self)
+                    .as(Sweetener.self)
+            builder.register(injectable: SodaWater.self)
                     .singleInstance()
-                    .asSelf()
-            builder.register(injectable: FourthDependency.self)
-                    .singleInstance()
-                    .asSelf()
+                    .as(Water.self)
         }
 
-        XCTAssertNoThrow(try container.resolve(ServiceWithFourParameters.self))
+        XCTAssertNoThrow(try container.resolve(Cocktail.self))
     }
 
     func testRegisterAndResolveSingleInstanceWithFiveDependencies() throws {
         let container = try Container { builder in
-            builder.register(injectable: ServiceWithFiveParameters.self)
+            builder.register(injectable: IcyLemonade.self)
                     .singleInstance()
                     .asSelf()
 
-            builder.register(injectable: FirstDependency.self)
+            builder.register(injectable: Apple.self)
+                    .singleInstance()
+                    .as(Fruit.self)
+            builder.register(injectable: FreshJuice.self)
+                    .singleInstance()
+                    .as(Juice.self)
+            builder.register(injectable: Lemon.self)
                     .singleInstance()
                     .asSelf()
-            builder.register(injectable: SecondDependency.self)
+            builder.register(injectable: Sugar.self)
                     .singleInstance()
-                    .asSelf()
-            builder.register(injectable: ThirdDependency.self)
+                    .as(Sweetener.self)
+            builder.register(injectable: SodaWater.self)
                     .singleInstance()
-                    .asSelf()
-            builder.register(injectable: FourthDependency.self)
-                    .singleInstance()
-                    .asSelf()
-            builder.register(injectable: FifthDependency.self)
+                    .as(Water.self)
+            builder.register(injectable: Ice.self)
                     .singleInstance()
                     .asSelf()
         }
 
-        XCTAssertNoThrow(try container.resolve(ServiceWithFiveParameters.self))
+        XCTAssertNoThrow(try container.resolve(IcyLemonade.self))
     }
 
     func testRegisterAndResolveSingleInstanceWithCustomDependencies() throws {
         let container = try Container { builder in
-            builder.register(injectable: ServiceWithCustomParameters.self)
+            builder.register(injectable: TeaBlend.self)
                     .singleInstance()
                     .asSelf()
 
-            builder.register(injectable: FirstDependency.self)
+            builder.register(injectable: Pu_er.self)
                     .singleInstance()
-                    .asSelf()
-            builder.register(injectable: SecondDependency.self)
+                    .as(Tea.self)
+            builder.register(injectable: Orange.self)
                     .singleInstance()
-                    .asSelf()
-            builder.register(injectable: ThirdDependency.self)
+                    .as(Fruit.self)
+            builder.register(injectable: Raspberry.self)
                     .singleInstance()
-                    .asSelf()
-            builder.register(injectable: FourthDependency.self)
+                    .as(Berry.self)
+            builder.register(injectable: Lotus.self)
                     .singleInstance()
-                    .asSelf()
-            builder.register(injectable: FifthDependency.self)
+                    .as(Flower.self)
+            builder.register(injectable: Mint.self)
                     .singleInstance()
-                    .asSelf()
-            builder.register(injectable: SixthDependency.self)
+                    .as(Herb.self)
+            builder.register(injectable: Ginger.self)
                     .singleInstance()
-                    .asSelf()
+                    .as(Spice.self)
         }
 
-        XCTAssertNoThrow(try container.resolve(ServiceWithCustomParameters.self))
+        XCTAssertNoThrow(try container.resolve(TeaBlend.self))
     }
 
     func testResolvesTwoDifferentInstancesIfOneTypeRegisteredTwice() throws {

@@ -3,11 +3,41 @@
 //
 import blaze
 
+protocol Fruit {
+}
+
+protocol Berry {
+}
+
+protocol Spice {
+}
+
+protocol Drink {
+}
+
+protocol Water {
+}
+
+protocol Sweetener {
+}
+
+protocol Tea {
+}
+
+protocol Flower {
+}
+
+protocol Herb {
+}
+
 protocol Juice: Drink {
     var fruit: Fruit { get }
 }
 
 protocol Smoothie: Drink{
+    var fruit: Fruit { get }
+    var berry: Berry { get }
+    var juice: Juice { get }
 }
 
 class Apple: Fruit, Injectable {
@@ -26,6 +56,16 @@ class Banana: Fruit, Injectable {
 }
 
 class Pear: Fruit, Injectable {
+    required init() {
+    }
+}
+
+class Lemon: Fruit, Injectable {
+    required init() {
+    }
+}
+
+class Lime: Fruit, Injectable {
     required init() {
     }
 }
@@ -55,6 +95,24 @@ struct Cloves: Spice, Injectable {
 }
 
 struct Ginger: Spice, Injectable {
+}
+
+struct Sugar: Sweetener, Injectable {
+}
+
+struct SodaWater: Water, Injectable {
+}
+
+struct Ice: Injectable {
+}
+
+struct Mint: Herb, Injectable {
+}
+
+struct Lotus: Flower, Injectable {
+}
+
+struct Pu_er: Tea, Injectable {
 }
 
 class Chocolate: InjectableWithParameter {
