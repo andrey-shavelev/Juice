@@ -4,12 +4,7 @@
 
 import Foundation
 
-// TODO probably remove
-class ContainerPrototype {
-
+struct ContainerPrototype {
     var registrations: [TypeKey: ServiceRegistration] = [:]
-
-    func addRegistration<Type>(serviceType: Type, registration: ServiceRegistration) {
-        registrations[TypeKey(for: Type.self)] = registration;
-    }
+    var dynamicRegistrationSources: [DynamicRegistrationsSource]
 }

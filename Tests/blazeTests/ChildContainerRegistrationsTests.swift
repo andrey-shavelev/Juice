@@ -89,11 +89,8 @@ final class ChildContainerRegistrationsTests: XCTestCase {
         }
 
         let childContainer = try container.createChildContainer()
-
-        XCTAssertNoThrow(try childContainer.resolve(FreshJuice.self, withParameters: Apple()))
-
-        let juice = try childContainer.resolve(FreshJuice.self, withParameters: Apple())
-
+        XCTAssertNoThrow(try childContainer.resolve(FreshJuice.self, withParameters: Parameter(Apple(), as: Fruit.self)))
+        let juice = try childContainer.resolve(FreshJuice.self, withParameters: Parameter(Apple(), as: Fruit.self))
         XCTAssert(juice.fruit is Apple)
     }
 

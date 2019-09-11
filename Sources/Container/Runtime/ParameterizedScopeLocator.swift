@@ -6,9 +6,9 @@ import Foundation
 
 struct ParameterizedScopeLocator: ResolutionScopeLocator {
     let container: Container
-    let parameters: [Any]
+    let parameters: [Parameter]
 
-    init(container: Container, parameters: [Any]) {
+    init(container: Container, parameters: [Parameter]) {
         self.container = container
         self.parameters = parameters
     }

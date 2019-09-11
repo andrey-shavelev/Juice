@@ -36,7 +36,7 @@ final class ParameterizedResolutionTests: XCTestCase {
                     .asSelf()
         }
 
-        XCTAssertNoThrow(try container.resolve(Compote.self, withParameters: Cinnamon()))
+        XCTAssertNoThrow(try container.resolve(Compote.self, withParameters: Parameter(Cinnamon(), as: Spice.self)))
     }
 
     func testParametersAreUsedOnlyForServiceItselfAndNotUsedForItsDependencies() throws {
@@ -55,12 +55,15 @@ final class ParameterizedResolutionTests: XCTestCase {
                     .asSelf()
         }
 
-        XCTAssertNoThrow(try container.resolve(FreshMorningSmoothie.self, withParameters: Banana.self))
+        XCTAssertNoThrow(try container.resolve(FreshMorningSmoothie.self,
+                withParameters: Parameter(Banana(), as: Fruit.self)))
 
-        let smoothie = try container.resolve(FreshMorningSmoothie.self, withParameters: Banana.self)
+        let smoothie = try container.resolve(FreshMorningSmoothie.self,
+                withParameters: Parameter(Banana(), as: Fruit.self))
+
         let freshJuice = smoothie.juice as! FreshJuice
 
-        XCTAssert(smoothie.fruit is Orange)
+        XCTAssert(smoothie.fruit is Banana)
         XCTAssert(freshJuice.fruit is Orange)
     }
 
@@ -72,9 +75,9 @@ final class ParameterizedResolutionTests: XCTestCase {
         }
 
         let fruit: Fruit = Apple()
-        XCTAssertNoThrow(try container.resolve(HomeMadeJuice.self, withParameters: fruit))
+        XCTAssertNoThrow(try container.resolve(HomeMadeJuice.self, withParameters: Parameter(fruit)))
 
-        let juice = try container.resolve(HomeMadeJuice.self, withParameters: fruit)
+        let juice = try container.resolve(HomeMadeJuice.self, withParameters: Parameter(fruit))
         XCTAssertTrue(fruit as! Apple === juice.fruit as! Apple)
     }
 

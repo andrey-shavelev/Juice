@@ -37,10 +37,11 @@ public class ContainerBuilder {
         return register(type: Type.self, createdWith: DelegatingFactory(factory))
     }
 
-    func build(_ buildFunc: (ContainerBuilder) -> Void) throws -> [TypeKey: ServiceRegistration] {
+    func build(_ buildFunc: (ContainerBuilder) -> Void) throws -> ContainerPrototype {
         buildFunc(self)
 
         var registrations = [TypeKey: ServiceRegistration]()
+        var dynamicRegistrationSources = [DynamicRegistrationsSource]()
 
         for registrationPrototype in registrationPrototypes {
             let serviceRegistration: ServiceRegistration = try registrationPrototype.build()
@@ -50,7 +51,11 @@ public class ContainerBuilder {
             }
         }
 
-        return registrations
+        dynamicRegistrationSources.append(OptionalDynamicRegistrationSource())
+
+        return ContainerPrototype(
+                registrations: registrations,
+                dynamicRegistrationSources: dynamicRegistrationSources)
     }
 }
 

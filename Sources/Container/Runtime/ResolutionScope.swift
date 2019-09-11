@@ -6,52 +6,34 @@
 //
 
 struct ResolutionScope: Scope {
-    public var isValid: Bool {
-        return container != nil
-    }
-
     weak var container: Container?
 
     init(_ container: Container) {
         self.container = container
     }
 
-    public func resolve<TInstance>(_ serviceType: TInstance.Type) throws -> TInstance {
-        guard let container = container else {
-            throw ContainerRuntimeError.invalidScope()
-        }
-        return try resolveInternal(serviceType, ScopeLocator(container))
+    public var isValid: Bool {
+        return container != nil
     }
 
-    public func resolve<Service>(_ serviceType: Service.Type, withParameters parameters: [Any]) throws -> Service {
+    func resolveAnyOptional(_ serviceType: Any.Type, withParameters parameters: [Parameter]?) throws -> Any? {
         guard let container = container else {
             throw ContainerRuntimeError.invalidScope()
         }
-        let scopeLocator = ParameterizedScopeLocator(container: container, parameters: parameters)
-        return try resolveInternal(serviceType, scopeLocator)
-    }
-
-    func resolveInternal<TInstance>(_ serviceType: TInstance.Type,
-                                    _ scopeLocator: ResolutionScopeLocator) throws -> TInstance {
-        guard let container = container else {
-            throw ContainerRuntimeError.invalidScope()
-        }
-
+        let scopeLocator = createScopeLocator(container, parameters)
         let serviceKey = TypeKey(for: serviceType)
-
         guard let registration = container.findRegistration(matchingKey: serviceKey) else {
-            throw ContainerRuntimeError.serviceNotFound(serviceType: serviceType)
+            return nil
         }
-
-        let rawInstance = try registration.resolveServiceInstance(
+        return try registration.resolveServiceInstance(
                 storageLocator: container,
                 scopeLocator: scopeLocator)
+    }
 
-        guard let typedInstance = rawInstance as? TInstance else {
-            throw ContainerRuntimeError.invalidRegistration(desiredType: TInstance.self,
-                    actualType: type(of: rawInstance))
+    private func createScopeLocator(_ container: Container, _ parameters: [Parameter]?) -> ResolutionScopeLocator {
+        if let parameters = parameters {
+            return ParameterizedScopeLocator(container: container, parameters: parameters)
         }
-
-        return typedInstance
+        return ScopeLocator(container)
     }
 }

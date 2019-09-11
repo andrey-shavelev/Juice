@@ -13,51 +13,29 @@ struct ParameterizedResolutionScope: Scope {
         return parentScope?.isValid == true
     }
     let parentScope: Scope?
-    let parameters: [Any]
+    let parameters: [Parameter]
 
-    init(_ parentScope: Scope, _ parameters: [Any]) {
+    init(_ parentScope: Scope, _ parameters: [Parameter]) {
         self.parentScope = parentScope
         self.parameters = parameters
     }
 
-    func resolve<Service>(_ serviceType: Service.Type, withParameters parameters: [Any]) throws -> Service {
+    func resolveAnyOptional(_ serviceType: Any.Type, withParameters parameters: [Parameter]?) throws -> Any? {
+        if let parameter = resolveParameterByExactType(serviceType) {
+            return parameter
+        }
         guard let parentScope = parentScope else {
             throw ContainerRuntimeError.invalidScope()
         }
-        guard parentScope.isValid else {
-            throw ContainerRuntimeError.invalidScope()
-        }
-
-        if let parameter = resolveParameter(serviceType) {
-            return parameter
-        }
-
-        return try parentScope.resolve(serviceType, withParameters: parameters)
+        return try parentScope.resolveAnyOptional(serviceType, withParameters: parameters)
     }
 
-    func resolve<TInstance>(_ serviceType: TInstance.Type) throws -> TInstance {
-        guard let parentScope = parentScope else {
-            throw ContainerRuntimeError.invalidScope()
-        }
-        guard parentScope.isValid else {
-            throw ContainerRuntimeError.invalidScope()
-        }
-
-        if let parameter = resolveParameter(serviceType) {
-            return parameter
-        }
-
-        return try parentScope.resolve(serviceType)
-    }
-
-    func resolveParameter<Parameter>(_ parameterType: Parameter.Type) -> Parameter? {
+    func resolveParameterByExactType(_ serviceType: Any.Type) -> Any? {
         for parameter in parameters {
-            let typedParameter = parameter as? Parameter
-            if typedParameter != nil {
-                return typedParameter
+            if parameter.type == serviceType {
+                return parameter.value
             }
         }
         return nil
     }
-
 }

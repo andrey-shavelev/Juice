@@ -8,10 +8,17 @@
 public class Container: Scope, InstanceStorage, InstanceStorageLocator {
     public var isValid = true
 
-    let registrations: [TypeKey: ServiceRegistration]
+    let dynamicRegistrationsSources: [DynamicRegistrationsSource]
+    var registrations: [TypeKey: ServiceRegistration]
     var instances = [StorageKey: Any]()
+
     let key: ScopeKey
     let parent: Container?
+
+    convenience init () throws {
+        try self.init { builder in
+        }
+    }
 
     convenience init(_ buildFunc: (ContainerBuilder) -> Void) throws {
         try self.init(parent: nil, name: nil, buildFunc: buildFunc)
@@ -24,7 +31,15 @@ public class Container: Scope, InstanceStorage, InstanceStorageLocator {
         } else {
             self.key = .unique(key: UniqueScopeKey())
         }
-        self.registrations = try ContainerBuilder(scopeKey: key).build(buildFunc)
+
+        let prototype = try ContainerBuilder(scopeKey: key).build(buildFunc)
+
+        self.registrations = prototype.registrations
+        self.dynamicRegistrationsSources = prototype.dynamicRegistrationSources
+    }
+
+    public func resolveAnyOptional(_ serviceType: Any.Type, withParameters parameters: [Parameter]?) throws -> Any? {
+        return try ResolutionScope(self).resolveAnyOptional(serviceType, withParameters: parameters)
     }
 
     public func createChildContainer(name: String? = nil) throws -> Container {
@@ -35,30 +50,31 @@ public class Container: Scope, InstanceStorage, InstanceStorageLocator {
         return try Container(parent: self, buildFunc: buildFunc)
     }
 
-    public func resolve<TService>(_ serviceType: TService.Type) throws -> TService {
-        return try ResolutionScope(self).resolve(serviceType)
-    }
-
-    public func resolve<Service>(_ serviceType: Service.Type, withParameters parameters: [Any]) throws -> Service {
-        return try ResolutionScope(self).resolve(serviceType, withParameters: parameters)
-    }
-
     func getOrCreate(storageKey: StorageKey,
                                usingFactory factory: InstanceFactory,
-                               withDependenciesFrom scope: Scope) throws
-                    -> Any {
-
+                               withDependenciesFrom scope: Scope) throws -> Any {
         if let existingInstance = instances[storageKey] {
             return existingInstance
         }
-
         let newInstance = try factory.create(withDependenciesFrom: scope)
         instances[storageKey] = newInstance
         return newInstance
     }
 
     func findRegistration(matchingKey serviceKey: TypeKey) -> ServiceRegistration? {
-        return registrations[serviceKey] ?? parent?.findRegistration(matchingKey: serviceKey);
+
+        if let existingRegistration = registrations[serviceKey] ?? parent?.findRegistration(matchingKey: serviceKey){
+            return existingRegistration
+        }
+
+        for dynamicRegistrationsSource in dynamicRegistrationsSources {
+            if let dynamicRegistration = dynamicRegistrationsSource.FindRegistration(forType: serviceKey.type) {
+                registrations[serviceKey] = dynamicRegistration
+                return dynamicRegistration
+            }
+        }
+
+        return nil
     }
 
     func findContainer(matchingKey key: ScopeKey) -> Container? {
