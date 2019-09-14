@@ -21,7 +21,7 @@ class OptionalServiceRegistration: ServiceRegistration {
     }
 
     func resolveServiceInstance(storageLocator: InstanceStorageLocator, scopeLocator: ResolutionScopeLocator) throws -> Any {
-        return try scopeLocator.findScope(matchingKey: ScopeKey.any)!.resolveAnyOptional(wrappedType)
+        return try scopeLocator.findScope(matchingKey: ScopeKey.any)!.resolveAnyOptional(wrappedType) as Any
     }
 }
 

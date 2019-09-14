@@ -1,5 +1,5 @@
 import XCTest
-@testable import blaze
+import blaze
 
 final class SingleInstanceDynamicRegistrationsTests: XCTestCase {
     func testRegistersAndResolvesSingleInstanceService() throws {

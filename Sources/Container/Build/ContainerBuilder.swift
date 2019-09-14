@@ -33,7 +33,7 @@ public class ContainerBuilder {
         return ValueRegistrationBuilder<Type>(registrationPrototype: registrationPrototype)
     }
 
-    func register<Type>(factory: @escaping (Scope) -> Type) -> DynamicInstanceScopeSelector<Type> {
+    public func register<Type>(factory: @escaping (Scope) -> Type) -> DynamicInstanceScopeSelector<Type> {
         return register(type: Type.self, createdWith: DelegatingFactory(factory))
     }
 

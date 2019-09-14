@@ -3,7 +3,7 @@
 //
 
 import XCTest
-@testable import blaze
+import blaze
 
 final class OptionalResolutionTests: XCTestCase {
 

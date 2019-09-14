@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import blaze
+import blaze
 
 final class InstancePerDependencyDynamicRegistrationsTests: XCTestCase {
     func testRegistersAndResolvesSingleInstanceService() throws {

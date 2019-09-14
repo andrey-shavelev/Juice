@@ -15,12 +15,12 @@ public class Container: Scope, InstanceStorage, InstanceStorageLocator {
     let key: ScopeKey
     let parent: Container?
 
-    convenience init () throws {
+    public convenience init () throws {
         try self.init { builder in
         }
     }
 
-    convenience init(_ buildFunc: (ContainerBuilder) -> Void) throws {
+    public convenience init(_ buildFunc: (ContainerBuilder) -> Void) throws {
         try self.init(parent: nil, name: nil, buildFunc: buildFunc)
     }
 
