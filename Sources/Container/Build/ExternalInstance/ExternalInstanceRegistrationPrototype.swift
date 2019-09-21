@@ -1,0 +1,28 @@
+//
+// Copyright © 2019 Andrey Shavelev. All rights reserved.
+//
+
+import Foundation
+
+class ExternalInstanceRegistrationPrototype<Type: AnyObject>: ServiceRegistrationPrototype {
+
+    var services = [Any.Type]()
+    let instance: Type
+    var ownedByContainer: Bool?
+
+    init(instance: Type) {
+        self.instance = instance
+    }
+
+    func build() throws -> ServiceRegistration {
+        guard let ownedByContainer = ownedByContainer else {
+            throw ContainerRuntimeError.missingOwnershipDefinition(componentType: Type.self)
+        }
+
+        if (ownedByContainer) {
+            return OwnedExternalInstanceRegistration(instance: self.instance)
+        }
+
+        return UnownedExternalInstanceRegistration(instance: self.instance)
+    }
+}

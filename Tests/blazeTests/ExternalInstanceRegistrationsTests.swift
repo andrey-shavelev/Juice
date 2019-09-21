@@ -12,8 +12,10 @@ final class ExternalInstanceRegistrationsTests: XCTestCase {
 
     func testRegistrationOfInstance() throws {
         let apple = Apple()
+        
         let container = try Container { builder in
             builder.register(instance: apple)
+                    .ownedByContainer()
                     .asSelf()
         }
 
@@ -24,11 +26,12 @@ final class ExternalInstanceRegistrationsTests: XCTestCase {
         XCTAssert(apple === appleFromContainer)
     }
 
-    func testDoesNotKeepAReferenceToExternalInstanceByDefault() throws {
+    func testDoesNotKeepAReferenceToExternalInstanceIfOwnedExternally() throws {
         var orange: Orange? = Orange()
 
         let container = try Container { builder in
             builder.register(instance: orange!)
+                    .ownedExternally()
                     .asSelf()
         }
 
@@ -46,8 +49,8 @@ final class ExternalInstanceRegistrationsTests: XCTestCase {
 
         let container = try Container { builder in
             builder.register(instance: orange!)
-                    .asSelf()
                     .ownedByContainer()
+                    .asSelf()
         }
 
         weak var weakReferenceToOrange = try container.resolve(Orange.self)

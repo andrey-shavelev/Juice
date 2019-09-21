@@ -1,5 +1,5 @@
 //
-// Created by Andrey Shavelev on 2019-07-28.
+// Copyright © 2019 Andrey Shavelev. All rights reserved.
 //
 
 struct ScopeLocator: ResolutionScopeLocator {

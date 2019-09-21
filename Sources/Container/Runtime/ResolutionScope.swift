@@ -1,8 +1,5 @@
 //
-//  ContextResolver
-//  blaze
-//
-//  Created by Andrey Shavelev on 20/05/2019.
+// Copyright © 2019 Andrey Shavelev. All rights reserved.
 //
 
 struct ResolutionScope: Scope {
@@ -17,23 +14,11 @@ struct ResolutionScope: Scope {
     }
 
     func resolveAnyOptional(_ serviceType: Any.Type, withParameters parameters: [Parameter]?) throws -> Any? {
+        // TODO add ability to resolve a Scope itself
         guard let container = container else {
             throw ContainerRuntimeError.invalidScope()
         }
-        let scopeLocator = createScopeLocator(container, parameters)
-        let serviceKey = TypeKey(for: serviceType)
-        guard let registration = container.findRegistration(matchingKey: serviceKey) else {
-            return nil
-        }
-        return try registration.resolveServiceInstance(
-                storageLocator: container,
-                scopeLocator: scopeLocator)
-    }
 
-    private func createScopeLocator(_ container: Container, _ parameters: [Parameter]?) -> ResolutionScopeLocator {
-        if let parameters = parameters {
-            return ParameterizedScopeLocator(container: container, parameters: parameters)
-        }
-        return ScopeLocator(container)
+        return try container.resolveAnyOptional(serviceType, withParameters: parameters)
     }
 }

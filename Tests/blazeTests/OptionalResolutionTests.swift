@@ -8,7 +8,7 @@ import blaze
 final class OptionalResolutionTests: XCTestCase {
 
     func testReturnsNilIfResolvingNonRegisteredService() throws {
-        let emptyContainer = try Container()
+        let emptyContainer = Container()
 
         let fruit = try emptyContainer.resolveOptional(Fruit.self)
         let secondFruit = try emptyContainer.resolve(Fruit?.self)

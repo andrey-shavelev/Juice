@@ -66,7 +66,7 @@ final class ChildContainerRegistrationsTests: XCTestCase {
                     .asSelf()
         }
 
-        let childContainer = try container.createChildContainer()
+        let childContainer = container.createChildContainer()
 
         XCTAssertNoThrow(try childContainer.resolve(FreshJuice.self))
         XCTAssertNoThrow(try container.resolve(FreshJuice.self))
@@ -88,7 +88,7 @@ final class ChildContainerRegistrationsTests: XCTestCase {
                     .asSelf()
         }
 
-        let childContainer = try container.createChildContainer()
+        let childContainer = container.createChildContainer()
         XCTAssertNoThrow(try childContainer.resolve(FreshJuice.self, withParameters: Parameter(Apple(), as: Fruit.self)))
         let juice = try childContainer.resolve(FreshJuice.self, withParameters: Parameter(Apple(), as: Fruit.self))
         XCTAssert(juice.fruit is Apple)
@@ -101,22 +101,22 @@ final class ChildContainerRegistrationsTests: XCTestCase {
                     .as(Fruit.self)
 
             $0.register(injectable: FreshJuice.self)
-                    .instancePerContainer(name: "zen")
+                    .instancePerContainer(name: "garder")
                     .asSelf()
         }
 
-        let zenScope = try container.createChildContainer(name: "zen")
-        let gardenScope = try zenScope.createChildContainer(name: "garden")
-        let innerZenScope = try gardenScope.createChildContainer(name: "zen")
+        let gardenScope = container.createChildContainer(name: "garder")
+        let zenScope = gardenScope.createChildContainer(name: "zen")
+        let innerGardenScope = zenScope.createChildContainer(name: "garden")
 
         XCTAssertThrowsError(try container.resolve(FreshJuice.self))
-        XCTAssertNoThrow(try zenScope.resolve(FreshJuice.self))
         XCTAssertNoThrow(try gardenScope.resolve(FreshJuice.self))
-        XCTAssertNoThrow(try innerZenScope.resolve(FreshJuice.self))
+        XCTAssertNoThrow(try zenScope.resolve(FreshJuice.self))
+        XCTAssertNoThrow(try innerGardenScope.resolve(FreshJuice.self))
 
-        let zenFreshJuice = try zenScope.resolve(FreshJuice.self)
-        let gardenFreshJuice = try zenScope.resolve(FreshJuice.self)
-        let innerZenFreshJuice = try innerZenScope.resolve(FreshJuice.self)
+        let zenFreshJuice = try gardenScope.resolve(FreshJuice.self)
+        let gardenFreshJuice = try gardenScope.resolve(FreshJuice.self)
+        let innerZenFreshJuice = try innerGardenScope.resolve(FreshJuice.self)
 
         XCTAssert(zenFreshJuice === gardenFreshJuice)
         XCTAssert(gardenFreshJuice !== innerZenFreshJuice)

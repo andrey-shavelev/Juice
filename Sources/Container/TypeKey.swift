@@ -1,8 +1,5 @@
 //
-//  ServiceKey.swift
-//  blaze
-//
-//  Created by Andrey Shavelev on 21/05/2019.
+// Copyright © 2019 Andrey Shavelev. All rights reserved.
 //
 
 public struct TypeKey: Hashable {

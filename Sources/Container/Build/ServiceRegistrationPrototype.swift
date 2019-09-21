@@ -1,12 +1,10 @@
 //
-// Created by Andrey Shavelev on 2019-08-04.
+// Copyright © 2019 Andrey Shavelev. All rights reserved.
 //
 
 import Foundation
 
 protocol ServiceRegistrationPrototype {
-
     func build() throws -> ServiceRegistration
-
-    var services: [Any.Type] { get }
+    var services: [Any.Type] { get set }
 }
