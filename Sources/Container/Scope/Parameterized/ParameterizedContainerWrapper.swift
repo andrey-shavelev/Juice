@@ -4,16 +4,15 @@
 
 import Foundation
 
-struct ParameterizedResolutionScope: Scope {
-
+struct ParameterizedContainerWrapper: Scope {
     var isValid: Bool {
-        return parentScope?.isValid == true
+        return container?.isValid == true
     }
-    let parentScope: Scope?
+    weak var container: Container?
     let parameters: [Parameter]
 
-    init(_ parentScope: Scope, _ parameters: [Parameter]) {
-        self.parentScope = parentScope
+    init(_ container: Container, _ parameters: [Parameter]) {
+        self.container = container
         self.parameters = parameters
     }
 
@@ -21,10 +20,10 @@ struct ParameterizedResolutionScope: Scope {
         if let parameter = resolveParameterByExactType(serviceType) {
             return parameter
         }
-        guard let parentScope = parentScope else {
+        guard let container = container else {
             throw ContainerRuntimeError.invalidScope()
         }
-        return try parentScope.resolveAnyOptional(serviceType, withParameters: parameters)
+        return try container.resolveAnyOptional(serviceType, withParameters: parameters)
     }
 
     func resolveParameterByExactType(_ serviceType: Any.Type) -> Any? {

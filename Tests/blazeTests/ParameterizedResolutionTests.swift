@@ -1,8 +1,5 @@
 //
-//  AutoFactoryTests.swift
-//  blazeTests
-//
-//  Created by Andrey Shavelev on 17/06/2019.
+// Copyright © 2019 Andrey Shavelev. All rights reserved.
 //
 
 import XCTest

@@ -1,5 +1,5 @@
 //
-// Created by Andrey Shavelev on 2019-08-02.
+// Copyright © 2019 Andrey Shavelev. All rights reserved.
 //
 
 import XCTest
@@ -101,11 +101,11 @@ final class ChildContainerRegistrationsTests: XCTestCase {
                     .as(Fruit.self)
 
             $0.register(injectable: FreshJuice.self)
-                    .instancePerContainer(name: "garder")
+                .instancePerContainer(withName: "garden")
                     .asSelf()
         }
 
-        let gardenScope = container.createChildContainer(name: "garder")
+        let gardenScope = container.createChildContainer(name: "garden")
         let zenScope = gardenScope.createChildContainer(name: "zen")
         let innerGardenScope = zenScope.createChildContainer(name: "garden")
 

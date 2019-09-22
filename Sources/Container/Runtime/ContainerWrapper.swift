@@ -2,7 +2,7 @@
 // Copyright © 2019 Andrey Shavelev. All rights reserved.
 //
 
-struct ResolutionScope: Scope {
+struct ContainerWrapper: Scope {
     weak var container: Container?
 
     init(_ container: Container) {
@@ -14,7 +14,11 @@ struct ResolutionScope: Scope {
     }
 
     func resolveAnyOptional(_ serviceType: Any.Type, withParameters parameters: [Parameter]?) throws -> Any? {
-        // TODO add ability to resolve a Scope itself
+        
+        if serviceType == Scope.self {
+            return self
+        }
+
         guard let container = container else {
             throw ContainerRuntimeError.invalidScope()
         }

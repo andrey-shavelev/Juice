@@ -19,23 +19,32 @@ class DynamicInstanceRegistrationPrototype<Type>: ServiceRegistrationPrototype {
     }
 
     func build() throws -> ServiceRegistration {
-
         guard let kind = kind else {
             throw ContainerRuntimeError.missingScopeDefinition(componentType: Type.self)
         }
 
-        let actualFactory = propertyInjectors.count == 0
-                ? factory
-                : PropertyInjectingFactoryWrapper(innerFactory: factory, propertyInjectors: propertyInjectors)
-
         switch (kind) {
         case .perDependency:
-            return InstancePerDependencyRegistration<Type>(factory: actualFactory)
+            return InstancePerDependencyRegistration<Type>(factory: buildFactory(kind))
         case .perScope(let key):
             return InstancePerScopeRegistration<Type>(
-                    factory: actualFactory,
+                    factory: buildFactory(kind),
                     scopeKey: key,
                     storageKey: storageKey)
         }
+    }
+    
+    func buildFactory(_ kind: DynamicInstanceKind) -> InstanceFactory {
+        var actualFactory = factory
+        
+        if propertyInjectors.count > 0 {
+            actualFactory = PropertyInjectingFactoryWrapper(actualFactory, propertyInjectors)
+        }
+        
+        if case DynamicInstanceKind.perScope(_) = kind {
+            actualFactory = InstancePerScopeComponentFactoryWrapper(actualFactory, Type.self)
+        }
+
+        return actualFactory
     }
 }

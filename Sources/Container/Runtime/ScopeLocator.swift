@@ -14,6 +14,6 @@ struct ScopeLocator: ResolutionScopeLocator {
             return nil
         }
 
-        return ResolutionScope(actualContainer)
+        return ContainerWrapper(actualContainer)
     }
 }

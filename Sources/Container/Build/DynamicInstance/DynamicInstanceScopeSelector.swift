@@ -99,8 +99,8 @@ public struct DynamicInstanceScopeSelector<Type> {
     ///
     /// - Parameter name: The name of child container that will own instance of this component.
     /// - Note: Container keeps strong reference to such component.
-    public func instancePerContainer(containerName: String) -> DynamicInstanceRegistrationBuilder<Type> {
-        registrationPrototype.kind = .perScope(key: ScopeKey.named(name: containerName))
+    public func instancePerContainer(withName name: String) -> DynamicInstanceRegistrationBuilder<Type> {
+        registrationPrototype.kind = .perScope(key: ScopeKey.named(name: name))
         return DynamicInstanceRegistrationBuilder(registrationPrototype: registrationPrototype)
     }
 }

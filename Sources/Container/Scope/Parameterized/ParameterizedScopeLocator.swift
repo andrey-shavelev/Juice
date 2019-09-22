@@ -17,6 +17,6 @@ struct ParameterizedScopeLocator: ResolutionScopeLocator {
         guard let actualScope = container.findContainer(matchingKey: key) else {
             return nil
         }
-        return ParameterizedResolutionScope(ResolutionScope(actualScope), parameters)
+        return ParameterizedContainerWrapper(actualScope, parameters)
     }
 }

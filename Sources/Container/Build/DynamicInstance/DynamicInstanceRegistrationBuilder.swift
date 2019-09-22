@@ -44,7 +44,7 @@ public struct DynamicInstanceRegistrationBuilder<Type> {
         return self
     }
 
-    /// Instructs container to inject dependency at given `keyPath`
+    /// Tells container to inject a dependency at given `keyPath`
     ///
     /// For example:
     ///
@@ -67,6 +67,15 @@ public struct DynamicInstanceRegistrationBuilder<Type> {
     @discardableResult
     public func injectDependency<PropertyType>(into keyPath: WritableKeyPath<Type, PropertyType?>) -> DynamicInstanceRegistrationBuilder {
         registrationPrototype.propertyInjectors.append(TypedPropertyInjector<Type, PropertyType>(keyPath))
+        return self
+    }
+    
+    /// Tells container to inject an optional dependency at given `keyPath`
+    ///
+    ///
+    @discardableResult
+    public func injectOptionalDependency<PropertyType>(into keyPath: WritableKeyPath<Type, PropertyType?>) -> DynamicInstanceRegistrationBuilder {
+        registrationPrototype.propertyInjectors.append(OptionalTypedPropertyInjector<Type, PropertyType>(keyPath))
         return self
     }
 }

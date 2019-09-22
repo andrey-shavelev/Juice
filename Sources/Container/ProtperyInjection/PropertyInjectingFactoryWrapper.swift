@@ -5,16 +5,16 @@
 import Foundation
 
 class PropertyInjectingFactoryWrapper : InstanceFactory {
-    let innerFactory: InstanceFactory
+    let wrappedFactory: InstanceFactory
     let propertyInjectors: [PropertyInjector]
 
-    init(innerFactory: InstanceFactory, propertyInjectors: [PropertyInjector]){
-        self.innerFactory = innerFactory
+    init(_ wrappedFactory: InstanceFactory, _ propertyInjectors: [PropertyInjector]){
+        self.wrappedFactory = wrappedFactory
         self.propertyInjectors = propertyInjectors
     }
 
     func create(withDependenciesFrom scope: Scope) throws -> Any {
-        let instance = try innerFactory.create(withDependenciesFrom: scope)
+        let instance = try wrappedFactory.create(withDependenciesFrom: scope)
         for propertyInjector in propertyInjectors {
             try propertyInjector.inject(into: instance, resolveFrom: scope)
         }

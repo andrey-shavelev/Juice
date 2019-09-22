@@ -1,6 +1,7 @@
 //
-// Created by Andrey Shavelev on 03/09/2019.
+// Copyright © 2019 Andrey Shavelev. All rights reserved.
 //
+
 import blaze
 
 protocol Fruit {

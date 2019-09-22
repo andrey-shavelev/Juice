@@ -1,8 +1,5 @@
 //
-//  propertyInjectionTests.swift
-//  blazeTests
-//
-//  Created by Andrey Shavelev on 08/06/2019.
+// Copyright © 2019 Andrey Shavelev. All rights reserved.
 //
 
 import XCTest
@@ -10,7 +7,7 @@ import blaze
 
 final class PropertyInjectionTests: XCTestCase {
 
-    func testInjectsSingleInstancesIntoProperty() throws {
+    func testInjectsDependenciesIntoProperties() throws {
         let container = try Container { builder in
             builder.register(injectable: Pear.self)
                     .singleInstance()
@@ -33,5 +30,23 @@ final class PropertyInjectionTests: XCTestCase {
 
         XCTAssert(pear === jam.fruit as! Pear)
         XCTAssert(jam.spice is Ginger)
+    }
+    
+    func testOptionalPropertyInjection() throws {
+        let container = try Container { builder in
+            builder.register(injectable: Pear.self)
+                    .singleInstance()
+                    .asSelf()
+                    .as(Fruit.self)
+            builder.register(injectable: Jam.self)
+                    .singleInstance()
+                    .asSelf()
+                    .injectDependency(into: \.fruit)
+                    .injectOptionalDependency(into: \.spice)
+        }
+        
+        XCTAssertNoThrow(try container.resolve(Jam.self))
+        let jam = try container.resolve(Jam.self)
+        XCTAssertNil(jam.spice)
     }
 }

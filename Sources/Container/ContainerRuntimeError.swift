@@ -11,6 +11,7 @@ public struct ContainerRuntimeError: Error {
         case missingScopeDefinition(componentType: Any.Type)
         case scopeNotFound(scopeKey: ScopeKey)
         case missingOwnershipDefinition(componentType: Any.Type)
+        case dependencyCycle(componentType: Any.Type)
     }
 
     public let message: String
@@ -53,6 +54,10 @@ extension ContainerRuntimeError {
     static func missingOwnershipDefinition(componentType: Any.Type) -> ContainerRuntimeError {
         return ContainerRuntimeError(message: "Ownership must be defined for \(componentType). Use .ownedByContainer() or .ownedExternally().", 
                 errorType: .missingOwnershipDefinition(componentType: componentType))
+    }
+    
+    static func dependencyCycle(componentType: Any.Type) -> ContainerRuntimeError {
+        return ContainerRuntimeError(message: "Dependency cycle found while resolving: \(componentType)", errorType: .dependencyCycle(componentType: componentType))
     }
 }
 

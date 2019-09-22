@@ -4,7 +4,7 @@
 
 import Foundation
 
-public class ValueRegistrationBuilder<Type> : RegistrationBuilder {
+public class ValueRegistrationBuilder<Type> {
     
     let registrationPrototype: ValueRegistrationPrototype<Type>
 
