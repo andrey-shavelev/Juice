@@ -2,7 +2,7 @@
 // Copyright © 2019 Andrey Shavelev. All rights reserved.
 //
 
-import blaze
+import juice
 
 protocol Fruit {
 }

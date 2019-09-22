@@ -3,7 +3,7 @@
 //
 
 import XCTest
-import blaze
+import juice
 
 final class InstancePerDependencyDynamicRegistrationsTests: XCTestCase {
     func testRegistersAndResolvesSingleInstanceService() throws {

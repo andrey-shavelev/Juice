@@ -2,7 +2,7 @@
 // Copyright © 2019 Andrey Shavelev. All rights reserved.
 //
 
-import blaze
+import juice
 
 class FreshJuice: InjectableWithParameter, Juice {
     let fruit: Fruit
