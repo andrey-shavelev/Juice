@@ -16,7 +16,7 @@ public protocol Scope {
     ///
     var isValid: Bool { get }
 
-    func resolveAnyOptional(_ serviceType: Any.Type, withParameters parameters: [Parameter]?) throws -> Any?
+    func resolveAnyOptional(_ serviceType: Any.Type, withParameters parameters: [ParameterProtocol]?) throws -> Any?
 }
 
 public extension Scope {
@@ -47,7 +47,7 @@ public extension Scope {
     /// - Throws: `ContainerRuntimeError` when dependencies are missing
     /// or there is any other error in registrations.
     ///
-    func resolve<Service>(_ serviceType: Service.Type, withParameters parameters: [Parameter]) throws -> Service {
+    func resolve<Service>(_ serviceType: Service.Type, withParameters parameters: [ParameterProtocol]) throws -> Service {
         return try castOrThrow(try resolveAny(serviceType, withParameters: parameters), to: serviceType)
     }
     
@@ -68,7 +68,7 @@ public extension Scope {
     /// - Throws: `ContainerRuntimeError` when dependencies are missing
     /// or there is any other error in registrations.
     ///
-    func resolve<Service>(_ serviceType: Service.Type, withParameters parameters: Parameter...) throws -> Service {
+    func resolve<Service>(_ serviceType: Service.Type, withParameters parameters: ParameterProtocol...) throws -> Service {
         return try resolve(serviceType, withParameters: parameters)
     }
 
@@ -122,7 +122,7 @@ public extension Scope {
     /// - Throws: `ContainerRuntimeError` when dependencies are missing
     /// or there is any other error in registrations.
     ///
-    func resolveOptional<Service>(_ serviceType: Service.Type, withParameters parameters: [Parameter]) throws -> Service? {
+    func resolveOptional<Service>(_ serviceType: Service.Type, withParameters parameters: [ParameterProtocol]) throws -> Service? {
         return try castOrThrowOptional(try resolveAnyOptional(serviceType, withParameters: parameters), to: serviceType)
     }
     
@@ -144,7 +144,7 @@ public extension Scope {
     /// - Throws: `ContainerRuntimeError` when dependencies are missing
     /// or there is any other error in registrations.
     ///
-    func resolveOptional<Service>(_ serviceType: Service.Type, withParameters parameters: Parameter...) throws -> Service? {
+    func resolveOptional<Service>(_ serviceType: Service.Type, withParameters parameters: ParameterProtocol...) throws -> Service? {
         return try resolveOptional(serviceType, withParameters: parameters)
     }
 
@@ -174,11 +174,11 @@ public extension Scope {
         return try internalResolveAny(serviceType, withParameters: nil)
     }
 
-    func resolveAny(_ serviceType: Any.Type, withParameters parameters: [Parameter]) throws -> Any {
+    func resolveAny(_ serviceType: Any.Type, withParameters parameters: [ParameterProtocol]) throws -> Any {
         return try internalResolveAny(serviceType, withParameters: parameters)
     }
 
-    func resolveAny(_ serviceType: Any.Type, withParameters parameters: Parameter...) throws -> Any {
+    func resolveAny(_ serviceType: Any.Type, withParameters parameters: ParameterProtocol...) throws -> Any {
         return try resolveAny(serviceType, withParameters: parameters)
     }
 
@@ -191,7 +191,7 @@ public extension Scope {
     }
 
     private func internalResolveAny(_ serviceType: Any.Type,
-                            withParameters parameters: [Parameter]?) throws -> Any {
+                            withParameters parameters: [ParameterProtocol]?) throws -> Any {
         guard let anyInstance = try resolveAnyOptional(serviceType, withParameters: parameters) else {
             throw ContainerRuntimeError.serviceNotFound(serviceType: serviceType)
         }
@@ -213,7 +213,7 @@ public extension Scope {
         return typedInstance
     }
 
-    private func convertParameters(_ parameters: [Any]) -> [Parameter] {
-        return parameters.map {Parameter($0, as: type(of: $0))}
+    private func convertParameters(_ parameters: [Any]) -> [ParameterProtocol] {
+        return parameters.map {AnyParameter($0, type(of: $0))}
     }
 }

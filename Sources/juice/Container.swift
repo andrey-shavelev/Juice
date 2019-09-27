@@ -76,7 +76,7 @@ public class Container: Scope {
     ///
     /// - Attention: This method does not check if component could be casted to requested type,
     /// and returns exactly what was registered during container build.
-    public func resolveAnyOptional(_ serviceType: Any.Type, withParameters parameters: [Parameter]?) throws -> Any? {
+    public func resolveAnyOptional(_ serviceType: Any.Type, withParameters parameters: [ParameterProtocol]?) throws -> Any? {
         let serviceKey = TypeKey(for: serviceType)
         guard let registration = findRegistration(matchingKey: serviceKey) else {
             return nil
@@ -124,7 +124,7 @@ public class Container: Scope {
         return nil
     }
 
-    private func createScopeLocator(_ parameters: [Parameter]?) -> ResolutionScopeLocator {
+    private func createScopeLocator(_ parameters: [ParameterProtocol]?) -> ResolutionScopeLocator {
         if let parameters = parameters {
             return ParameterizedScopeLocator(self, parameters)
         }

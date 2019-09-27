@@ -4,16 +4,26 @@
 
 import Foundation
 
-public struct Parameter {
-    let value: Any
-    let type: Any.Type
+public protocol ParameterProtocol {
+    var value: Any { get }
+    var type: Any.Type { get }
+}
 
-    public init(_ value: Any, as type: Any.Type){
+public struct Parameter<Type>: ParameterProtocol {
+    public let value: Any
+    public var type: Any.Type { Type.self }
+
+    public init(_ value: Type){
+        self.value = value
+    }
+}
+
+public struct AnyParameter: ParameterProtocol {
+    public let value: Any
+    public let type: Any.Type
+
+    public init(_ value: Any, _ type: Any.Type){
         self.value = value
         self.type = type
-    }
-
-    public init<Type>(_ value: Type) {
-        self.init(value, as: Type.self)
     }
 }

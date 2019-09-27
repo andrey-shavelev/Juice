@@ -13,7 +13,7 @@ struct ContainerWrapper: Scope {
         return container != nil
     }
 
-    func resolveAnyOptional(_ serviceType: Any.Type, withParameters parameters: [Parameter]?) throws -> Any? {
+    func resolveAnyOptional(_ serviceType: Any.Type, withParameters parameters: [ParameterProtocol]?) throws -> Any? {
         
         if serviceType == Scope.self {
             return self

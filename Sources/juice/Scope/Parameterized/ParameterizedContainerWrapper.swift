@@ -9,14 +9,14 @@ struct ParameterizedContainerWrapper: Scope {
         return container?.isValid == true
     }
     weak var container: Container?
-    let parameters: [Parameter]
+    let parameters: [ParameterProtocol]
 
-    init(_ container: Container, _ parameters: [Parameter]) {
+    init(_ container: Container, _ parameters: [ParameterProtocol]) {
         self.container = container
         self.parameters = parameters
     }
 
-    func resolveAnyOptional(_ serviceType: Any.Type, withParameters parameters: [Parameter]?) throws -> Any? {
+    func resolveAnyOptional(_ serviceType: Any.Type, withParameters parameters: [ParameterProtocol]?) throws -> Any? {
         if let parameter = resolveParameterByExactType(serviceType) {
             return parameter
         }

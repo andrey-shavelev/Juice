@@ -38,7 +38,7 @@ final class OptionalResolutionTests: XCTestCase {
                 .as(Juice.self)
         }
 
-        let juice = try container.resolveOptional(Juice.self, withParameters: Parameter(Apple(), as: Fruit.self))
+        let juice = try container.resolveOptional(Juice.self, withParameters: Parameter<Fruit>(Apple()))
 
         XCTAssertTrue(juice?.fruit is Apple)
     }
