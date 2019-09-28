@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 Andrey Shavelev. All rights reserved.
+// Copyright © 2019 Juice Project. All rights reserved.
 //
 
 /// Dependency injection container.
@@ -94,6 +94,7 @@ public class Container: Scope {
     /// - Parameter name: The optional name for a new container.
     ///
     /// - Returns: an empty child `Container` with optional `name`.
+    ///
     public func createChildContainer(name: String? = nil) -> Container {
         return Container(parent: self, name: name)
     }
@@ -101,9 +102,10 @@ public class Container: Scope {
     /// Creates and returns a child `Container`.
     ///
     /// - Parameter name: The optional name for a new container.
-    /// - Parameter buildFunc: The closure that registers all required components.
+    /// - Parameter buildFunc: The closure to registers additional components.
     ///
     /// - Returns: A child `Container` with optional `name` and additional components registered in `buildFunc`.
+    ///
     public func createChildContainer(name: String? = nil, _ buildFunc: (ContainerBuilder) -> Void) throws -> Container {
         return try Container(parent: self, buildFunc: buildFunc)
     }

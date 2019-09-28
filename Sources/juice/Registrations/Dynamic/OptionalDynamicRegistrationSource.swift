@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 Andrey Shavelev. All rights reserved.
+// Copyright © 2019 Juice Project. All rights reserved.
 //
 
 import Foundation
@@ -24,7 +24,6 @@ class OptionalServiceRegistration: ServiceRegistration {
         return try scopeLocator.findScope(matchingKey: ScopeKey.any)!.resolveAnyOptional(wrappedType) as Any
     }
 }
-
 
 protocol OptionalProtocol {
     static var elementType: Any.Type { get }

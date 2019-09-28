@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 Andrey Shavelev. All rights reserved.
+// Copyright © 2019 Juice Project. All rights reserved.
 //
 
 /// A builder for component registrations
@@ -62,7 +62,7 @@ public class ContainerBuilder {
     ///      for the component.
     ///
     /// - Returns: A specialized builder to complete component registration.
-    public func register<Type>(factory: @escaping (_ scope: Scope) -> Type) -> DynamicInstanceScopeSelector<Type> {
+    public func register<Type>(factory: @escaping (_ scope: Scope) throws -> Type) -> DynamicInstanceScopeSelector<Type> {
         return register(type: Type.self, createdWith: DelegatingFactory(factory))
     }
 
@@ -132,14 +132,5 @@ extension ContainerBuilder {
     /// - Returns: Specialized builder to complete registration.
     public func register<Type: InjectableWithFiveParameters>(injectable type: Type.Type) -> DynamicInstanceScopeSelector<Type> {
         return register(type: type, createdWith: InjectableFactoryWithFiveParameters<Type>())
-    }
-
-    /// Starts registration of an injectable component.
-    ///
-    /// - Parameter type: The type of component to registers.
-    ///
-    /// - Returns: Specialized builder to complete registration.
-    public func register<Type: CustomInjectable>(injectable type: Type.Type) -> DynamicInstanceScopeSelector<Type> {
-        return register(type: type, createdWith: CustomInjectableFactory<Type>())
     }
 }

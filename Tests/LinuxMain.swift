@@ -1,5 +1,4 @@
 import XCTest
-
 import blazeTests
 
 var tests = [XCTestCaseEntry]()

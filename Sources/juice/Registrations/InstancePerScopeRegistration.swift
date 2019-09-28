@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 Andrey Shavelev. All rights reserved.
+// Copyright © 2019 Juice Project. All rights reserved.
 //
 
 class InstancePerScopeRegistration<ServiceType>: ServiceRegistration {

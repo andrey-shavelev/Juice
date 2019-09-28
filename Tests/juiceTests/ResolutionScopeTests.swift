@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 Andrey Shavelev. All rights reserved.
+// Copyright © 2019 Juice Project. All rights reserved.
 //
 
 import XCTest
@@ -101,9 +101,9 @@ final class ResolutionScopeTests: XCTestCase {
     }
 }
 
-class CustomInjectableThatHoldsReferenceToScope: CustomInjectable {
-    let scope: Scope
-    required init(inScope scope: Scope) throws {
+class CustomInjectableThatHoldsReferenceToScope: InjectableWithParameter {
+    let scope: CurrentScope
+    required init(_ scope: CurrentScope) throws {
         self.scope = scope
     }
 }

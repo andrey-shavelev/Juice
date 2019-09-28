@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 Andrey Shavelev. All rights reserved.
+// Copyright © 2019 Juice Project. All rights reserved.
 //
 
 /// A scope used to resolve services.
@@ -14,9 +14,47 @@
 public protocol Scope {
     /// Shows if scope is still valid and could be used.
     ///
+    func resolveAnyOptional(_ serviceType: Any.Type, withParameters parameters: [ParameterProtocol]?) throws -> Any?
+}
+
+public protocol CurrentScope: Scope {
+    /// Shows if Scope is still valid and could be used to resolve dependencies.
+    ///
+    /// `CurrentScope` does not keep a strong reference to underliyng container and
+    /// may become invalid if container gets dealocated.
+    ///
     var isValid: Bool { get }
 
-    func resolveAnyOptional(_ serviceType: Any.Type, withParameters parameters: [ParameterProtocol]?) throws -> Any?
+    /// Creates a child `Container`.
+    ///
+    /// - Returns: an empty child `Container`.
+    ///
+    func createChildContainer() throws -> Container
+
+    /// Creates a named child `Container`.
+    ///
+    /// - Parameter name: The name for a new container.
+    ///
+    /// - Returns: an empty child `Container` with `name`.
+    ///
+    func createChildContainer(name: String?) throws -> Container
+    
+    /// Creates a child `Container`.
+    ///
+    /// - Parameter buildFunc: The closure to registers additional components.
+    ///
+    /// - Returns: A child `Container`.
+    ///
+    func createChildContainer(_ buildFunc: (ContainerBuilder) -> Void) throws -> Container
+    
+    /// Creates a child `Container`.
+    ///
+    /// - Parameter name: The  name for a new container.
+    /// - Parameter buildFunc: The closure to registers additional components.
+    ///
+    /// - Returns: A child `Container`.
+    ///
+    func createChildContainer(name: String?, _ buildFunc: (ContainerBuilder) -> Void) throws -> Container
 }
 
 public extension Scope {

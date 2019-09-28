@@ -1,12 +1,12 @@
 //
-// Copyright © 2019 Andrey Shavelev. All rights reserved.
+// Copyright © 2019 Juice Project. All rights reserved.
 //
 
-public class Factory<Type>: CustomInjectable {
-    let scope: Scope
+public class Factory<Type>: InjectableWithParameter {
+    let scope: CurrentScope
 
-    public required init(inScope scope: Scope) throws {
-        self.scope = try scope.resolve(Scope.self)
+    public required init(_ scope: CurrentScope) {
+        self.scope = scope
     }
 
     func create<ParameterType>(_ parameter: ParameterType) throws -> Type {

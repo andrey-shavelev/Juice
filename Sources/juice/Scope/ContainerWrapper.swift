@@ -2,44 +2,28 @@
 // Copyright © 2019 Juice Project. All rights reserved.
 //
 
-import Foundation
-
-struct ParameterizedContainerWrapper: CurrentScope {
-    var isValid: Bool {
-        return container?.isValid == true
-    }
+struct ContainerWrapper: CurrentScope {
     weak var container: Container?
-    let parameters: [ParameterProtocol]
 
-    init(_ container: Container, _ parameters: [ParameterProtocol]) {
+    init(_ container: Container) {
         self.container = container
-        self.parameters = parameters
+    }
+
+    public var isValid: Bool {
+        return container != nil
     }
 
     func resolveAnyOptional(_ serviceType: Any.Type, withParameters parameters: [ParameterProtocol]?) throws -> Any? {
-
+        
         if serviceType == CurrentScope.self {
             return self
         }
 
-        if let parameter = resolveParameterByExactType(serviceType) {
-            return parameter
-        }
-        
         guard let container = container else {
             throw ContainerRuntimeError.invalidScope()
         }
-        
-        return try container.resolveAnyOptional(serviceType, withParameters: parameters)
-    }
 
-    func resolveParameterByExactType(_ serviceType: Any.Type) -> Any? {
-        for parameter in parameters {
-            if let value = parameter.tryProvideValue(for: serviceType) {
-                return value
-            }
-        }
-        return nil
+        return try container.resolveAnyOptional(serviceType, withParameters: parameters)
     }
     
     func createChildContainer() throws -> Container {

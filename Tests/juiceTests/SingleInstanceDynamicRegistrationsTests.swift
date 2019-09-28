@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 Andrey Shavelev. All rights reserved.
+// Copyright © 2019 Juice Project. All rights reserved.
 //
 
 import XCTest
@@ -118,7 +118,9 @@ final class SingleInstanceDynamicRegistrationsTests: XCTestCase {
 
     func testRegisterAndResolveSingleInstanceWithFourDependencies() throws {
         let container = try Container { builder in
-            builder.register(injectable: Cocktail.self)
+            builder.register(factory: {
+                return Cocktail(try $0.resolve(Juice.self), Lime(), Sugar(), SodaWater())
+            })
                     .singleInstance()
                     .asSelf()
             builder.register(injectable: Apple.self)

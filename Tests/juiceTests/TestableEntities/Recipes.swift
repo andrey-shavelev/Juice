@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 Andrey Shavelev. All rights reserved.
+// Copyright © 2019 Juice Project. All rights reserved.
 //
 
 import juice
@@ -42,9 +42,9 @@ class FreshMorningSmoothie: InjectableWithThreeParameters, Smoothie {
     }
 }
 
-class HomeMadeJuice: CustomInjectable {
+class HomeMadeJuice: InjectableWithParameter {
     let fruit: Fruit
-    required init(inScope scope: Scope) throws {
+    required init(_ scope: CurrentScope) throws {
         fruit = try scope.resolve(Fruit.self)
     }
 }
@@ -86,7 +86,7 @@ class IcyLemonade: InjectableWithFiveParameters {
     }
 }
 
-class TeaBlend: CustomInjectable {
+class TeaBlend: InjectableWithParameter {
     let tea: Tea
     let fruit: Fruit
     let berry: Berry
@@ -94,7 +94,7 @@ class TeaBlend: CustomInjectable {
     let herb: Herb
     let spice: Spice
 
-    required init(inScope scope: Scope) throws {
+    required init(_ scope: CurrentScope) throws {
         self.tea = try scope.resolve(Tea.self)
         self.fruit = try scope.resolve(Fruit.self)
         self.berry = try scope.resolve(Berry.self)
