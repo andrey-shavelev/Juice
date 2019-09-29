@@ -142,5 +142,25 @@ final class ChildContainerRegistrationsTests: XCTestCase {
 
         XCTAssert(juice.fruit is Apple)
     }
+
+    func testCreatingChildContainerFromInjectableComponent() throws {
+        let container = try Container {
+            $0.register(injectable: Orange.self)
+                .instancePerDependency()
+                .as(Fruit.self)
+
+            $0.register(injectable: JuiceMachine.self)
+                .instancePerDependency()
+                .asSelf()
+        }
+
+        XCTAssertNoThrow(try container.resolve(JuiceMachine.self))
+        let juiceMachine = try container.resolve(JuiceMachine.self)
+
+        XCTAssertNoThrow(juiceMachine.makeJuice())
+        let freshOrangeJuice = juiceMachine.makeJuice() as! FreshJuice
+    
+        XCTAssert(freshOrangeJuice.fruit is Orange)
+    }
 }
 

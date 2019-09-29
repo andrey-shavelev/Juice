@@ -31,3 +31,25 @@ class Egg: Injectable {
     required init() {
     }
 }
+
+class JuiceMachine: InjectableWithParameter {
+    let container: Container
+
+    required init(_ scope: CurrentScope) throws {
+        container = try scope.createChildContainer { builder in
+            builder
+                .register(injectable: FreshJuice.self)
+                .instancePerDependency()
+                .as(Juice.self)
+        }
+    }
+
+    func makeJuice() -> Juice? {
+        do {
+            return try container.resolve(Juice.self)
+        }
+        catch {
+            return nil
+        }
+    }
+}
