@@ -43,7 +43,7 @@ final class ResolutionScopeTests: XCTestCase {
         }
 
         let ignoredParameter = 42
-        let injectable = try container?.resolve(CustomInjectableThatHoldsReferenceToScope.self, withParameters: ignoredParameter)
+        let injectable = try container?.resolve(CustomInjectableThatHoldsReferenceToScope.self, withArguments: ignoredParameter)
         weak var weakContainerReference = container
         container = nil
 
@@ -59,7 +59,7 @@ final class ResolutionScopeTests: XCTestCase {
         }
 
         let ignoredParameter = 42
-        let injectable = try container!.resolve(CustomInjectableThatHoldsReferenceToScope.self, withParameters: ignoredParameter)
+        let injectable = try container!.resolve(CustomInjectableThatHoldsReferenceToScope.self, withArguments: ignoredParameter)
         container = nil
 
         XCTAssertFalse(injectable.scope.isValid)
@@ -94,7 +94,7 @@ final class ResolutionScopeTests: XCTestCase {
         }
 
         let ignoredParameter = 42
-        let strongReference = try container!.resolve(CustomInjectableThatHoldsReferenceToScope.self, withParameters: ignoredParameter)
+        let strongReference = try container!.resolve(CustomInjectableThatHoldsReferenceToScope.self, withArguments: ignoredParameter)
         container = nil
 
         XCTAssertThrowsError(try strongReference.scope.resolve(Apple.self))

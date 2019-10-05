@@ -11,17 +11,15 @@ public struct ExternalInstanceOwnershipBuilder<Type: AnyObject> {
         self.registrationPrototype = registrationPrototype
     }
 
-    /// Tells container to keep strong reference to an instance.
+    /// Tells the container to keep a strong reference to the external component.
     ///
-    /// - Returns: Specialized builder to compleate registration.
     public func ownedByContainer() -> ExternalInstanceRegistrationBuilder<Type> {
         registrationPrototype.ownedByContainer = true
         return ExternalInstanceRegistrationBuilder(registrationPrototype)
     }
 
-    /// Tells container to keep unowned reference to an instance.
+    /// Tells the container to keep an unowned reference to the external component.
     ///
-    /// - Returns: Specialized builder to compleate registration.
     public func ownedExternally() -> ExternalInstanceRegistrationBuilder<Type> {
         registrationPrototype.ownedByContainer = false
         return ExternalInstanceRegistrationBuilder(registrationPrototype)

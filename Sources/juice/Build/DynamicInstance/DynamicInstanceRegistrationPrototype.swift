@@ -20,7 +20,7 @@ class DynamicInstanceRegistrationPrototype<Type>: ServiceRegistrationPrototype {
 
     func build() throws -> ServiceRegistration {
         guard let kind = kind else {
-            throw ContainerRuntimeError.missingScopeDefinition(componentType: Type.self)
+            throw ContainerError.missingLifetimeDefinition(componentType: Type.self)
         }
 
         switch (kind) {

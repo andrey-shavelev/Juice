@@ -4,11 +4,11 @@
 
 import Foundation
 
-public protocol ParameterProtocol {
+public protocol ArgumentProtocol {
     func tryProvideValue(for type: Any.Type) -> Any?
 }
 
-public struct Parameter<Type>: ParameterProtocol {
+public struct Argument<Type>: ArgumentProtocol {
     let value: Type
 
     public init(_ value: Type) {
@@ -24,7 +24,7 @@ public struct Parameter<Type>: ParameterProtocol {
     }
 }
 
-public struct AnyParameter: ParameterProtocol {
+public struct AnyArgument: ArgumentProtocol {
     let value: Any
     let type: Any.Type
 

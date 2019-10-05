@@ -4,19 +4,19 @@
 
 import Foundation
 
-struct ParameterizedContainerWrapper: CurrentScope {
+struct ParameterizedContainerWrapper: ContainerWrapperProtocol, CurrentScope {
     var isValid: Bool {
         return container?.isValid == true
     }
     weak var container: Container?
-    let parameters: [ParameterProtocol]
+    let parameters: [ArgumentProtocol]
 
-    init(_ container: Container, _ parameters: [ParameterProtocol]) {
+    init(_ container: Container, _ parameters: [ArgumentProtocol]) {
         self.container = container
         self.parameters = parameters
     }
 
-    func resolveAnyOptional(_ serviceType: Any.Type, withParameters parameters: [ParameterProtocol]?) throws -> Any? {
+    func resolveAnyOptional(_ serviceType: Any.Type, withArguments parameters: [ArgumentProtocol]?) throws -> Any? {
 
         if serviceType == CurrentScope.self {
             return self
@@ -27,10 +27,10 @@ struct ParameterizedContainerWrapper: CurrentScope {
         }
         
         guard let container = container else {
-            throw ContainerRuntimeError.invalidScope()
+            throw ContainerError.invalidScope
         }
         
-        return try container.resolveAnyOptional(serviceType, withParameters: parameters)
+        return try container.resolveAnyOptional(serviceType, withArguments: parameters)
     }
 
     func resolveParameterByExactType(_ serviceType: Any.Type) -> Any? {
@@ -41,36 +41,11 @@ struct ParameterizedContainerWrapper: CurrentScope {
         }
         return nil
     }
-    
-    func createChildContainer() throws -> Container {
-        guard let container = container else {
-            throw ContainerRuntimeError.invalidScope()
-        }
 
-        return container.createChildContainer()
-    }
-    
-    func createChildContainer(name: String?) throws -> Container {
+    func getContainer() throws -> Container {
         guard let container = container else {
-            throw ContainerRuntimeError.invalidScope()
+            throw ContainerError.invalidScope
         }
-
-        return container.createChildContainer(name: name)
-    }
-    
-    func createChildContainer(_ buildFunc: (ContainerBuilder) -> Void) throws -> Container {
-        guard let container = container else {
-            throw ContainerRuntimeError.invalidScope()
-        }
-
-        return try container.createChildContainer(buildFunc)
-    }
-    
-    func createChildContainer(name: String?, _ buildFunc: (ContainerBuilder) -> Void) throws -> Container {
-        guard let container = container else {
-            throw ContainerRuntimeError.invalidScope()
-        }
-
-        return try container.createChildContainer(name: name, buildFunc)
+        return container
     }
 }

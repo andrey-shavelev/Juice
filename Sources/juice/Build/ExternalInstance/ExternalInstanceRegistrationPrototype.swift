@@ -16,7 +16,7 @@ class ExternalInstanceRegistrationPrototype<Type: AnyObject>: ServiceRegistratio
 
     func build() throws -> ServiceRegistration {
         guard let ownedByContainer = ownedByContainer else {
-            throw ContainerRuntimeError.missingOwnershipDefinition(componentType: Type.self)
+            throw ContainerError.missingOwnershipDefinition(componentType: Type.self)
         }
 
         if (ownedByContainer) {

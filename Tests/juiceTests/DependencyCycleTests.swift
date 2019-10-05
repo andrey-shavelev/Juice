@@ -16,11 +16,11 @@ final class DependencyCycleTests: XCTestCase {
                 .asSelf()
         }
         
-        var actualError: ContainerRuntimeError?
+        var actualError: ContainerError?
         
         do {
             let _ = try container.resolve(Yin.self)
-        } catch let error as ContainerRuntimeError {
+        } catch let error as ContainerError {
             actualError = error
         }
         
@@ -39,11 +39,11 @@ final class DependencyCycleTests: XCTestCase {
                 .injectDependency(into: \.chicken)
         }
         
-        var actualError: ContainerRuntimeError?
+        var actualError: ContainerError?
         
         do {
             let _ = try container.resolve(Chicken.self)
-        } catch let error as ContainerRuntimeError {
+        } catch let error as ContainerError {
             actualError = error
         }
         

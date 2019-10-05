@@ -14,10 +14,10 @@ final class ParameterizedResolutionTests: XCTestCase {
                     .asSelf()
         }
 
-        XCTAssertNoThrow(try container.resolve(Chocolate.self, withParameters: Chocolate.Kind.milk))
+        XCTAssertNoThrow(try container.resolve(Chocolate.self, withArguments: Chocolate.Kind.milk))
 
-        let darkChocolate = try container.resolve(Chocolate.self, withParameters: Chocolate.Kind.dark)
-        let milkChocolate = try container.resolve(Chocolate.self, withParameters: Chocolate.Kind.milk)
+        let darkChocolate = try container.resolve(Chocolate.self, withArguments: Chocolate.Kind.dark)
+        let milkChocolate = try container.resolve(Chocolate.self, withArguments: Chocolate.Kind.milk)
 
         XCTAssertEqual(Chocolate.Kind.dark, darkChocolate.kind)
         XCTAssertEqual(Chocolate.Kind.milk, milkChocolate.kind)
@@ -33,7 +33,7 @@ final class ParameterizedResolutionTests: XCTestCase {
                     .asSelf()
         }
 
-        XCTAssertNoThrow(try container.resolve(Compote.self, withParameters: Parameter<Spice>(Cinnamon())))
+        XCTAssertNoThrow(try container.resolve(Compote.self, withArguments: Argument<Spice>(Cinnamon())))
     }
 
     func testParametersAreUsedOnlyForServiceItselfAndNotUsedForItsDependencies() throws {
@@ -53,10 +53,10 @@ final class ParameterizedResolutionTests: XCTestCase {
         }
 
         XCTAssertNoThrow(try container.resolve(FreshMorningSmoothie.self,
-                withParameters: Parameter<Fruit>(Banana())))
+                withArguments: Argument<Fruit>(Banana())))
 
         let smoothie = try container.resolve(FreshMorningSmoothie.self,
-                withParameters: Parameter<Fruit>(Banana()))
+                withArguments: Argument<Fruit>(Banana()))
 
         let freshJuice = smoothie.juice as! FreshJuice
 
@@ -72,9 +72,9 @@ final class ParameterizedResolutionTests: XCTestCase {
         }
 
         let fruit: Fruit = Apple()
-        XCTAssertNoThrow(try container.resolve(HomeMadeJuice.self, withParameters: Parameter(fruit)))
+        XCTAssertNoThrow(try container.resolve(HomeMadeJuice.self, withArguments: Argument(fruit)))
 
-        let juice = try container.resolve(HomeMadeJuice.self, withParameters: Parameter(fruit))
+        let juice = try container.resolve(HomeMadeJuice.self, withArguments: Argument(fruit))
         XCTAssertTrue(fruit as! Apple === juice.fruit as! Apple)
     }
 

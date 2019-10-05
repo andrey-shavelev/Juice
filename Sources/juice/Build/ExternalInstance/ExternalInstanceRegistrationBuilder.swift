@@ -9,7 +9,7 @@ public struct ExternalInstanceRegistrationBuilder<Type: AnyObject> {
         self.registrationPrototype = registrationPrototype
     }
 
-    /// Registers by a specific service.
+    /// Registers the component by a `serviceType`.
     ///
     /// For example:
     ///
@@ -20,7 +20,7 @@ public struct ExternalInstanceRegistrationBuilder<Type: AnyObject> {
     ///
     ///     let fruit = try container.resolve(Fruit.self)
     ///
-    /// - Prameter serviceType: The type of service that this component provides.
+    /// - Parameter serviceType: The type of a service that this component provides.
     ///
     @discardableResult
     public func `as`<TService>(_ serviceType: TService.Type) -> ExternalInstanceRegistrationBuilder<Type> {
@@ -28,7 +28,7 @@ public struct ExternalInstanceRegistrationBuilder<Type: AnyObject> {
         return self
     }
 
-    /// Registers component by its own type.
+    /// Registers the component by its own type.
     ///
     /// For example:
     ///

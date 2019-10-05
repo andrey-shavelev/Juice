@@ -12,7 +12,7 @@ public class ValueRegistrationBuilder<Type> {
         self.registrationPrototype = registrationPrototype
     }
 
-    /// Registers by a specific service.
+    /// Registers the component by a `serviceType`.
     ///
     /// For example:
     ///
@@ -23,7 +23,7 @@ public class ValueRegistrationBuilder<Type> {
     ///
     ///     let fruit = try container.resolve(Fruit.self)
     ///
-    /// - Prameter serviceType: The type of service that this component provides.
+    /// - Parameter serviceType: The type of a service that this component provides.
     ///
     @discardableResult
     public func `as`<TService>(_ serviceType: TService.Type) -> ValueRegistrationBuilder<Type> {
@@ -31,7 +31,7 @@ public class ValueRegistrationBuilder<Type> {
         return self
     }
 
-    /// Registers component by its own type.
+    /// Registers the component by its own type.
     ///
     /// For example:
     ///

@@ -2,7 +2,7 @@
 // Copyright © 2019 Juice Project. All rights reserved.
 //
 
-public class Factory<Type>: InjectableWithParameter {
+class Factory<Type>: InjectableWithParameter {
     let scope: CurrentScope
 
     public required init(_ scope: CurrentScope) {

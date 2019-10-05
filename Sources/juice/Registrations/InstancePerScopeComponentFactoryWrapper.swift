@@ -14,7 +14,7 @@ class InstancePerScopeComponentFactoryWrapper: InstanceFactory {
     
     func create(withDependenciesFrom scope: Scope) throws -> Any {
         guard !locked else {
-            throw ContainerRuntimeError.dependencyCycle(componentType: componentType)
+            throw ContainerError.dependencyCycle(componentType: componentType)
         }
         
         locked = true

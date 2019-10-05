@@ -15,7 +15,7 @@
 ///                .as(Juice.self)
 ///     }
 ///
-/// Resolve services using `Scope` protocol:
+/// Resolve services using `Scope` protocol methods:
 ///
 ///     let appleJuice = try container.resolve(Juice.self)
 ///
@@ -35,11 +35,11 @@ public class Container: Scope {
         self.init(parent: nil, name: nil)
     }
 
-    /// Creates a dependency `Container` with components registered in `buildFunc`.
+    /// Creates a `Container` with components registered in `buildFunc`.
     ///
     /// - Parameter buildFunc: The closure that registers all required components.
     ///
-    /// - Throws: ContainerRuntimeError to in case of errors in components registrations.
+    /// - Throws: ContainerRuntimeError in case of an error in registrations.
     ///
     public convenience init(_ buildFunc: (ContainerBuilder) -> Void) throws {
         try self.init(parent: nil, name: nil, buildFunc: buildFunc)
@@ -60,13 +60,10 @@ public class Container: Scope {
         self.dynamicRegistrationsSources = [OptionalDynamicRegistrationSource()]
     }
 
-    /// Resolves optional service from container.
-    ///
-    /// This is a most general method to resolve a service. Usually you should avoid calling it directly
-    /// and instead give preference to one of generic extension methods that return a strongly typed instance.
+    /// Resolves an optional service from container.
     ///
     /// - Parameter serviceType: The type of the service to resolve.
-    /// - Parameter withParameters: The array of parameters that are passed to component's `init` method
+    /// - Parameter withParameters: The array of arguments that are passed to component's `init` method
     ///     when new instance is created.
     ///
     /// - Returns: An instance of component that provides requested service if any registered;
@@ -74,15 +71,15 @@ public class Container: Scope {
     ///
     /// - Throws: `ContainerRuntimeError`.
     ///
-    /// - Attention: This method does not check if component could be casted to requested type,
+    /// - Attention: This method does not check if the component provides the requested service,
     /// and returns exactly what was registered during container build.
-    public func resolveAnyOptional(_ serviceType: Any.Type, withParameters parameters: [ParameterProtocol]?) throws -> Any? {
+    public func resolveAnyOptional(_ serviceType: Any.Type, withArguments arguments: [ArgumentProtocol]?) throws -> Any? {
         let serviceKey = TypeKey(for: serviceType)
         guard let registration = findRegistration(matchingKey: serviceKey) else {
             return nil
         }
 
-        let scopeLocator = createScopeLocator(parameters)
+        let scopeLocator = createScopeLocator(arguments)
 
         return try registration.resolveServiceInstance(
                 storageLocator: self,
@@ -126,7 +123,7 @@ public class Container: Scope {
         return nil
     }
 
-    private func createScopeLocator(_ parameters: [ParameterProtocol]?) -> ResolutionScopeLocator {
+    private func createScopeLocator(_ parameters: [ArgumentProtocol]?) -> ResolutionScopeLocator {
         if let parameters = parameters {
             return ParameterizedScopeLocator(self, parameters)
         }

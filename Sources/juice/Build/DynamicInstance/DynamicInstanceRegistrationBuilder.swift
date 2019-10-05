@@ -9,7 +9,7 @@ public struct DynamicInstanceRegistrationBuilder<Type> {
         self.registrationPrototype = registrationPrototype
     }
 
-    /// Registers component by `serviceType` type.
+    /// Registers the component by a `serviceType`.
     ///
     /// For example:
     ///
@@ -20,7 +20,7 @@ public struct DynamicInstanceRegistrationBuilder<Type> {
     ///
     ///     let fruit = try container.resolve(Fruit.self)
     ///
-    /// - Prameter serviceType: The type of service that this component provides.
+    /// - Parameter serviceType: The type of a service that this component provides.
     ///
     @discardableResult
     public func `as`<TService>(_ serviceType: TService.Type) -> DynamicInstanceRegistrationBuilder {
@@ -28,7 +28,7 @@ public struct DynamicInstanceRegistrationBuilder<Type> {
         return self
     }
 
-    /// Registers component by its own type.
+    /// Registers the component by its own type.
     ///
     /// For example:
     ///
@@ -38,13 +38,14 @@ public struct DynamicInstanceRegistrationBuilder<Type> {
     ///             .asSelf()
     ///
     ///     let apple = try container.resolve(Apple.self)
+    ///
     @discardableResult
     public func asSelf() -> DynamicInstanceRegistrationBuilder {
         registrationPrototype.services.append(Type.self)
         return self
     }
 
-    /// Tells container to inject a dependency at given `keyPath`
+    /// Tells the container to inject a dependency at a given `keyPath`
     ///
     /// For example:
     ///
@@ -61,7 +62,7 @@ public struct DynamicInstanceRegistrationBuilder<Type> {
     ///                 .singleInstance()
     ///                 .asSelf()
     ///                 .injectDependency(into: \.fruit)
-    ///                 .injectDependency(into: \.spice)
+    ///                 .injectOptionalDependency(into: \.spice)
     ///     }
     ///
     @discardableResult
@@ -70,8 +71,25 @@ public struct DynamicInstanceRegistrationBuilder<Type> {
         return self
     }
     
-    /// Tells container to inject an optional dependency at given `keyPath`
+    /// Tells the container to inject an optional dependency at given `keyPath`
     ///
+    /// For example:
+    ///
+    ///     class Jam: Injectable {
+    ///         var fruit: Fruit!
+    ///         var spice: Spice?
+    ///
+    ///         required init() {
+    ///         }
+    ///     }
+    ///     let container = try Container { builder in
+    ///         ...
+    ///         builder.register(injectable: Jam.self)
+    ///                 .singleInstance()
+    ///                 .asSelf()
+    ///                 .injectDependency(into: \.fruit)
+    ///                 .injectOptionalDependency(into: \.spice)
+    ///     }
     ///
     @discardableResult
     public func injectOptionalDependency<PropertyType>(into keyPath: WritableKeyPath<Type, PropertyType?>) -> DynamicInstanceRegistrationBuilder {
