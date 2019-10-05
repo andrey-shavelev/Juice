@@ -5,7 +5,7 @@
 /// Builds all registrations within a `Container`.
 ///
 public class ContainerBuilder {
-    var registrationPrototypes = [ServiceRegistrationPrototype]()
+    var registrationPrototypes = [RegistrationPrototype]()
     let container: Container
 
     init(_ container: Container) {

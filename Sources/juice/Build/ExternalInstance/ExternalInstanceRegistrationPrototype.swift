@@ -4,7 +4,7 @@
 
 import Foundation
 
-class ExternalInstanceRegistrationPrototype<Type: AnyObject>: ServiceRegistrationPrototype {
+class ExternalInstanceRegistrationPrototype<Type: AnyObject>: RegistrationPrototype {
 
     var services = [Any.Type]()
     let instance: Type

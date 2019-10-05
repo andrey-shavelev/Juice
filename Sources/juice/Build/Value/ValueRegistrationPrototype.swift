@@ -4,8 +4,7 @@
 
 import Foundation
 
-class ValueRegistrationPrototype<Type> : ServiceRegistrationPrototype {
-
+class ValueRegistrationPrototype<Type> : RegistrationPrototype {
     var services = [Any.Type]()
     let value: Type
 
