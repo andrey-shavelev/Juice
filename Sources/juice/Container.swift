@@ -41,7 +41,7 @@ public class Container: Scope {
     ///
     /// - Throws: ContainerRuntimeError in case of an error in registrations.
     ///
-    public convenience init(_ buildFunc: (ContainerBuilder) -> Void) throws {
+    public convenience init(_ buildFunc: (_ builder: ContainerBuilder) -> Void) throws {
         try self.init(parent: nil, name: nil, buildFunc: buildFunc)
     }
 

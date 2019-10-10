@@ -2,7 +2,6 @@
 // Copyright © 2019 Juice Project. All rights reserved.
 //
 
-
 public struct ExternalInstanceRegistrationBuilder<Type: AnyObject> : ComponentServicesBuilder {
     typealias Component = Type
     var prototype: ExternalInstanceRegistrationPrototype<Type>
