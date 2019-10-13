@@ -2,14 +2,10 @@
 // Copyright © 2019 Juice Project. All rights reserved.
 //
 
+// MARK: Protocols
+
 public protocol Injectable {
     init() throws
-}
-
-public class InjectableFactory<Type: Injectable>: InstanceFactory {
-    func create(withDependenciesFrom scope: Scope) throws -> Any {
-        return try Type()
-    }
 }
 
 public protocol InjectableWithParameter {
@@ -17,30 +13,12 @@ public protocol InjectableWithParameter {
 
     init(_ parameter: ParameterType) throws
 }
-public typealias InjectableWith1Parameter = InjectableWithParameter
-public typealias InjectableWithOneParameter = InjectableWithParameter
-
-public class InjectableFactoryWithParameter<Type: InjectableWithParameter>: InstanceFactory {
-    func create(withDependenciesFrom scope: Scope) throws -> Any {
-        return try Type(try scope.resolve(Type.ParameterType.self))
-    }
-}
 
 public protocol InjectableWithTwoParameters {
     associatedtype FirstParameterType
     associatedtype SecondParameterType
 
     init(_ firstParameter: FirstParameterType, _ secondParameter: SecondParameterType) throws
-}
-public typealias InjectableWith2Parameters = InjectableWithTwoParameters
-
-public class InjectableFactoryWithTwoParameters<Type: InjectableWithTwoParameters>: InstanceFactory {
-    func create(withDependenciesFrom scope: Scope) throws -> Any {
-        return try Type(
-                try scope.resolve(Type.FirstParameterType.self),
-                try scope.resolve(Type.SecondParameterType.self)
-        )
-    }
 }
 
 public protocol InjectableWithThreeParameters {
@@ -52,17 +30,6 @@ public protocol InjectableWithThreeParameters {
          _ secondParameter: SecondParameterType,
          _ thirdParameter: ThirdParameterType) throws
 }
-public typealias InjectableWith3Parameters = InjectableWithThreeParameters
-
-public class InjectableFactoryWithThreeParameters<Type: InjectableWithThreeParameters>: InstanceFactory {
-    func create(withDependenciesFrom scope: Scope) throws -> Any {
-        return try Type(try scope.resolve(Type.FirstParameterType.self),
-                try scope.resolve(Type.SecondParameterType.self),
-                try scope.resolve(Type.ThirdParameterType.self))
-    }
-}
-public typealias InjectableWith4Parameters = InjectableWithFourParameters
-
 public protocol InjectableWithFourParameters {
     associatedtype FirstParameterType
     associatedtype SecondParameterType
@@ -74,17 +41,6 @@ public protocol InjectableWithFourParameters {
          _ thirdParameter: ThirdParameterType,
          _ fourthParameter: FourthParameterType) throws
 }
-
-public class InjectableFactoryWithFourParameters<Type: InjectableWithFourParameters>: InstanceFactory {
-    func create(withDependenciesFrom scope: Scope) throws -> Any {
-        return try Type(try scope.resolve(Type.FirstParameterType.self),
-                try scope.resolve(Type.SecondParameterType.self),
-                try scope.resolve(Type.ThirdParameterType.self),
-                try scope.resolve(Type.FourthParameterType.self))
-    }
-}
-
-public typealias InjectableWith5Parameters = InjectableWithFiveParameters
 
 public protocol InjectableWithFiveParameters {
     associatedtype FirstParameterType
@@ -100,7 +56,58 @@ public protocol InjectableWithFiveParameters {
          _ fifthParameter: FifthParameterType) throws
 }
 
-public class InjectableFactoryWithFiveParameters<Type: InjectableWithFiveParameters>: InstanceFactory {
+
+// MARK: Aliases
+
+public typealias InjectableWith1Parameter = InjectableWithParameter
+public typealias InjectableWithOneParameter = InjectableWithParameter
+public typealias InjectableWith2Parameters = InjectableWithTwoParameters
+public typealias InjectableWith3Parameters = InjectableWithThreeParameters
+public typealias InjectableWith4Parameters = InjectableWithFourParameters
+public typealias InjectableWith5Parameters = InjectableWithFiveParameters
+
+
+//MARK: Factories
+
+class InjectableFactory<Type: Injectable>: InstanceFactory {
+    func create(withDependenciesFrom scope: Scope) throws -> Any {
+        return try Type()
+    }
+}
+
+class InjectableFactoryWithParameter<Type: InjectableWithParameter>: InstanceFactory {
+    func create(withDependenciesFrom scope: Scope) throws -> Any {
+        return try Type(try scope.resolve(Type.ParameterType.self))
+    }
+}
+
+class InjectableFactoryWithTwoParameters<Type: InjectableWithTwoParameters>: InstanceFactory {
+    func create(withDependenciesFrom scope: Scope) throws -> Any {
+        return try Type(
+                try scope.resolve(Type.FirstParameterType.self),
+                try scope.resolve(Type.SecondParameterType.self)
+        )
+    }
+}
+
+class InjectableFactoryWithThreeParameters<Type: InjectableWithThreeParameters>: InstanceFactory {
+    func create(withDependenciesFrom scope: Scope) throws -> Any {
+        return try Type(try scope.resolve(Type.FirstParameterType.self),
+                try scope.resolve(Type.SecondParameterType.self),
+                try scope.resolve(Type.ThirdParameterType.self))
+    }
+}
+
+class InjectableFactoryWithFourParameters<Type: InjectableWithFourParameters>: InstanceFactory {
+    func create(withDependenciesFrom scope: Scope) throws -> Any {
+        return try Type(try scope.resolve(Type.FirstParameterType.self),
+                try scope.resolve(Type.SecondParameterType.self),
+                try scope.resolve(Type.ThirdParameterType.self),
+                try scope.resolve(Type.FourthParameterType.self))
+    }
+}
+
+class InjectableFactoryWithFiveParameters<Type: InjectableWithFiveParameters>: InstanceFactory {
     func create(withDependenciesFrom scope: Scope) throws -> Any {
         return try Type(try scope.resolve(Type.FirstParameterType.self),
                 try scope.resolve(Type.SecondParameterType.self),

@@ -6,7 +6,7 @@ import Foundation
 
 struct ParameterizedContainerWrapper: ContainerWrapperProtocol, CurrentScope {
     var isValid: Bool {
-        return container?.isValid == true
+        return container != nil
     }
     weak var container: Container?
     let parameters: [ArgumentProtocol]

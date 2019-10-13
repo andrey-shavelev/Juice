@@ -11,6 +11,9 @@ public protocol Scope {
 }
 
 public extension Scope {
+    // MARK: Resolve
+    
+    
     /// Resolves a `serviceType` service.
     ///
     /// - Returns: An instance of a component that provides `serviceType` service.
@@ -80,6 +83,9 @@ public extension Scope {
     func resolve<Service>(_ serviceType: Service.Type, withArguments arguments: Any...) throws -> Service {
         try resolve(serviceType, withArguments: convertArguments(arguments))
     }
+    
+    
+    // MARK: Resolve Optional
 
     /// Resolves an optional `serviceType` service.
     ///
@@ -152,6 +158,9 @@ public extension Scope {
     func resolveOptional<Service>(_ serviceType: Service.Type, withArguments arguments: Any...) throws -> Service? {
         try resolveOptional(serviceType, withArguments: convertArguments(arguments))
     }
+    
+    
+    // MARK: Resolve Any
 
     func resolveAny(_ serviceType: Any.Type) throws -> Any {
         try internalResolveAny(serviceType, withArguments: nil)
@@ -172,6 +181,10 @@ public extension Scope {
     func resolveAnyOptional(_ serviceType: Any.Type) throws -> Any? {
         try resolveAnyOptional(serviceType, withArguments: nil)
     }
+    
+    
+
+    // MARK: Private
 
     private func internalResolveAny(_ serviceType: Any.Type,
                                     withArguments arguments: [ArgumentProtocol]?) throws -> Any {

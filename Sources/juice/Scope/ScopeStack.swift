@@ -19,5 +19,4 @@ class ScopeStack {
     class func pop() {
         stack.removeLast()
     }
-    
 }

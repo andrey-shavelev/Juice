@@ -27,8 +27,6 @@ public class Container: Scope {
     var instances = [StorageKey: Any]()
     let key: ScopeKey
     let parent: Container?
-    
-    public var isValid: Bool { get { return true } }
 
     /// Creates an empty `Container`
     public convenience init () {
@@ -43,21 +41,6 @@ public class Container: Scope {
     ///
     public convenience init(_ buildFunc: (_ builder: ContainerBuilder) -> Void) throws {
         try self.init(parent: nil, name: nil, buildFunc: buildFunc)
-    }
-
-    private convenience init(parent: Container?,
-                 name: String? = nil,
-                 buildFunc: (ContainerBuilder) -> Void) throws {
-        self.init(parent: parent, name: name)
-        try ContainerBuilder(self).build(buildFunc)
-    }
-    
-    private init (parent: Container?,
-                  name: String? = nil) {
-        self.parent = parent
-        self.key = ScopeKey.create(fromName: name)
-        self.registrations = [TypeKey: ServiceRegistration]()
-        self.dynamicRegistrationsSources = [OptionalDynamicRegistrationSource()]
     }
 
     /// Resolves an optional service from container.
@@ -106,8 +89,26 @@ public class Container: Scope {
     public func createChildContainer(name: String? = nil, _ buildFunc: (ContainerBuilder) -> Void) throws -> Container {
         return try Container(parent: self, buildFunc: buildFunc)
     }
+    
+    
+    // MARK: Private
+    
+    private convenience init(parent: Container?,
+                 name: String? = nil,
+                 buildFunc: (ContainerBuilder) -> Void) throws {
+        self.init(parent: parent, name: name)
+        try ContainerBuilder(self).build(buildFunc)
+    }
+    
+    private init (parent: Container?,
+                  name: String? = nil) {
+        self.parent = parent
+        self.key = ScopeKey.create(fromName: name)
+        self.registrations = [TypeKey: ServiceRegistration]()
+        self.dynamicRegistrationsSources = [OptionalDynamicRegistrationSource()]
+    }
 
-    func findRegistration(matchingKey serviceKey: TypeKey) -> ServiceRegistration? {
+    private func findRegistration(matchingKey serviceKey: TypeKey) -> ServiceRegistration? {
 
         if let existingRegistration = registrations[serviceKey] ?? parent?.findRegistration(matchingKey: serviceKey){
             return existingRegistration
@@ -131,8 +132,10 @@ public class Container: Scope {
     }
 }
 
-extension Container: InstanceStorage, InstanceStorageLocator {
 
+// MARK: Storage
+
+extension Container: InstanceStorage, InstanceStorageLocator {
     func getOrCreate(storageKey: StorageKey,
                      usingFactory factory: InstanceFactory,
                      withDependenciesFrom scope: Scope) throws -> Any {
