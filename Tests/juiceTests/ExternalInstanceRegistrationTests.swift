@@ -5,7 +5,7 @@
 import XCTest
 import juice
 
-final class ExternalInstanceRegistrationsTests: XCTestCase {
+final class ExternalInstanceRegistrationTests: XCTestCase {
 
     func testRegistrationOfInstance() throws {
         let apple = Apple()

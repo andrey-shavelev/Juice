@@ -5,7 +5,7 @@
 import XCTest
 import juice
 
-final class InstancePerContainerRegistrationsTests: XCTestCase {
+final class InstancePerContainerRegistrationTests: XCTestCase {
 
     func testResolvesDifferentInstanceOfInstancePerScopeServiceForChildScope() throws {
         let container = try Container { builder in

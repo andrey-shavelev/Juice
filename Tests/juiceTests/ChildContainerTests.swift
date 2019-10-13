@@ -5,7 +5,7 @@
 import XCTest
 import juice
 
-final class ChildContainerRegistrationsTests: XCTestCase {
+final class ChildContainerTests: XCTestCase {
 
     func testRedeclaredInstancePerScopeIsResolvedWithingChildScopeAndItsChildren() throws {
         let container = try Container {

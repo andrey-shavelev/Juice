@@ -5,7 +5,7 @@
 import XCTest
 import juice
 
-final class ResolutionScopeTests: XCTestCase {
+final class CurrentScopeTests: XCTestCase {
 
     func testResolutionScopeHoldsWeakReferenceToMainScope() throws {
         var container: Container? = try Container { builder in

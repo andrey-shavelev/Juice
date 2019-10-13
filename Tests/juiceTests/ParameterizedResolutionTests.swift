@@ -79,6 +79,28 @@ final class ParameterizedResolutionTests: XCTestCase {
     }
 
     func testCorrectlyResolvesDependencyWithParametersFromAParametrizedResolutionScope() throws {
+        let container = try Container { builder in
+            builder.register(injectable: FreshJuice.self)
+                .instancePerDependency()
+                .as(Juice.self)
+            builder.register(injectable: InjectableThatResolvesJuiceWithParameter.self)
+                .instancePerDependency()
+                .asSelf()
+        }
 
+        XCTAssertNoThrow(try container.resolve(InjectableThatResolvesJuiceWithParameter.self, withArguments: Argument<Fruit>(Apple())))
+        let injectable = try container.resolve(InjectableThatResolvesJuiceWithParameter.self, withArguments: Argument<Fruit>(Apple()))
+
+        XCTAssert(injectable.fruit is Apple)
+        XCTAssert(injectable.juice.fruit is Orange)
+    }
+}
+
+class InjectableThatResolvesJuiceWithParameter: InjectableWithParameter {
+    @Inject var fruit: Fruit
+    let juice: Juice
+
+    required init(_ scope: CurrentScope) throws {
+        juice = try scope.resolve(Juice.self, withArguments: Argument<Fruit>(Orange()))
     }
 }

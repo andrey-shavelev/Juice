@@ -17,6 +17,8 @@ public protocol InjectableWithParameter {
 
     init(_ parameter: ParameterType) throws
 }
+public typealias InjectableWith1Parameter = InjectableWithParameter
+public typealias InjectableWithOneParameter = InjectableWithParameter
 
 public class InjectableFactoryWithParameter<Type: InjectableWithParameter>: InstanceFactory {
     func create(withDependenciesFrom scope: Scope) throws -> Any {

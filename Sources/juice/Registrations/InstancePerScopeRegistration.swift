@@ -18,9 +18,17 @@ class InstancePerScopeRegistration<ServiceType>: ServiceRegistration {
         guard let scopeForDependencies = scopeLocator.findScope(matchingKey: scopeKey) else {
             throw ContainerError.scopeNotFound(scopeKey: scopeKey)
         }
+        
         guard let storageForInstance = storageLocator.findStorage(matchingKey: scopeKey) else {
             throw ContainerError.scopeNotFound(scopeKey: scopeKey)
         }
+        
+        ScopeStack.push(scopeForDependencies)
+        
+        defer {
+            ScopeStack.pop()
+        }
+        
         return try storageForInstance.getOrCreate(
                 storageKey: storageKey,
                 usingFactory: factory,

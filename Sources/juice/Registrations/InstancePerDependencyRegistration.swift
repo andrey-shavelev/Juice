@@ -13,6 +13,12 @@ class InstancePerDependencyRegistration<ServiceType>: ServiceRegistration {
         guard let scopeForDependencies = scopeLocator.findScope(matchingKey: .any) else {
             throw ContainerError.scopeNotFound(scopeKey: .any)
         }
+        
+        ScopeStack.push(scopeForDependencies)
+        defer {
+            ScopeStack.pop()
+        }
+        
         return try factory.create(withDependenciesFrom: scopeForDependencies)
     }
 }

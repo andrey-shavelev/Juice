@@ -7,8 +7,8 @@ import juice
 
 final class FactoryRegistrationsTests: XCTestCase {
     func testRegisterAndResolveSingleInstanceCreatedByFactory() throws {
+        
         let container = try Container { builder in
-
             builder.register { scope in
                         Apple()
                     }

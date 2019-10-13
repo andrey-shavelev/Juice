@@ -35,7 +35,7 @@ protocol Juice: Drink {
     var fruit: Fruit { get }
 }
 
-protocol Smoothie: Drink{
+protocol Smoothie: Drink {
     var fruit: Fruit { get }
     var berry: Berry { get }
     var juice: Juice { get }

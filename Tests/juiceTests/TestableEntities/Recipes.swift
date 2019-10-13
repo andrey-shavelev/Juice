@@ -103,3 +103,22 @@ class TeaBlend: InjectableWithParameter {
         self.spice = try scope.resolve(Spice.self)
     }
 }
+
+class FruitIce: Injectable {
+    
+    @Inject var apple: Apple?
+    @Inject var ice: Ice
+    
+    required init() {
+    }
+}
+
+class FruitCooler: Injectable {
+
+    @Inject var ice: Ice
+    @Inject var juice: Juice
+    @Inject var fruit: Fruit
+
+    required init() {
+    }
+}

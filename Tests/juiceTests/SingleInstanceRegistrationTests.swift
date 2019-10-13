@@ -5,7 +5,7 @@
 import XCTest
 import juice
 
-final class SingleInstanceDynamicRegistrationsTests: XCTestCase {
+final class SingleInstanceRegistrationTests: XCTestCase {
     func testRegistersAndResolvesSingleInstanceService() throws {
         let container = try Container { builder in
             builder.register(injectable: Apple.self)
