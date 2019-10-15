@@ -2,7 +2,7 @@
 // Copyright © 2019 Juice Project. All rights reserved.
 //
 
-import juice
+import Juice
 
 class Yin: InjectableWithParameter {
     let yang: Yang

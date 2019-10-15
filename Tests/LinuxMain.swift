@@ -1,6 +1,6 @@
 import XCTest
-import blazeTests
+import JuiceTests
 
 var tests = [XCTestCaseEntry]()
-tests += blazeTests.allTests()
+tests += JuiceTests.allTests()
 XCTMain(tests)

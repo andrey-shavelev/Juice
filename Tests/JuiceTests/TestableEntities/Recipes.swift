@@ -2,7 +2,7 @@
 // Copyright © 2019 Juice Project. All rights reserved.
 //
 
-import juice
+import Juice
 
 class FreshJuice: InjectableWithParameter, Juice {
     let fruit: Fruit

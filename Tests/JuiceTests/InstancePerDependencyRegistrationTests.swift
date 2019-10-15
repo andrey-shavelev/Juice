@@ -3,7 +3,7 @@
 //
 
 import XCTest
-import juice
+import Juice
 
 final class InstancePerDependencyRegistrationTests: XCTestCase {
     func testRegistersAndResolvesSingleInstanceService() throws {
