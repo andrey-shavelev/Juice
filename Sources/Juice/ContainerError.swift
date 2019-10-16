@@ -30,8 +30,6 @@ extension ContainerError: CustomStringConvertible {
             return "Ownership kind must be defined for \(componentType). Use .ownedByContainer() or .ownedExternally()."
         case .dependencyCycle(let componentType):
             return "Dependency cycle found while resolving: \(componentType)"
-        @unknown default:
-            return "Container Error: \(self)"
         }
     }
 }
