@@ -3,7 +3,7 @@
 //
 
 @propertyWrapper
-public class Inject<Service> {
+public struct Inject<Service> {
     
     let service: Service
     

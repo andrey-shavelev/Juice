@@ -116,4 +116,25 @@ final class PropertyInjectionTests: XCTestCase {
         
         XCTAssertNil(sushiRoll.omelette)
     }
+    
+    func testStructWithInjectablePropertiesCouldBeCorrectlyCopied() throws {
+        let container = try Container { builder in
+            builder.register(injectable: Tuna.self)
+                .instancePerDependency()
+                .asSelf()
+            builder.register(injectable: Cucumber.self)
+                .instancePerDependency()
+                .asSelf()
+            builder.register(injectable: Mayo.self)
+                .instancePerDependency()
+                .asSelf()
+            builder.register(injectable: SushiRoll.self)
+                .instancePerDependency()
+                .asSelf()
+        }
+        
+        let sushiRoll = try container.resolve(SushiRoll.self)
+        
+        XCTAssertNoThrow({ let _ = sushiRoll })
+    }
 }
