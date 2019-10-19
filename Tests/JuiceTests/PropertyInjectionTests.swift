@@ -67,7 +67,7 @@ final class PropertyInjectionTests: XCTestCase {
         
         let fruitIce = try container.resolve(FruitIce.self)
 
-        XCTAssertNotNil(fruitIce.apple)
+        XCTAssertNotNil(fruitIce.publicApple)
     }
 
     func testCorrectlyInjectsDependenciesFromSeveralScopesUsingPropertyWrappers() throws {
@@ -94,5 +94,26 @@ final class PropertyInjectionTests: XCTestCase {
 
         XCTAssert(cooler.fruit is Apple)
         XCTAssert(cooler.juice.fruit is Lime)
+    }
+    
+    func testInjectsNilForWrappedOptionalPropertyWhenServiceIsNotRegistered() throws {
+        let container = try Container { builder in
+            builder.register(injectable: Tuna.self)
+                .instancePerDependency()
+                .asSelf()
+            builder.register(injectable: Cucumber.self)
+                .instancePerDependency()
+                .asSelf()
+            builder.register(injectable: Mayo.self)
+                .instancePerDependency()
+                .asSelf()
+            builder.register(injectable: SushiRoll.self)
+                .instancePerDependency()
+                .asSelf()
+        }
+        
+        let sushiRoll = try container.resolve(SushiRoll.self)
+        
+        XCTAssertNil(sushiRoll.omelette)
     }
 }

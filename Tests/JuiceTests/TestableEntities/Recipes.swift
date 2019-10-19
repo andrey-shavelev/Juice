@@ -106,8 +106,11 @@ class TeaBlend: InjectableWithParameter {
 
 class FruitIce: Injectable {
     
-    @Inject var apple: Apple?
-    @Inject var ice: Ice
+    @Inject private var apple: Apple?
+    @Inject private var ice: Ice
+    
+    var publicApple: Apple? { get { apple }}
+    var publicIce: Ice { get { ice }}
     
     required init() {
     }
@@ -121,4 +124,11 @@ class FruitCooler: Injectable {
 
     required init() {
     }
+}
+
+struct SushiRoll: Injectable {    
+    @Inject var tuna: Tuna
+    @Inject var cucumber: Cucumber
+    @Inject var mayo: Mayo
+    @Inject var omelette: Omelette?
 }

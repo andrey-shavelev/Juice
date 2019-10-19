@@ -129,3 +129,4 @@ class Chocolate: InjectableWithParameter {
         self.kind = kind
     }
 }
+
