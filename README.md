@@ -3,11 +3,11 @@ Juice is a Swift dependency injection container.
 
 ## Quick Start
 
-Using Juice is simple. First, you create a Container and register required components. Second, resolve the services you need, while Juice cares about all the dependencies injected automatically.
+Using Juice is simple. First, you create a Container and register required components. Second, resolve the services you need, while Juice injects all the dependencies automatically.
 
 ###  Creating a Container
 
-Container builder has clear and fluent syntax. Components are registered one by one, with all options specified explicitly:
+Container builder has clear and fluent interface. Components are registered one by one, with all options specified explicitly:
 
 ```swift
 let container = try Container { builder in
@@ -49,7 +49,7 @@ You resolve a service from the container by calling _resolve(…)_ method:
 let orangeJuice = try container.resolve(Juice.self)
 ```
 
-Or _resolveOptional(…)_:
+Or optional service _resolveOptional(…)_:
 
 ```swift
 let compot = try container.resolveOptional(Compot.self)
@@ -181,7 +181,7 @@ let orange = childContainer.resolve(Orange.self)
 ```
 
 FreshJuice, Orange and Apple are components, while Juice and Fruit are services that they provide. 
-When you resolve Juice from child container Apple gets injected as Fruit, however, when resolved from parent container, Juice receives Orange for its dependency. Orange could also be resolved by its own type from child container.
+When you resolve Juice from child container Apple is by injected as Fruit, however, when resolved from parent container, Juice receives Orange for its dependency. Orange could also be resolved by its own type from child container.
 
 #### The Injectable Protocol
 
@@ -286,11 +286,11 @@ class Cocktail {
 }
 ```
 
-A factory closure receives a single parameter: _Scope_ that should be uses to resolve required dependencies.
+A factory closure receives a single parameter: _Scope_ that should be used to resolve required dependencies.
 
 #### External Instances
 
-You can register an external instance, i.e. an instance that was created before the container and possibly has a longer lifetime. When registering such an instance, you may optionally tell container to take ownership and keep a strong reference to it.
+You can register an external instance, i.e. an instance that was created before the container and possibly has a longer lifetime. When registering such instance, you may optionally tell container to take ownership and keep a strong reference to it.
 
 ```swift
 let apple = Apple()
@@ -424,7 +424,7 @@ let container = try Container { builder in
 let freshJuice = try container.resolveOptional(Juice.self)
 ```
 
-In the example above _freshJuice_ is not set to _nil_; instead, an error is thrown. The reason behind it is that Container holds a correct registration of FreshJuice component that provides Juice service, however FreshJuice has a missing dependency—Fruit. In such a case, Container does not know, was it really supposed optional, or was it a mistake in the configuration? Instead of trying to make a decision on such a matter, Container reports an error right away.
+In the example above _freshJuice_ is not set to _nil_. An error is thrown instead. That happens, because Container holds a correct registration of FreshJuice component that provides Juice service, however FreshJuice itself has a missing dependency. Fruit is not registered in container. This situation is treated as a mistake in the configuration, Container does not try to hide it and, instead, reports an error.
 Summarizing, Container uses following schema, when resolving an optional service:
 
 1. Search for a registration. If not found - return nil. If found go to step 2.
@@ -443,16 +443,17 @@ Please note that if a component keeps a reference to its CurrentScope, then it a
 
 ## Fail-fast
 
-Juice follows [Fail-fast](https://en.wikipedia.org/wiki/Fail-fast)principle and it throws a _ContainerError_ when it can not find required dependencies, when a component registration is incomplete or incorrect or when any other possibly erroneous situation occurs.
+Juice follows [Fail-fast](https://en.wikipedia.org/wiki/Fail-fast) principle and it throws a _ContainerError_ when it can not find required dependencies, when a component registration is incomplete or incorrect or when any other possibly erroneous situation occurs.
 
-## Roadmap
+## Roadmap to Version 1.0
 
 1. Modules.
 2. Thread safety.
-3. Defer resolution of dependencies with Defered\<T\>.
+3. Defered resolution of dependencies with Defered\<T\>. @Inject(.deferred)
 4. AutoFactory\<T\> – to simplify creating multiple child components with arguments.
-5. Add dynamic registrations.
-6. Allow multiple components implementing the same service.
+5. Dynamic registrations.
+6. Weak references to a single instance component.
+7. Allow multiple components implementing the same service.
 
 ## License
 
