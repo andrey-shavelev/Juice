@@ -1,5 +1,16 @@
 # Juice
-Juice is a Swift dependency injection container.
+Juice is a Swift dependency injection container. Being a young project, it already has basic features needed to refresh an app with DI.
+
+## Installing
+
+With a swift package manager:
+
+```swift
+dependencies: [
+        .package(url: "https://github.com/andrey-shavelev/Juice", from: "0.1.0")
+//...
+    ]
+```
 
 ## Quick Start
 
