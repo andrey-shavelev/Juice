@@ -1,5 +1,5 @@
 # Juice
-Juice is a Swift dependency injection container. Being a young project, it already has basic features needed to refresh an app with DI.
+Juice is a Swift dependency injection container. It is a new project, but it already has basic features needed to refresh an app with DI.
 
 ## Installing
 
@@ -524,7 +524,7 @@ class SushiRoll: InjectableWith4Parameters {
 
 Either way, Juice will resolve a service if it is registered or will put/return _nil_ if it is not.
 
-There is one more situation to consider: when an optional service _is_ registered in the container, but it, in turn, has required dependencies missing or its initializer throws an errer. This situation is treated as a erroneous, and Juice does not try to hide it and, instead, reports an error.
+There is one more situation to consider: when an optional service _is_ registered in the container, but it has missing dependencies (required). This situation is treated as a erroneous, and Juice does not try to hide it and, instead, reports an error.
 For example:
 
 ```swift
@@ -547,7 +547,7 @@ let container = try Container { builder in
 let freshJuice = try container.resolveOptional(Juice.self)
 ```
 
-Here, _freshJuice_ is not set to _nil_, an error is thrown instead. 
+Here, _freshJuice_ is not set to _nil_, an error is thrown instead. If optional component’s init method throws an error it is also rethrown. 
 
 Summarizing, Juice uses following algorithm when resolving an optional service:
 
