@@ -2,8 +2,6 @@
 // Copyright © 2019 Juice Project. All rights reserved.
 //
 
-import Foundation
-
 class OptionalDynamicRegistrationSource: DynamicRegistrationsSource {
     func FindRegistration(forType type: Any.Type) -> ServiceRegistration? {
         if let optionalProtocol = type as? OptionalProtocol.Type {

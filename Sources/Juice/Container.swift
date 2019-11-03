@@ -105,7 +105,10 @@ public class Container: Scope {
         self.parent = parent
         self.key = ScopeKey.create(fromName: name)
         self.registrations = [TypeKey: ServiceRegistration]()
-        self.dynamicRegistrationsSources = [OptionalDynamicRegistrationSource()]
+        self.dynamicRegistrationsSources = [
+            OptionalDynamicRegistrationSource(),
+            FactoryDynamicRegistrationSource()
+        ]
     }
 
     private func findRegistration(matchingKey serviceKey: TypeKey) -> ServiceRegistration? {
