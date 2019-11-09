@@ -32,7 +32,48 @@ final class AutoFactoriesTests : XCTestCase {
         XCTAssert(orangeJuice.fruit is Orange)
     }
     
-    func testCreateComponentWithTwoParameters() throws {
+    func testCreatesComponentWithTwoParameters() throws {
+        let container = try Container { builder in
+            builder.register(injectable: Compote.self)
+                .instancePerDependency()
+                .asSelf()
+        }
         
+        let compoteFactory = try container.resolve(FactoryWithTwoParameters<Fruit, Spice, Compote>.self)
+        
+        let appleCompote = try compoteFactory.create(Apple(), Ginger())
+        
+        XCTAssert(appleCompote.fruit is Apple)
+        XCTAssert(appleCompote.spice is Ginger)
+    }
+    
+    func testCreatesComponentWithThreeParameters() throws {
+        let container = try Container { builder in
+            builder.register(injectable: FreshMorningSmoothie.self)
+                .instancePerDependency()
+                .asSelf()
+        }
+        
+        let smoothieFactory = try container.resolve(FactoryWithThreeParameters<Fruit, Berry, Juice, FreshMorningSmoothie>.self)
+        let smoothie = try smoothieFactory.create(Banana(), Strawberry(), FreshJuice(Apple()))
+        
+        XCTAssert(smoothie.berry is Strawberry)
+        XCTAssert(smoothie.fruit is Banana)
+        XCTAssert(smoothie.juice.fruit is Apple)
+    }
+    
+    func testCreatesComponentWithFourParameters() throws {
+        let container = try Container { builder in
+            builder.register(injectable: Cocktail.self)
+                .instancePerDependency()
+                .asSelf()
+        }
+        
+        let cocktailFactory = try container.resolve(FactoryWithFourParameters<Juice, Lime, Sweetener, Water, Cocktail>.self)
+        let cocktail = try cocktailFactory.create(FreshJuice(Apple()), Lime(), Sugar(), SodaWater())
+        
+        XCTAssert(cocktail.fruitJuice.fruit is Apple)
+        XCTAssert(cocktail.sweetener is Sugar)
+        XCTAssert(cocktail.water is SodaWater)
     }
 }
