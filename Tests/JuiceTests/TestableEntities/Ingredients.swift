@@ -130,3 +130,18 @@ class Chocolate: InjectableWithParameter {
     }
 }
 
+struct Tuna: Injectable {
+    
+}
+
+struct Cucumber: Injectable {
+    
+}
+
+struct Mayo: Injectable {
+    
+}
+
+struct Omelette: Injectable {
+    
+}

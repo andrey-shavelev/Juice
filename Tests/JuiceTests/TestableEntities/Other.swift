@@ -19,16 +19,32 @@ class Yang: InjectableWithParameter {
 }
 
 class Chicken: Injectable {
-    unowned var egg: Egg!
+    var egg: Egg!
     
     required init() {
     }
 }
 
 class Egg: Injectable {
-    var chicken: Chicken!
+    unowned var chicken: Chicken!
     
     required init() {
+    }
+}
+
+class LazyChicken: InjectableWithParameter {
+    var egg: Lazy<LazyEgg>
+    
+    required init(_ egg: Lazy<LazyEgg>) {
+        self.egg = egg
+    }
+}
+
+class LazyEgg: InjectableWithParameter {
+    unowned var chicken: LazyChicken
+    
+    required init(_ chicken: LazyChicken) {
+        self.chicken = chicken
     }
 }
 
@@ -54,18 +70,3 @@ class JuiceMachine: InjectableWithParameter {
     }
 }
 
-struct Tuna: Injectable {
-    
-}
-
-struct Cucumber: Injectable {
-    
-}
-
-struct Mayo: Injectable {
-    
-}
-
-struct Omelette: Injectable {
-    
-}

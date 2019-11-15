@@ -107,7 +107,8 @@ public class Container: Scope {
         self.registrations = [TypeKey: ServiceRegistration]()
         self.dynamicRegistrationsSources = [
             OptionalDynamicRegistrationSource(),
-            FactoryDynamicRegistrationSource()
+            FactoryDynamicRegistrationSource(),
+            LazyDynamicRegistrationSource()
         ]
     }
 

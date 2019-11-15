@@ -3,7 +3,7 @@
 //
 
 protocol FactoryProtocol {    
-    static func createInstance(_ scope: Scope) -> Any
+    static func createInstance(_ scope: Scope) -> FactoryProtocol
 }
 
 public class Factory<Service>: FactoryProtocol {
@@ -17,7 +17,7 @@ public class Factory<Service>: FactoryProtocol {
         return try scope.resolve(Service.self)
     }
     
-    static func createInstance(_ scope: Scope) -> Any {
+    static func createInstance(_ scope: Scope) -> FactoryProtocol {
         return Factory<Service>(scope)
     }
 }
@@ -34,7 +34,7 @@ public class FactoryWithParameter<Parameter, Service> : FactoryProtocol {
                                  withArguments: Argument<Parameter>(parameter))
     }
     
-    static func createInstance(_ scope: Scope) -> Any {
+    static func createInstance(_ scope: Scope) -> FactoryProtocol {
         return FactoryWithParameter<Parameter, Service>(scope)
     }
 }
@@ -53,7 +53,7 @@ public class FactoryWithTwoParameters<Parameter1, Parameter2, Service> : Factory
             Argument<Parameter2>(parameter2))
     }
     
-    static func createInstance(_ scope: Scope) -> Any {
+    static func createInstance(_ scope: Scope) -> FactoryProtocol {
         return FactoryWithTwoParameters<Parameter1, Parameter2, Service>(scope)
     }
 }
@@ -77,7 +77,7 @@ public class FactoryWithThreeParameters<Parameter1, Parameter2, Parameter3, Serv
             Argument<Parameter3>(parameter3))
     }
     
-    static func createInstance(_ scope: Scope) -> Any {
+    static func createInstance(_ scope: Scope) -> FactoryProtocol {
         return FactoryWithThreeParameters<Parameter1, Parameter2, Parameter3, Service>(scope)
     }
 }
@@ -103,7 +103,7 @@ public class FactoryWithFourParameters<Parameter1, Parameter2, Parameter3, Param
             Argument<Parameter4>(parameter4))
     }
     
-    static func createInstance(_ scope: Scope) -> Any {
+    static func createInstance(_ scope: Scope) -> FactoryProtocol {
         return FactoryWithFourParameters<Parameter1, Parameter2, Parameter3, Parameter4, Service>(scope)
     }
 }
