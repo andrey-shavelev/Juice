@@ -75,7 +75,7 @@ public class ContainerBuilder {
             let serviceRegistration: ServiceRegistration = try registrationPrototype.build()
 
             for serviceType in registrationPrototype.services {
-                container.registrations[TypeKey(for: serviceType)] = serviceRegistration
+                container.registrations[ComponentKey(for: serviceType)] = serviceRegistration
             }
         }
     }

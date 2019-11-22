@@ -23,7 +23,7 @@
 ///
 public class Container: Scope {
     var dynamicRegistrationsSources: [DynamicRegistrationsSource]
-    var registrations: [TypeKey: ServiceRegistration]
+    var registrations: [ComponentKey: ServiceRegistration]
     var instances = [StorageKey: Any]()
     let key: ScopeKey
     let parent: Container?
@@ -57,7 +57,7 @@ public class Container: Scope {
     /// - Attention: This method does not check if the component provides the requested service,
     /// and returns exactly what was registered during container build.
     public func resolveAnyOptional(_ serviceType: Any.Type, withArguments arguments: [ArgumentProtocol]?) throws -> Any? {
-        let serviceKey = TypeKey(for: serviceType)
+        let serviceKey = ComponentKey(for: serviceType)
         guard let registration = findRegistration(matchingKey: serviceKey) else {
             return nil
         }
@@ -104,7 +104,7 @@ public class Container: Scope {
                   name: String? = nil) {
         self.parent = parent
         self.key = ScopeKey.create(fromName: name)
-        self.registrations = [TypeKey: ServiceRegistration]()
+        self.registrations = [ComponentKey: ServiceRegistration]()
         self.dynamicRegistrationsSources = [
             OptionalDynamicRegistrationSource(),
             FactoryDynamicRegistrationSource(),
@@ -112,7 +112,7 @@ public class Container: Scope {
         ]
     }
 
-    private func findRegistration(matchingKey serviceKey: TypeKey) -> ServiceRegistration? {
+    private func findRegistration(matchingKey serviceKey: ComponentKey) -> ServiceRegistration? {
 
         if let existingRegistration = registrations[serviceKey] ?? parent?.findRegistration(matchingKey: serviceKey){
             return existingRegistration

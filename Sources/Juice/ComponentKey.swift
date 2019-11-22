@@ -2,14 +2,14 @@
 // Copyright © 2019 Juice Project. All rights reserved.
 //
 
-public struct TypeKey: Hashable {
+public struct ComponentKey: Hashable {
     let type: Any.Type
 
     init(for type: Any.Type) {
         self.type = type
     }
 
-    public static func ==(lhs: TypeKey, rhs: TypeKey) -> Bool {
+    public static func ==(lhs: ComponentKey, rhs: ComponentKey) -> Bool {
         return lhs.type == rhs.type
     }
 
