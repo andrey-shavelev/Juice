@@ -6,6 +6,28 @@ protocol FactoryProtocol {
     static func createInstance(_ scope: Scope) -> FactoryProtocol
 }
 
+// MARK: Qithout parameters
+
+/// Simplifies creation of multiple components
+///
+/// For example:
+///
+///     class Robot: InjectableWith2Parameters {
+///         let leftArm: Arm
+///         let rightArm: Arm
+///         let leftLeg: Leg
+///         let rightLeg: Leg
+///
+///         required init(_ armsFactory: Factory<Arm>,
+///                       _ legFactory: Factory<Leg>) throws {
+///
+///             self.leftArm = try armsFactory.create()
+///             self.rightArm = try armsFactory.create()
+///             self.leftLeg = try legFactory.create()
+///             self.rightLeg = try legFactory.create()
+///         }
+///     }
+///
 public class Factory<Service>: FactoryProtocol {
     let scope: Scope
 
@@ -22,6 +44,27 @@ public class Factory<Service>: FactoryProtocol {
     }
 }
 
+// MARK: One parameter
+
+/// Simplifies creation of multiple components with parameter
+///
+/// For example:
+///
+///     class Robot: InjectableWith2Parameters {
+///         let leftArm: Arm
+///         let rightArm: Arm
+///         let leftLeg: Leg
+///         let rightLeg: Leg
+///
+///         required init(_ armsFactory: Factory1<Side, Arm>,
+///                       _ legFactory: Factory1<Side, Leg>) throws {
+///
+///             self.leftArm = try armsFactory.create(.left)
+///             self.rightArm = try armsFactory.create(.right)
+///             self.leftLeg = try legFactory.create(.left)
+///             self.rightLeg = try legFactory.create(.right)}
+///         }
+///
 public class FactoryWithParameter<Parameter, Service> : FactoryProtocol {
     let scope: Scope
 
@@ -39,6 +82,29 @@ public class FactoryWithParameter<Parameter, Service> : FactoryProtocol {
     }
 }
 
+public typealias Factory1 = FactoryWithParameter
+
+// MARK: Two parameters
+
+/// Simplifies creation of multiple components with parameters
+///
+/// For example:
+///
+///     class Robot: InjectableWith2Parameters {
+///         let leftArm: Arm
+///         let rightArm: Arm
+///         let leftLeg: Leg
+///         let rightLeg: Leg
+///
+///         required init(_ armsFactory: FactoryWithParameter<Side, Arm>,
+///                       _ legFactory: FactoryWithParameter<Side, Leg>) throws {
+///
+///             self.leftArm = try armsFactory.create(.left)
+///             self.rightArm = try armsFactory.create(.right)
+///             self.leftLeg = try legFactory.create(.left)
+///             self.rightLeg = try legFactory.create(.right)}
+///         }
+///
 public class FactoryWithTwoParameters<Parameter1, Parameter2, Service> : FactoryProtocol {
     let scope: Scope
 
@@ -59,7 +125,29 @@ public class FactoryWithTwoParameters<Parameter1, Parameter2, Service> : Factory
 }
 
 public typealias FactoryWith2Parameters = FactoryWithTwoParameters
+public typealias Factory2 = FactoryWithTwoParameters
 
+// MARK: Three parameters
+
+/// Simplifies creation of multiple components with parameters
+///
+/// For example:
+///
+///     class Robot: InjectableWith2Parameters {
+///         let leftArm: Arm
+///         let rightArm: Arm
+///         let leftLeg: Leg
+///         let rightLeg: Leg
+///
+///         required init(_ armsFactory: Factory1<Side, Arm>,
+///                       _ legFactory: Factory1<Side, Leg>) throws {
+///
+///             self.leftArm = try armsFactory.create(.left)
+///             self.rightArm = try armsFactory.create(.right)
+///             self.leftLeg = try legFactory.create(.left)
+///             self.rightLeg = try legFactory.create(.right)}
+///         }
+///
 public class FactoryWithThreeParameters<Parameter1, Parameter2, Parameter3, Service> : FactoryProtocol {
     let scope: Scope
 
@@ -83,7 +171,29 @@ public class FactoryWithThreeParameters<Parameter1, Parameter2, Parameter3, Serv
 }
 
 public typealias FactoryWith3Parameters = FactoryWithThreeParameters
+public typealias Factory3 = FactoryWithThreeParameters
 
+// MARK: Four parameters
+
+/// Simplifies creation of multiple components with parameters
+///
+/// For example:
+///
+///     class Robot: InjectableWith2Parameters {
+///         let leftArm: Arm
+///         let rightArm: Arm
+///         let leftLeg: Leg
+///         let rightLeg: Leg
+///
+///         required init(_ armsFactory: Factory1<Side, Arm>,
+///                       _ legFactory: Factory1<Side, Leg>) throws {
+///
+///             self.leftArm = try armsFactory.create(.left)
+///             self.rightArm = try armsFactory.create(.right)
+///             self.leftLeg = try legFactory.create(.left)
+///             self.rightLeg = try legFactory.create(.right)}
+///         }
+///
 public class FactoryWithFourParameters<Parameter1, Parameter2, Parameter3, Parameter4, Service> : FactoryProtocol {
     let scope: Scope
 
@@ -109,3 +219,4 @@ public class FactoryWithFourParameters<Parameter1, Parameter2, Parameter3, Param
 }
 
 public typealias FactoryWith4Parameters = FactoryWithFourParameters
+public typealias Factory4 = FactoryWithFourParameters
