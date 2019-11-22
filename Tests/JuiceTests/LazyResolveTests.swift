@@ -17,7 +17,7 @@ final class LazyResolveTests : XCTestCase {
         var lazyOrange = try container.resolve(Lazy<Fruit>.self)
         let orange = try container.resolve(Fruit.self)
         
-        XCTAssert(lazyOrange.value as! Orange === orange as! Orange)
+        XCTAssert(try lazyOrange.getValue() as! Orange === orange as! Orange)
     }
     
     func testLazyInstanceIsNotCreatedUntilValueIsRead() throws {
@@ -36,7 +36,7 @@ final class LazyResolveTests : XCTestCase {
         
         XCTAssertFalse(factoryWasCalled)
         
-        let _ = lazyApple.value
+        let _ = try lazyApple.getValue()
         
         XCTAssertTrue(factoryWasCalled)
     }
@@ -55,6 +55,6 @@ final class LazyResolveTests : XCTestCase {
         let lazyEgg = try container.resolve(LazyEgg.self)
         
         XCTAssert(lazyEgg.chicken === lazyChicken)
-        XCTAssert(lazyChicken.egg.value === lazyEgg)
+        XCTAssert(try lazyChicken.egg.getValue() === lazyEgg)
     }
 }
