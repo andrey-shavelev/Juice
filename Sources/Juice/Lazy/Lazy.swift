@@ -9,7 +9,7 @@
 /// - Note: Captures `CurrentScope` of component and keeps it until value is resolved.
 /// After that, reference to `CurrentScope` is released.
 ///
-public struct Lazy<T> : LazyProtocol {
+public class Lazy<T> : LazyProtocol {
     static func createInstance(_ scope: CurrentScope) -> LazyProtocol {
         Lazy<T>(scope)
     }
@@ -24,7 +24,7 @@ public struct Lazy<T> : LazyProtocol {
     ///
     /// Value is resolved from `CurrentScope`that is released afterwards.
     ///
-    public mutating func getValue() throws -> T {        
+    public func getValue() throws -> T {        
         switch self.state {
         case .uninitialized(let currentScope):
             let value = try currentScope.resolve(T.self)
