@@ -9,5 +9,5 @@ public protocol Module {
     ///
     /// - Parameter containerBuilder: A builder that this method must use to register all services
     ///
-    func registerServices(into containerBuilder: ContainerBuilder)
+    func registerServices(into builder: ContainerBuilder)
 }

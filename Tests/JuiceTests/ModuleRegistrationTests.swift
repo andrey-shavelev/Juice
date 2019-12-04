@@ -18,8 +18,8 @@ final class ModuleRegistrationTests: XCTestCase {
 }
 
 struct FruitModule : Module {
-    func registerServices(into containerBuilder: ContainerBuilder) {
-        containerBuilder.register(injectable: Apple.self)
+    func registerServices(into builder: ContainerBuilder) {
+        builder.register(injectable: Apple.self)
             .instancePerDependency()
             .asSelf()
     }
