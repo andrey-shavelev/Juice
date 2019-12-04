@@ -14,7 +14,7 @@ final class LazyResolveTests : XCTestCase {
                 .as(Fruit.self)
         }
         
-        var lazyOrange = try container.resolve(Lazy<Fruit>.self)
+        let lazyOrange = try container.resolve(Lazy<Fruit>.self)
         let orange = try container.resolve(Fruit.self)
         
         XCTAssert(try lazyOrange.getValue() as! Orange === orange as! Orange)
@@ -32,7 +32,7 @@ final class LazyResolveTests : XCTestCase {
                 .as(Fruit.self)
         }
         
-        var lazyApple = try container.resolve(Lazy<Fruit>.self)
+        let lazyApple = try container.resolve(Lazy<Fruit>.self)
         
         XCTAssertFalse(factoryWasCalled)
         
