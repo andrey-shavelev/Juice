@@ -1,3 +1,8 @@
+<p align="left">
+    <a href="https://swift.org"><img src="https://img.shields.io/badge/Swift-5.1-orange" alt="Swift-5.1" /></a>
+    <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-green" alt="license-MIT" /></a>
+</p>
+
 # Juice
 Juice is a Swift dependency injection container. It is a new project, but it already has basic features needed to refresh an app with DI.
 
@@ -144,6 +149,63 @@ class Jam: Injectable {
     @Inject var spice: Spice?
 
     required init() {
+    }
+}
+```
+
+### Lazy dependencies
+
+```swift
+class Egg: InjectableWithParameter {
+    unowned var chicken: Chicken
+    
+    required init(_ chicken: Chicken) {
+        self.chicken = chicken
+    }
+}
+
+class Chicken: InjectableWithParameter {
+    var egg: Lazy<Egg>
+    
+    required init(_ egg: Lazy<Egg>) {
+        self.egg = egg
+    }
+}
+```
+
+### Auto factories
+
+```swift
+class RobotFactory: Injectable {
+    
+    @Inject var armFactory: FactoryWith2Parameters<Side, Equipment, Arm>
+    @Inject var legFactory: FactoryWith2Parameters<Side, Equipment, Leg>
+    
+    required init() throws {
+        
+    }
+    
+    func makeRobot(withName name: String) throws -> Robot {
+        return Robot(name: name,
+                     leftArm: try armFactory.create(.left, .machineGun),
+                     rightArm: try armFactory.create(.right, .lazer),
+                     leftLeg: try legFactory.create(.left, .jumpJet),
+                     rightLeg: try legFactory.create(.right, .jumpJet))
+    }
+```
+
+### Modules
+
+```swift
+let container = try Container { builder in
+    builder.register(module: FruitModule())
+}
+
+struct FruitModule : Module {
+    func registerServices(into builder: ContainerBuilder) {
+        builder.register(injectable: Apple.self)
+            .instancePerDependency()
+            .asSelf()
     }
 }
 ```
@@ -303,9 +365,9 @@ For example:
 let container = try Container { builder in
     builder.register(factory: {
         Cocktail(fruitJuice: try $0.resolve(Juice.self), 
-            lime: Lime(), 
-            sweetener: Sugar(), 
-            water: SodaWater())})
+			lime: Lime(), 
+			sweetener: Sugar(), 
+			water: SodaWater())})
             .singleInstance()
             .asSelf()
 }
@@ -377,6 +439,7 @@ The container owns all _single instance_, _instance per container_ and matching 
 
 #### Declaring services
 
+]
 All services that component provides has to be declared explicitly by calling either `as()` or `asSelf()` method of component registration builder:
 
 ```swift
@@ -479,11 +542,11 @@ There are several way to resolve an optional service.
 When using @Injectable property wrapper, you simple need to declare the property optional:
 ```swift
 struct SushiRoll: Injectable {
-    // Required stuff
+	// Required stuff
     @Inject var tuna: Tuna
     @Inject var cucumber: Cucumber
     @Inject var mayo: Mayo
-    // Really optional
+	// Really optional
     @Inject var omelette: Omelette?   
 }
 ```
@@ -493,7 +556,7 @@ When using CurrentScope or Container, you call `resolveOptional()` method:
 class SushiRoll: InjectableWithParameter {
     required init(_ currentScope: CurrentScope) throws {
         self.omelette = try currentScope.resolveOptional(Omlet.self)
-        // ...
+		// ...
     }
     // ...
 }
@@ -504,7 +567,7 @@ You can also resolve optional service by passing optional type to `resolve` meth
 class SushiRoll: InjectableWithParameter {
     required init(_ currentScope: CurrentScope) throws {
         self.omelette = try currentScope.resolve(Omelette?.self)
-        // ...
+		// ...
     }
     // ...
 }
@@ -517,7 +580,7 @@ class SushiRoll: InjectableWith4Parameters {
                   _ cucumber: Cucumber,
                   _ majo: Majo,
                   _ optionalOmelette: Omelette?) {
-        // ...
+		// ...
     }
 }
 ```
@@ -554,6 +617,84 @@ Summarizing, Juice uses following algorithm when resolving an optional service:
 1. Search for a registration. If not found - return nil. If found go to step 2.
 2. Try to resolve registered component. Resolved successfully? Then return an instance of component; else throw an error.
 
+### Lazy dependencies
+
+_Lazy\<T\>_ allows to postpone resolution of service until the moment when it is really needed. For example:
+
+```swift
+class TripPlanningService: Injectable {
+    @Inject var hotelBookingService: Lazy<HotelBookingService>
+
+    required init() {
+    }
+    
+    func planATrip(forDays days: Int) throws -> Trip {
+        if (days > 1) {
+            try hotelBookingService.getValue().makeBooking()
+        }
+		// more planing ...
+    }    
+}
+```
+
+Here, _HotelBookingService_ will be resolved — and, probably, created — only when and if a trip is planned for at least two days.
+
+_Lazy\<T\>_ is a special wrapper class. You don’t need to register it manually in the container, instead it is registered and created automatically when needed.
+
+Please note, that _Lazy\<T\> _ keeps a reference to the component’s context until _getValue()_ method is called for the first time. After that, _Lazy\<T\>_ releases reference to the context and, instead, stores a reference to the component instance. If you use _Lazy\<T\>_ to resolve circular dependencies, additional measures are required to avoid strong reference cycle.
+
+### Auto factories
+
+Auto factories provider a convenient way to create multiple child components within a parent component. 
+
+```swift
+class RobotFactory: Injectable {
+    
+    @Inject var armFactory: FactoryWith2Parameters<Side, Equipment, Arm>
+    @Inject var legFactory: FactoryWith2Parameters<Side, Equipment, Leg>
+    
+    required init() throws {
+        
+    }
+    
+    func makeRobot(withName name: String) throws -> Robot {
+        return Robot(name: name,
+                     leftArm: try armFactory.create(.left, .machineGun),
+                     rightArm: try armFactory.create(.right, .lazer),
+                     leftLeg: try legFactory.create(.left, .jumpJet),
+                     rightLeg: try legFactory.create(.right, .jumpJet))
+    }
+}
+```
+
+There are several generic _Factory_ types declared, depending on how many arguments you need to pass. There is no need to manually register _Factory_ types in container. They are registered and created dynamically when needed. 
+
+Using _Factory_ is the same as using _resolve(\_:withArguments:)_ method of _CurrentScope_, with only difference that parameters’ types are specify in factory class generic arguments, not when _resolve_ method is called. 
+
+```swift
+let arm = try armFactory.create(.left, .machineGun)
+
+let sameArm = try currentScope.resolve(Arm.self, withArguments: Argument<Side>(.left), Argument<Equipment>(.machineGun))
+```
+
+Here _arm_  and _sameArm_ are equivalent.
+
+Please note that _Factory_ keeps a strong reference to _CurrentScope_ of the component that it is used within and, thus, references all parameters (if any) that may present in it.
+
+### Modules
+
+Modules helps to organize registration of components into structured and reusable units. In order to create a module, you need to conform to the Module protocol and define _registerServices(into builder: ContainerBuilder)_. For example:
+
+```swift
+struct FruitModule : Module {
+    func registerServices(into builder: ContainerBuilder) {
+        builder.register(injectable: Apple.self)
+            .instancePerDependency()
+            .asSelf()
+    }
+}
+```
+
 ### Containers Hierarchy 
 
 A child container keeps a reference to its parent and inherits all component registrations. When creating a child container you can use a container builder to register additional components or override inherited registrations.
@@ -569,13 +710,10 @@ Any _resolve()_ method and many other methods working with container may throw a
 
 ## Roadmap to Version 1.0
 
-1. Modules.
-2. Thread safety.
-3. Defered resolution of dependencies with Defered\<T\>. @Inject(.deferred)
-4. AutoFactory\<T\> – to simplify creating multiple child components with arguments.
-5. Dynamic registrations.
-6. Weak references to a single instance component.
-7. Allow multiple components implementing the same service.
+1. Thread safety.
+2. Dynamic registrations.
+3. Weak references to a single instance component.
+4. Allow multiple components implementing the same service.
 
 ## License
 

@@ -59,6 +59,14 @@ public class ContainerBuilder {
     public func register<Type>(factory: @escaping (_ scope: Scope) throws -> Type) -> DynamicInstanceLifetimeBuilder<Type> {
         return register(type: Type.self, createdWith: DelegatingFactory(factory))
     }
+    
+    /// Registers a module
+    ///
+    /// - Parameter module: a module to register
+    ///
+    public func register(module: Module) {
+        module.registerServices(into: self)
+    }
 
     func build(_ buildFunc: (ContainerBuilder) -> Void) throws {
         buildFunc(self)
@@ -67,7 +75,7 @@ public class ContainerBuilder {
             let serviceRegistration: ServiceRegistration = try registrationPrototype.build()
 
             for serviceType in registrationPrototype.services {
-                container.registrations[TypeKey(for: serviceType)] = serviceRegistration
+                container.registrations[ComponentKey(for: serviceType)] = serviceRegistration
             }
         }
     }
