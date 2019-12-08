@@ -6,9 +6,9 @@ protocol FactoryProtocol {
     static func createInstance(_ scope: Scope) -> FactoryProtocol
 }
 
-// MARK: Qithout parameters
+// MARK: Without parameters
 
-/// Simplifies creation of multiple components
+/// Resolves multiple instances of the same service from the `CurrentScope`
 ///
 /// For example:
 ///
@@ -28,6 +28,9 @@ protocol FactoryProtocol {
 ///         }
 ///     }
 ///
+/// - Note: For single-instance and instance-per-container services always returns the same instance.
+/// - Note: Keeps reference to `CurrentScope` of the component.
+///
 public class Factory<Service>: FactoryProtocol {
     let scope: Scope
 
@@ -36,17 +39,19 @@ public class Factory<Service>: FactoryProtocol {
     }
 
     public func create() throws -> Service {
-        return try scope.resolve(Service.self)
+        try scope.resolve(Service.self)
     }
     
     static func createInstance(_ scope: Scope) -> FactoryProtocol {
-        return Factory<Service>(scope)
+        Factory<Service>(scope)
     }
 }
 
 // MARK: One parameter
 
-/// Simplifies creation of multiple components with parameter
+/// Resolves multiple instances of the same service from the `CurrentScope`
+///
+/// Allows to pass one parameter of type `Parameter` each time the service is resolved.
 ///
 /// For example:
 ///
@@ -65,6 +70,9 @@ public class Factory<Service>: FactoryProtocol {
 ///             self.rightLeg = try legFactory.create(.right)}
 ///         }
 ///
+/// - Note: For single-instance and instance-per-container services always returns the same instance.
+/// - Note: Keeps reference to `CurrentScope` of the component.
+///
 public class FactoryWithParameter<Parameter, Service> : FactoryProtocol {
     let scope: Scope
 
@@ -73,12 +81,12 @@ public class FactoryWithParameter<Parameter, Service> : FactoryProtocol {
     }
 
     public func create(_ parameter: Parameter) throws -> Service {
-        return try scope.resolve(Service.self,
+        try scope.resolve(Service.self,
                                  withArguments: Argument<Parameter>(parameter))
     }
     
     static func createInstance(_ scope: Scope) -> FactoryProtocol {
-        return FactoryWithParameter<Parameter, Service>(scope)
+        FactoryWithParameter<Parameter, Service>(scope)
     }
 }
 
@@ -86,7 +94,9 @@ public typealias Factory1 = FactoryWithParameter
 
 // MARK: Two parameters
 
-/// Simplifies creation of multiple components with parameters
+/// Resolves multiple instances of the same service from the `CurrentScope`
+///
+/// Allows to pass parameters of type `Parameter1` and `Parameter2` each time the service is resolved.
 ///
 /// For example:
 ///
@@ -105,6 +115,9 @@ public typealias Factory1 = FactoryWithParameter
 ///             self.rightLeg = try legFactory.create(.right)}
 ///         }
 ///
+/// - Note: For single-instance and instance-per-container services always returns the same instance.
+/// - Note: Keeps reference to `CurrentScope` of the component.
+///
 public class FactoryWithTwoParameters<Parameter1, Parameter2, Service> : FactoryProtocol {
     let scope: Scope
 
@@ -114,13 +127,13 @@ public class FactoryWithTwoParameters<Parameter1, Parameter2, Service> : Factory
 
     public func create(_ parameter1: Parameter1,
                        _ parameter2: Parameter2) throws -> Service {
-        return try scope.resolve(Service.self,
+        try scope.resolve(Service.self,
                                  withArguments: Argument<Parameter1>(parameter1),
             Argument<Parameter2>(parameter2))
     }
     
     static func createInstance(_ scope: Scope) -> FactoryProtocol {
-        return FactoryWithTwoParameters<Parameter1, Parameter2, Service>(scope)
+        FactoryWithTwoParameters<Parameter1, Parameter2, Service>(scope)
     }
 }
 
@@ -129,7 +142,9 @@ public typealias Factory2 = FactoryWithTwoParameters
 
 // MARK: Three parameters
 
-/// Simplifies creation of multiple components with parameters
+/// Resolves multiple instances of the same service from the `CurrentScope`
+///
+/// Allows to pass parameters of type `Parameter1`, `Parameter2` and `Parameter3` each time the service is resolved.
 ///
 /// For example:
 ///
@@ -147,6 +162,9 @@ public typealias Factory2 = FactoryWithTwoParameters
 ///             self.leftLeg = try legFactory.create(.left)
 ///             self.rightLeg = try legFactory.create(.right)}
 ///         }
+///
+/// - Note: For single-instance and instance-per-container services always returns the same instance.
+/// - Note: Keeps reference to `CurrentScope` of the component.
 ///
 public class FactoryWithThreeParameters<Parameter1, Parameter2, Parameter3, Service> : FactoryProtocol {
     let scope: Scope
@@ -166,7 +184,7 @@ public class FactoryWithThreeParameters<Parameter1, Parameter2, Parameter3, Serv
     }
     
     static func createInstance(_ scope: Scope) -> FactoryProtocol {
-        return FactoryWithThreeParameters<Parameter1, Parameter2, Parameter3, Service>(scope)
+        FactoryWithThreeParameters<Parameter1, Parameter2, Parameter3, Service>(scope)
     }
 }
 
@@ -175,7 +193,10 @@ public typealias Factory3 = FactoryWithThreeParameters
 
 // MARK: Four parameters
 
-/// Simplifies creation of multiple components with parameters
+/// Resolves multiple instances of the same service from the `CurrentScope`
+///
+/// Allows to pass parameters of type `Parameter1`, `Parameter2`,
+/// `Parameter3` and `Parameter4` each time the service is resolved.
 ///
 /// For example:
 ///
@@ -193,6 +214,9 @@ public typealias Factory3 = FactoryWithThreeParameters
 ///             self.leftLeg = try legFactory.create(.left)
 ///             self.rightLeg = try legFactory.create(.right)}
 ///         }
+///
+/// - Note: For single-instance and instance-per-container services always returns the same instance.
+/// - Note: Keeps reference to `CurrentScope` of the component.
 ///
 public class FactoryWithFourParameters<Parameter1, Parameter2, Parameter3, Parameter4, Service> : FactoryProtocol {
     let scope: Scope
