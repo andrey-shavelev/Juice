@@ -11,10 +11,10 @@ Juice is a Swift dependency injection container. It is a new project, but it alr
 With a swift package manager:
 
 ```swift
-dependencies:[
+dependencies: [
         .package(url: "https://github.com/andrey-shavelev/Juice", from: "0.1.0")
 //...
-	]
+    ]
 ```
 
 ## Quick Start
@@ -96,7 +96,7 @@ let container = try Container { builder in
     builder.register(injectable: IcyLemonade.self)
             .singleInstance()
             .asSelf()
-	///...
+    ///...
 }
 
 ```
@@ -216,13 +216,13 @@ struct FruitModule : Module {
 
 ```swift
 let container = try Container { builer in
-	// Some component registered here
+    // Some component registered here
 }
 
 let childContainerWithoutAdditionalComponents = container.createChildContainer()
 
 let childContainerWithAdditionalComponents = try container.createChildContainer { builer in
-	// Some additional components may be registered here
+    // Some additional components may be registered here
 }
 
 let namedChildContainer = container.createChildContainer(withName: "JuiceMaker")
@@ -439,6 +439,7 @@ The container owns all _single instance_, _instance per container_ and matching 
 
 #### Declaring services
 
+]
 All services that component provides has to be declared explicitly by calling either `as()` or `asSelf()` method of component registration builder:
 
 ```swift

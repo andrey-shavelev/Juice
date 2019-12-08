@@ -114,7 +114,7 @@ final class ChildContainerTests: XCTestCase {
         XCTAssertNoThrow(try zenScope.resolve(FreshJuice.self))
         XCTAssertNoThrow(try innerGardenScope.resolve(FreshJuice.self))
 
-        let zenFreshJuice = try gardenScope.resolve(FreshJuice.self)
+        let zenFreshJuice = try zenScope.resolve(FreshJuice.self)
         let gardenFreshJuice = try gardenScope.resolve(FreshJuice.self)
         let innerZenFreshJuice = try innerGardenScope.resolve(FreshJuice.self)
 
