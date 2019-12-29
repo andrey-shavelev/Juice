@@ -90,6 +90,9 @@ public class Container: Scope {
         return try Container(parent: self, buildFunc: buildFunc)
     }
     
+    public func setAsGlobalScope() {
+        ScopeStack.setGlobalScope(self)
+    }
     
     // MARK: Private
     
