@@ -13,9 +13,6 @@ protocol Berry {
 protocol Spice {
 }
 
-protocol Drink {
-}
-
 protocol Water {
 }
 
@@ -29,16 +26,6 @@ protocol Flower {
 }
 
 protocol Herb {
-}
-
-protocol Juice: Drink {
-    var fruit: Fruit { get }
-}
-
-protocol Smoothie: Drink {
-    var fruit: Fruit { get }
-    var berry: Berry { get }
-    var juice: Juice { get }
 }
 
 class Apple: Fruit, Injectable {

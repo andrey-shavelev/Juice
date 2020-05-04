@@ -20,6 +20,10 @@ struct ContainerWrapper: ContainerWrapperProtocol, CurrentScope {
 
         return try getContainer().resolveAnyOptional(serviceType, withArguments: parameters)
     }
+    
+    func resolveAll(_ serviceType: Any.Type, withArguments arguments: [ArgumentProtocol]?) throws -> [Any] {
+        return try getContainer().resolveAll(serviceType, withArguments: arguments)
+    }
 
     func getContainer() throws -> Container {
         guard let container = container else {

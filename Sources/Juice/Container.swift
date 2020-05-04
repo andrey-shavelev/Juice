@@ -68,6 +68,25 @@ public class Container: Scope {
                 storageLocator: self,
                 scopeLocator: scopeLocator)
     }
+    
+    public func resolveAll(_ serviceType: Any.Type, withArguments arguments: [ArgumentProtocol]?) throws -> [Any] {
+        let serviceKey = ComponentKey(for: serviceType)
+        guard let registration = findRegistration(matchingKey: serviceKey) else {
+            return []
+        }
+
+        let scopeLocator = createScopeLocator(arguments)
+        
+        if let multiServiceRegistration = registration as? MultiServiceRegistration {
+            return try multiServiceRegistration.resolveAllServiceInstances(
+                    storageLocator: self,
+                    scopeLocator: scopeLocator)
+        } else {
+            return [try registration.resolveServiceInstance(
+                    storageLocator: self,
+                    scopeLocator: scopeLocator)]
+        }
+    }
 
     /// Creates and returns a child `Container`.
     ///
@@ -111,7 +130,8 @@ public class Container: Scope {
         self.dynamicRegistrationsSources = [
             OptionalDynamicRegistrationSource(),
             FactoryDynamicRegistrationSource(),
-            LazyDynamicRegistrationSource()
+            LazyDynamicRegistrationSource(),
+            ArrayDynamicRegistrationSource()
         ]
     }
 

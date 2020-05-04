@@ -32,6 +32,22 @@ struct ParameterizedContainerWrapper: ContainerWrapperProtocol, CurrentScope {
         
         return try container.resolveAnyOptional(serviceType, withArguments: parameters)
     }
+    
+    func resolveAll(_ serviceType: Any.Type, withArguments arguments: [ArgumentProtocol]?) throws -> [Any] {
+        
+        let allParameters = resolveAllParametersByExactType(serviceType)
+        
+        if !allParameters.isEmpty {
+            return allParameters
+        }
+        
+        guard let container = container else {
+            throw ContainerError.invalidScope
+        }
+        
+        return try container.resolveAll(serviceType, withArguments: arguments)
+        
+    }
 
     func resolveParameterByExactType(_ serviceType: Any.Type) -> Any? {
         for parameter in parameters {
@@ -40,6 +56,16 @@ struct ParameterizedContainerWrapper: ContainerWrapperProtocol, CurrentScope {
             }
         }
         return nil
+    }
+    
+    func resolveAllParametersByExactType(_ serviceType: Any.Type) -> [Any] {
+        var result = [Any]()
+        for parameter in parameters {
+            if let value = parameter.tryProvideValue(for: serviceType) {
+                result.append(value)
+            }
+        }
+        return result
     }
 
     func getContainer() throws -> Container {

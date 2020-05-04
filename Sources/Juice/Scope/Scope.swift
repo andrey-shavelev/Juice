@@ -8,6 +8,8 @@
 ///
 public protocol Scope {
     func resolveAnyOptional(_ serviceType: Any.Type, withArguments arguments: [ArgumentProtocol]?) throws -> Any?
+    
+    func resolveAll(_ serviceType: Any.Type, withArguments arguments: [ArgumentProtocol]?) throws -> [Any]
 }
 
 public extension Scope {
@@ -159,6 +161,25 @@ public extension Scope {
         try resolveOptional(serviceType, withArguments: convertArguments(arguments))
     }
     
+    // MARK: Resolve All
+    
+    func resolveAll<Service>(of serviceType: Service.Type) throws -> [Service] {
+        try resolveAll(serviceType, withArguments: nil).map {
+            try castOrThrow($0, to: serviceType)
+        }
+    }
+    
+    func resolveAll<Service>(of serviceType: Service.Type, withArguments arguments: [ArgumentProtocol]) throws -> [Service] {
+        try resolveAll(serviceType, withArguments: arguments).map {
+            try castOrThrow($0, to: serviceType)
+        }
+    }    
+    
+    func resolveAll<Service>(of serviceType: Service.Type, withArguments arguments: ArgumentProtocol...) throws -> [Service] {
+        try resolveAll(serviceType, withArguments: arguments).map {
+            try castOrThrow($0, to: serviceType)
+        }
+    }
     
     // MARK: Resolve Any
 
