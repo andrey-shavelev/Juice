@@ -75,7 +75,7 @@ public class ContainerBuilder {
             let serviceRegistration: ServiceRegistration = try registrationPrototype.build()
 
             for serviceType in registrationPrototype.services {
-                let componentKey = ComponentKey(for: serviceType)
+                let componentKey = ServiceKey(type: serviceType)
                 
                 if let existingRegistration = container.registrations[componentKey] {
                     

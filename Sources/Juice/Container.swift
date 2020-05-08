@@ -23,7 +23,7 @@
 ///
 public class Container: Scope {
     var dynamicRegistrationsSources: [DynamicRegistrationsSource]
-    var registrations: [ComponentKey: ServiceRegistration]
+    var registrations: [ServiceKey: ServiceRegistration]
     var instances = [StorageKey: Any]()
     let key: ScopeKey
     let parent: Container?
@@ -57,7 +57,7 @@ public class Container: Scope {
     /// - Attention: This method does not check if the component provides the requested service,
     /// and returns exactly what was registered during container build.
     public func resolveAnyOptional(_ serviceType: Any.Type, withArguments arguments: [ArgumentProtocol]?) throws -> Any? {
-        let serviceKey = ComponentKey(for: serviceType)
+        let serviceKey = ServiceKey(type: serviceType)
         guard let registration = findRegistration(matchingKey: serviceKey) else {
             return nil
         }
@@ -70,7 +70,7 @@ public class Container: Scope {
     }
     
     public func resolveAll(_ serviceType: Any.Type, withArguments arguments: [ArgumentProtocol]?) throws -> [Any] {
-        let serviceKey = ComponentKey(for: serviceType)
+        let serviceKey = ServiceKey(type: serviceType)
         guard let registration = findRegistration(matchingKey: serviceKey) else {
             return []
         }
@@ -126,7 +126,7 @@ public class Container: Scope {
                   name: String? = nil) {
         self.parent = parent
         self.key = ScopeKey.create(fromName: name)
-        self.registrations = [ComponentKey: ServiceRegistration]()
+        self.registrations = [ServiceKey: ServiceRegistration]()
         self.dynamicRegistrationsSources = [
             OptionalDynamicRegistrationSource(),
             FactoryDynamicRegistrationSource(),
@@ -135,7 +135,7 @@ public class Container: Scope {
         ]
     }
 
-    private func findRegistration(matchingKey serviceKey: ComponentKey) -> ServiceRegistration? {
+    private func findRegistration(matchingKey serviceKey: ServiceKey) -> ServiceRegistration? {
 
         if let existingRegistration = registrations[serviceKey] ?? parent?.findRegistration(matchingKey: serviceKey){
             return existingRegistration
