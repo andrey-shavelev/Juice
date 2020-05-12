@@ -5,15 +5,20 @@
 class ScopeStack {
     
     private static var stack = [Scope]()
+    private static var globalScope: Scope?
     
     class var top: Scope? {
         get {
-            stack.last
+            stack.last ?? globalScope
         }
     }
     
-    class func push(_ currentScope: Scope) {
-        stack.append(currentScope)
+    class func setGlobalScope(_ scope: Scope) {
+        globalScope = scope
+    }
+    
+    class func push(_ scope: Scope) {
+        stack.append(scope)
     }
     
     class func pop() {

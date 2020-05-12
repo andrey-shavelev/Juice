@@ -23,7 +23,7 @@
 ///
 public class Container: Scope {
     var dynamicRegistrationsSources: [DynamicRegistrationsSource]
-    var registrations: [ComponentKey: ServiceRegistration]
+    var registrations: [ServiceKey: ServiceRegistration]
     var instances = [StorageKey: Any]()
     let key: ScopeKey
     let parent: Container?
@@ -57,16 +57,19 @@ public class Container: Scope {
     /// - Attention: This method does not check if the component provides the requested service,
     /// and returns exactly what was registered during container build.
     public func resolveAnyOptional(_ serviceType: Any.Type, withArguments arguments: [ArgumentProtocol]?) throws -> Any? {
-        let serviceKey = ComponentKey(for: serviceType)
-        guard let registration = findRegistration(matchingKey: serviceKey) else {
-            return nil
-        }
-
-        let scopeLocator = createScopeLocator(arguments)
-
-        return try registration.resolveServiceInstance(
-                storageLocator: self,
-                scopeLocator: scopeLocator)
+        try resolveAnyOptional(ServiceKey(type: serviceType), arguments)
+    }
+    
+    public func resolveAnyOptional<Key>(_ serviceType: Any.Type, forKey key: Key, withArguments arguments: [ArgumentProtocol]?) throws -> Any? where Key : Hashable {
+        try resolveAnyOptional(ServiceKey(type: serviceType, key: key), arguments)
+    }
+        
+    public func resolveAll(_ serviceType: Any.Type, withArguments arguments: [ArgumentProtocol]?) throws -> [Any] {
+        try resolveAll(ServiceKey(type: serviceType), arguments)
+    }
+    
+    public func resolveAll<Key>(_ serviceType: Any.Type, forKey key: Key, withArguments arguments: [ArgumentProtocol]?) throws -> [Any] where Key : Hashable {
+        try resolveAll(ServiceKey(type: serviceType, key: key), arguments)
     }
 
     /// Creates and returns a child `Container`.
@@ -90,6 +93,9 @@ public class Container: Scope {
         return try Container(parent: self, buildFunc: buildFunc)
     }
     
+    public func setAsGlobalScope() {
+        ScopeStack.setGlobalScope(self)
+    }
     
     // MARK: Private
     
@@ -104,15 +110,46 @@ public class Container: Scope {
                   name: String? = nil) {
         self.parent = parent
         self.key = ScopeKey.create(fromName: name)
-        self.registrations = [ComponentKey: ServiceRegistration]()
+        self.registrations = [ServiceKey: ServiceRegistration]()
         self.dynamicRegistrationsSources = [
             OptionalDynamicRegistrationSource(),
             FactoryDynamicRegistrationSource(),
-            LazyDynamicRegistrationSource()
+            LazyDynamicRegistrationSource(),
+            ArrayDynamicRegistrationSource()
         ]
     }
+    
+    private func resolveAnyOptional(_ serviceKey: ServiceKey, _ arguments: [ArgumentProtocol]?) throws -> Any? {
+        guard let registration = findRegistration(matchingKey: serviceKey) else {
+            return nil
+        }
 
-    private func findRegistration(matchingKey serviceKey: ComponentKey) -> ServiceRegistration? {
+        let scopeLocator = createScopeLocator(arguments)
+
+        return try registration.resolveServiceInstance(
+                storageLocator: self,
+                scopeLocator: scopeLocator)
+    }
+    
+    func resolveAll(_ serviceKey: ServiceKey, _ arguments: [ArgumentProtocol]?) throws -> [Any] {
+        guard let registration = findRegistration(matchingKey: serviceKey) else {
+            return []
+        }
+
+        let scopeLocator = createScopeLocator(arguments)
+        
+        if let multiServiceRegistration = registration as? MultiServiceRegistration {
+            return try multiServiceRegistration.resolveAllServiceInstances(
+                    storageLocator: self,
+                    scopeLocator: scopeLocator)
+        } else {
+            return [try registration.resolveServiceInstance(
+                    storageLocator: self,
+                    scopeLocator: scopeLocator)]
+        }
+    }
+
+    private func findRegistration(matchingKey serviceKey: ServiceKey) -> ServiceRegistration? {
 
         if let existingRegistration = registrations[serviceKey] ?? parent?.findRegistration(matchingKey: serviceKey){
             return existingRegistration

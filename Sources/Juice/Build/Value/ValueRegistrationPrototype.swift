@@ -5,7 +5,7 @@
 import Foundation
 
 class ValueRegistrationPrototype<Type> : RegistrationPrototype {
-    var services = [Any.Type]()
+    var services = [ServiceKey]()
     let value: Type
 
     init(value: Type) {

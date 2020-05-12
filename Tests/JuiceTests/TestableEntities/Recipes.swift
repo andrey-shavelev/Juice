@@ -4,6 +4,19 @@
 
 import Juice
 
+protocol Drink {
+}
+
+protocol Juice: Drink {
+    var fruit: Fruit { get }
+}
+
+protocol Smoothie: Drink {
+    var fruit: Fruit { get }
+    var berry: Berry { get }
+    var juice: Juice { get }
+}
+
 class FreshJuice: InjectableWithParameter, Juice {
     let fruit: Fruit
 
@@ -12,7 +25,7 @@ class FreshJuice: InjectableWithParameter, Juice {
     }
 }
 
-class Compote: InjectableWithTwoParameters {
+class Compote: InjectableWithTwoParameters, Drink {
     let fruit: Fruit
     let spice: Spice
 
@@ -42,14 +55,14 @@ class FreshMorningSmoothie: InjectableWithThreeParameters, Smoothie {
     }
 }
 
-class HomeMadeJuice: InjectableWithParameter {
+class HomeMadeJuice: InjectableWithParameter, Drink {
     let fruit: Fruit
     required init(_ scope: CurrentScope) throws {
         fruit = try scope.resolve(Fruit.self)
     }
 }
 
-class Cocktail: InjectableWithFourParameters {
+class Cocktail: InjectableWithFourParameters, Drink {
     let fruitJuice: Juice
     let lime: Lime
     let sweetener: Sweetener
@@ -66,7 +79,7 @@ class Cocktail: InjectableWithFourParameters {
     }
 }
 
-class IcyLemonade: InjectableWithFiveParameters {
+class IcyLemonade: InjectableWithFiveParameters, Drink {
     let fruitJuice: Juice
     let lemon: Lemon
     let sweetener: Sweetener
@@ -86,7 +99,7 @@ class IcyLemonade: InjectableWithFiveParameters {
     }
 }
 
-class TeaBlend: InjectableWithParameter {
+class TeaBlend: InjectableWithParameter, Drink {
     let tea: Tea
     let fruit: Fruit
     let berry: Berry

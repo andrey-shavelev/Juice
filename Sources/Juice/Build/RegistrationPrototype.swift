@@ -6,5 +6,5 @@ import Foundation
 
 protocol RegistrationPrototype {
     func build() throws -> ServiceRegistration
-    var services: [Any.Type] { get set }
+    var services: [ServiceKey] { get set }
 }

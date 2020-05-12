@@ -70,3 +70,9 @@ class JuiceMachine: InjectableWithParameter {
     }
 }
 
+enum TestEnum {
+    case one
+    case two
+    case three
+    case four
+}

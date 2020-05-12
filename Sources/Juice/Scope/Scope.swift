@@ -8,6 +8,12 @@
 ///
 public protocol Scope {
     func resolveAnyOptional(_ serviceType: Any.Type, withArguments arguments: [ArgumentProtocol]?) throws -> Any?
+    
+    func resolveAnyOptional<Key: Hashable>(_ serviceType: Any.Type, forKey key: Key, withArguments arguments: [ArgumentProtocol]?) throws -> Any?
+    
+    func resolveAll(_ serviceType: Any.Type, withArguments arguments: [ArgumentProtocol]?) throws -> [Any]
+    
+    func resolveAll<Key: Hashable>(_ serviceType: Any.Type, forKey key: Key, withArguments arguments: [ArgumentProtocol]?) throws -> [Any]
 }
 
 public extension Scope {
@@ -22,6 +28,11 @@ public extension Scope {
     ///
     func resolve<Service>(_ serviceType: Service.Type) throws -> Service {
         try castOrThrow(try resolveAny(serviceType), to: serviceType)
+    }
+    
+    
+    func resolve<Service, Key: Hashable>(_ serviceType: Service.Type, forKey key: Key) throws -> Service {
+        try castOrThrow(try resolveAny(serviceType, forKey: key), to: serviceType)
     }
 
     /// Resolves a `serviceType` service, using additional `arguments`.
@@ -42,6 +53,10 @@ public extension Scope {
     ///
     func resolve<Service>(_ serviceType: Service.Type, withArguments arguments: [ArgumentProtocol]) throws -> Service {
         try castOrThrow(try resolveAny(serviceType, withArguments: arguments), to: serviceType)
+    }
+    
+    func resolve<Service, Key: Hashable>(_ serviceType: Service.Type, forKey key: Key, withArguments arguments: [ArgumentProtocol]) throws -> Service {
+        try castOrThrow(try resolveAny(serviceType, forKey: key, withArguments: arguments), to: serviceType)
     }
 
     /// Resolves a `serviceType` service, using additional `arguments`.
@@ -64,6 +79,10 @@ public extension Scope {
         try resolve(serviceType, withArguments: arguments)
     }
 
+    func resolve<Service, Key: Hashable>(_ serviceType: Service.Type, forKey key: Key, withArguments arguments: ArgumentProtocol...) throws -> Service {
+        try resolve(serviceType, forKey: key, withArguments: arguments)
+    }
+    
     /// Resolves a `serviceType` service, using additional `arguments`.
     ///
     /// You can use this method when you need to specify custom arguments for `init()`
@@ -84,6 +103,9 @@ public extension Scope {
         try resolve(serviceType, withArguments: convertArguments(arguments))
     }
     
+    func resolve<Service, Key: Hashable>(_ serviceType: Service.Type, forKey key: Key, withArguments arguments: Any...) throws -> Service {
+        try resolve(serviceType, forKey: key, withArguments: convertArguments(arguments))
+    }
     
     // MARK: Resolve Optional
 
@@ -95,6 +117,10 @@ public extension Scope {
     ///
     func resolveOptional<Service>(_ serviceType: Service.Type) throws -> Service? {
         try castOrThrowOptional(try resolveAnyOptional(serviceType), to: serviceType)
+    }
+    
+    func resolveOptional<Service, Key: Hashable>(_ serviceType: Service.Type, forKey key: Key) throws -> Service? {
+        try castOrThrowOptional(try resolveAnyOptional(serviceType, forKey: key), to: serviceType)
     }
 
     /// Resolves an optional `serviceType` service, using additional `arguments`.
@@ -117,6 +143,10 @@ public extension Scope {
         try castOrThrowOptional(try resolveAnyOptional(serviceType, withArguments: arguments), to: serviceType)
     }
 
+    func resolveOptional<Service, Key: Hashable>(_ serviceType: Service.Type, forKey key: Key, withArguments arguments: [ArgumentProtocol]) throws -> Service? {
+        try castOrThrowOptional(try resolveAnyOptional(serviceType, forKey: key, withArguments: arguments), to: serviceType)
+    }
+    
     /// Resolves an optional `serviceType` service, using additional `arguments`.
     /// Uses `arguments` when creating a new instance.
     ///
@@ -136,6 +166,10 @@ public extension Scope {
     ///
     func resolveOptional<Service>(_ serviceType: Service.Type, withArguments arguments: ArgumentProtocol...) throws -> Service? {
         try resolveOptional(serviceType, withArguments: arguments)
+    }
+    
+    func resolveOptional<Service, Key: Hashable>(_ serviceType: Service.Type, forKey key: Key, withArguments arguments: ArgumentProtocol...) throws -> Service? {
+        try resolveOptional(serviceType, forKey: key, withArguments: arguments)
     }
 
     /// Resolves an optional `serviceType` service, using additional `arguments`.
@@ -159,36 +193,95 @@ public extension Scope {
         try resolveOptional(serviceType, withArguments: convertArguments(arguments))
     }
     
+    func resolveOptional<Service, Key: Hashable>(_ serviceType: Service.Type, forKey key: Key, withArguments arguments: Any...) throws -> Service? {
+        try resolveOptional(serviceType, forKey: key, withArguments: convertArguments(arguments))
+    }
+    
+    // MARK: Resolve All
+    
+    func resolveAll<Service>(of serviceType: Service.Type) throws -> [Service] {
+        try resolveAll(serviceType, withArguments: nil).map {
+            try castOrThrow($0, to: serviceType)
+        }
+    }
+    
+    func resolveAll<Service, Key: Hashable>(of serviceType: Service.Type, forKey key: Key) throws -> [Service] {
+        try resolveAll(serviceType, forKey: key, withArguments: nil).map {
+            try castOrThrow($0, to: serviceType)
+        }
+    }
+    
+    func resolveAll<Service>(of serviceType: Service.Type, withArguments arguments: [ArgumentProtocol]) throws -> [Service] {
+        try resolveAll(serviceType, withArguments: arguments).map {
+            try castOrThrow($0, to: serviceType)
+        }
+    }    
+    
+    func resolveAll<Service>(of serviceType: Service.Type, withArguments arguments: ArgumentProtocol...) throws -> [Service] {
+        try resolveAll(of: serviceType, withArguments: arguments)
+    }
+    
+    func resolveAll<Service>(of serviceType: Service.Type, withArguments arguments: Any...) throws -> [Service] {
+        try resolveAll(of: serviceType, withArguments: convertArguments(arguments))
+    }
     
     // MARK: Resolve Any
 
     func resolveAny(_ serviceType: Any.Type) throws -> Any {
         try internalResolveAny(serviceType, withArguments: nil)
     }
+    
+    func resolveAny<Key: Hashable>(_ serviceType: Any.Type, forKey key: Key) throws -> Any {
+        try internalResolveAny(serviceType, forKey: key, withArguments: nil)
+    }
 
     func resolveAny(_ serviceType: Any.Type, withArguments arguments: [ArgumentProtocol]) throws -> Any {
         try internalResolveAny(serviceType, withArguments: arguments)
+    }
+    
+    func resolveAny<Key: Hashable>(_ serviceType: Any.Type, forKey key: Key, withArguments arguments: [ArgumentProtocol]) throws -> Any {
+        try internalResolveAny(serviceType, forKey: key, withArguments: arguments)
     }
 
     func resolveAny(_ serviceType: Any.Type, withArguments arguments: ArgumentProtocol...) throws -> Any {
         try resolveAny(serviceType, withArguments: arguments)
     }
+    
+    func resolveAny<Key: Hashable>(_ serviceType: Any.Type, forKey key: Key, withArguments arguments: ArgumentProtocol...) throws -> Any {
+        try resolveAny(serviceType, forKey: key, withArguments: arguments)
+    }
 
     func resolveAny(_ serviceType: Any.Type, withArguments arguments: Any...) throws -> Any {
         try resolveAny(serviceType, withArguments: convertArguments(arguments))
     }
-
+    
+    func resolveAny<Key: Hashable>(_ serviceType: Any.Type, forKey key: Key, withArguments arguments: Any...) throws -> Any {
+        try resolveAny(serviceType, forKey: key, withArguments: convertArguments(arguments))
+    }
+    
     func resolveAnyOptional(_ serviceType: Any.Type) throws -> Any? {
         try resolveAnyOptional(serviceType, withArguments: nil)
     }
     
-    
+    func resolveAnyOptional<Key: Hashable>(_ serviceType: Any.Type, forKey key: Key) throws -> Any? {
+        try resolveAnyOptional(serviceType, forKey: key, withArguments: nil)
+    }
+
 
     // MARK: Private
 
     private func internalResolveAny(_ serviceType: Any.Type,
                                     withArguments arguments: [ArgumentProtocol]?) throws -> Any {
         guard let anyInstance = try resolveAnyOptional(serviceType, withArguments: arguments) else {
+            throw ContainerError.serviceNotFound(serviceType: serviceType)
+        }
+        return anyInstance
+    }
+    
+    private func internalResolveAny<Key: Hashable>(_ serviceType: Any.Type,
+                                         forKey key: Key,
+                                    withArguments arguments: [ArgumentProtocol]?) throws -> Any {
+        guard let anyInstance = try resolveAnyOptional(serviceType, forKey: key, withArguments: arguments) else {
             throw ContainerError.serviceNotFound(serviceType: serviceType)
         }
         return anyInstance

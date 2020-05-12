@@ -11,14 +11,19 @@ public struct DynamicInstanceRegistrationBuilder<Type> : ComponentServicesBuilde
 
     @discardableResult
     public func `as`<TService>(_ serviceType: TService.Type) -> DynamicInstanceRegistrationBuilder {
-        registrationPrototype.services.append(serviceType)
+        registrationPrototype.services.append(ServiceKey(type: serviceType))
+        return self
+    }
+    
+    @discardableResult
+    public func `as`<TService, TKey: Hashable>(_ serviceType: TService.Type, withKey key: TKey) -> DynamicInstanceRegistrationBuilder {
+        registrationPrototype.services.append(ServiceKey(type: serviceType, key: key))
         return self
     }
 
     @discardableResult
     public func asSelf() -> DynamicInstanceRegistrationBuilder {
-        registrationPrototype.services.append(Type.self)
-        return self
+        return `as`(Type.self)
     }
 
     @discardableResult
