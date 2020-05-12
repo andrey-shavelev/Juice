@@ -8,7 +8,8 @@ import XCTest
 import Juice
 
 final class EnumRegistrationsTest: XCTestCase {
-    func canRegisterAndResolveEnumValue() throws {
+    
+    func testCanRegisterAndResolveEnumValue() throws {
         let container = try Container { builder in
             builder.register(value: TestEnum.three)
                 .as(TestEnum.self)

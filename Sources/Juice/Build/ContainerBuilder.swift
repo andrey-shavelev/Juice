@@ -74,22 +74,21 @@ public class ContainerBuilder {
         for registrationPrototype in registrationPrototypes {
             let serviceRegistration: ServiceRegistration = try registrationPrototype.build()
 
-            for serviceType in registrationPrototype.services {
-                let componentKey = ServiceKey(type: serviceType)
+            for serviceKey in registrationPrototype.services {
                 
-                if let existingRegistration = container.registrations[componentKey] {
+                if let existingRegistration = container.registrations[serviceKey] {
                     
                     if let multiServiceRegistration = existingRegistration as? MultiServiceRegistration {
                         multiServiceRegistration.add(registration: serviceRegistration)
                     }
                     else{
-                        container.registrations[componentKey] = MultiServiceRegistration(
+                        container.registrations[serviceKey] = MultiServiceRegistration(
                             firstRegistration: existingRegistration,
                             secondRegistration: serviceRegistration)
                     }
                     
                 } else {
-                    container.registrations[componentKey] = serviceRegistration
+                    container.registrations[serviceKey] = serviceRegistration
                 }
             }
         }

@@ -12,14 +12,19 @@ public class ValueRegistrationBuilder<Type>: ComponentServicesBuilder {
     }
 
     @discardableResult
-    public func `as`<TService>(_ serviceType: TService.Type) -> ValueRegistrationBuilder<Type> {
-        registrationPrototype.services.append(serviceType)
+    public func `as`<Service>(_ serviceType: Service.Type) -> ValueRegistrationBuilder<Type> {
+        registrationPrototype.services.append(ServiceKey(type: serviceType))
+        return self
+    }
+    
+    @discardableResult
+    public func `as`<Service, Key: Hashable>(_ serviceType: Service.Type, withKey key: Key) -> ValueRegistrationBuilder<Type> {
+        registrationPrototype.services.append(ServiceKey(type: serviceType, key: key))
         return self
     }
 
     @discardableResult
     public func asSelf() -> ValueRegistrationBuilder<Type> {
-        registrationPrototype.services.append(Type.self)
-        return self
+        return `as`(Type.self)
     }
 }

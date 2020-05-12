@@ -9,20 +9,28 @@ struct ContainerWrapper: ContainerWrapperProtocol, CurrentScope {
         self.container = container
     }
 
-    public var isValid: Bool {
+    var isValid: Bool {
         return container != nil
     }
 
-    func resolveAnyOptional(_ serviceType: Any.Type, withArguments parameters: [ArgumentProtocol]?) throws -> Any? {
+    func resolveAnyOptional(_ serviceType: Any.Type, withArguments arguments: [ArgumentProtocol]?) throws -> Any? {
         if serviceType == CurrentScope.self {
             return self
         }
 
-        return try getContainer().resolveAnyOptional(serviceType, withArguments: parameters)
+        return try getContainer().resolveAnyOptional(serviceType, withArguments: arguments)
+    }
+    
+    func resolveAnyOptional<Key>(_ serviceType: Any.Type, forKey key: Key, withArguments arguments: [ArgumentProtocol]?) throws -> Any? where Key : Hashable {
+        try getContainer().resolveAnyOptional(serviceType, forKey: key, withArguments: arguments)
     }
     
     func resolveAll(_ serviceType: Any.Type, withArguments arguments: [ArgumentProtocol]?) throws -> [Any] {
-        return try getContainer().resolveAll(serviceType, withArguments: arguments)
+        try getContainer().resolveAll(serviceType, withArguments: arguments)
+    }
+    
+    func resolveAll<Key>(_ serviceType: Any.Type, forKey key: Key, withArguments arguments: [ArgumentProtocol]?) throws -> [Any] where Key : Hashable {
+        try getContainer().resolveAll(serviceType, forKey: key, withArguments: arguments)
     }
 
     func getContainer() throws -> Container {

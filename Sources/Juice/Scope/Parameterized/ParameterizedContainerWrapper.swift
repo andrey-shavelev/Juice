@@ -17,7 +17,6 @@ struct ParameterizedContainerWrapper: ContainerWrapperProtocol, CurrentScope {
     }
 
     func resolveAnyOptional(_ serviceType: Any.Type, withArguments parameters: [ArgumentProtocol]?) throws -> Any? {
-
         if serviceType == CurrentScope.self {
             return self
         }
@@ -26,27 +25,33 @@ struct ParameterizedContainerWrapper: ContainerWrapperProtocol, CurrentScope {
             return parameter
         }
         
-        guard let container = container else {
-            throw ContainerError.invalidScope
-        }
-        
-        return try container.resolveAnyOptional(serviceType, withArguments: parameters)
+        return try getContainer().resolveAnyOptional(serviceType, withArguments: parameters)
+    }
+    
+    func resolveAnyOptional<Key>(_ serviceType: Any.Type, forKey key: Key, withArguments arguments: [ArgumentProtocol]?) throws -> Any? where Key : Hashable {
+        try getContainer().resolveAnyOptional(serviceType, withArguments: parameters)
     }
     
     func resolveAll(_ serviceType: Any.Type, withArguments arguments: [ArgumentProtocol]?) throws -> [Any] {
-        
         let allParameters = resolveAllParametersByExactType(serviceType)
         
-        if !allParameters.isEmpty {
+        guard allParameters.isEmpty else {
             return allParameters
         }
         
+        return try getContainer().resolveAll(serviceType, withArguments: arguments)
+    }
+    
+    func resolveAll<Key>(_ serviceType: Any.Type, forKey key: Key, withArguments arguments: [ArgumentProtocol]?) throws -> [Any] where Key : Hashable {
+        try getContainer().resolveAll(serviceType, forKey: key, withArguments: arguments)
+    }
+    
+    func getContainer() throws -> Container {
         guard let container = container else {
             throw ContainerError.invalidScope
         }
         
-        return try container.resolveAll(serviceType, withArguments: arguments)
-        
+        return container
     }
 
     func resolveParameterByExactType(_ serviceType: Any.Type) -> Any? {
@@ -66,12 +71,5 @@ struct ParameterizedContainerWrapper: ContainerWrapperProtocol, CurrentScope {
             }
         }
         return result
-    }
-
-    func getContainer() throws -> Container {
-        guard let container = container else {
-            throw ContainerError.invalidScope
-        }
-        return container
     }
 }

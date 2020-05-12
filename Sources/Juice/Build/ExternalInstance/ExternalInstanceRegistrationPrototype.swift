@@ -6,7 +6,7 @@ import Foundation
 
 class ExternalInstanceRegistrationPrototype<Type: AnyObject>: RegistrationPrototype {
 
-    var services = [Any.Type]()
+    var services = [ServiceKey]()
     let instance: Type
     var ownedByContainer: Bool?
 
