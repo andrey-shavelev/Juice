@@ -272,36 +272,25 @@ let appleJuice = try childContainerWithApples.resolve(FreshJuice.self)
 
 ### Container build
 
-The first step when working with the DI container is to set it up. At this point you need to register all required components, specify their lifetime scope and list services that they provide.
 Component registration builder has a fluent interface that varies slightly depending on a kind of component that you are registering.
-Let's look at the example of the component registration:
 
 ```swift
 let container = try Container { builder in
     builder.register(injectable: Ramen.self)
         .instancePerDependency()
         .as(Soup.self)
-        .as(Noodles.self)
         .injectDependency(into: \.soySouce)
         .injectOptionalDependency(into: \.miso)
    // ... other registrations
 }
 ```
-
-1. First, we define the type of the component that is going to be registered:
+1. Here, we define the type of the component that is going to be registered:
 
 ```swift
 builder.register(injectable: Ramen.self)
 ```
 
-Ramen could be both a class or a structure. An instance(s) of it will be created dynamically by the container. 
-
-Apart from registering component by its type, you can also register:
-
-- Factory methods or closures.
-- External instances and values that are created outside of the container and have possibly a longer lifetime.
-
-2. Second, we specify the lifetime scope of the Ramen component:
+2. Next, we specify the lifetime for the Ramen component:
 
 ```swift
 .instancePerDependency()
@@ -318,7 +307,6 @@ There are three more options available:
 
 ```swift
  .as(Soup.self)
- .as(Noodles.self)
 ```
 
 Here we tell the container that Ramen could be resolved as Soup or as Noodles.
@@ -417,23 +405,14 @@ You can register an instance of struct by using `register(value:)` method:
              .asSelf()
 ```
 
-#### Lifetime scopes
+#### Component lifetime
 
-For every injectable component, as well as for all components created by factories, you has to explicitly specify how their instances will be scoped. You do it by calling one of four methods of component registration builder:
+For each injectable component, as well as for all components created by factories, you has to explicitly specify how their instances will be scoped. You do it by calling one of four methods of component registration builder:
 
 - `instancePerDependency()`
 - `singleInstance()`
 - `instancePerContainer()`
 - `instancePerContainer(withName:)`
-
-As was mentioned before, for _instance per dependency_ components container creates a new instance each time when the component is injected as a dependency or the _resolve(…)_ method is called. These components are not stored in the container and user code is responsible for managing their lifetime. 
-
-As the name suggests, only one instance is created for a _single instance_ component. This instance is also shared within a hierarchy of child containers.
-
-_Instance per container_ and _ instance per named container_ components both act similar to _single instance components_, but with two differences:
-
-1. For _instance per container_ components instances are not shared with child containers. Each of them creates its own instance. 
-2. For _ instance per container named container_ – instances are created only in containers with matching name and are shared with child containers unless a child container has again a matching name  — that container will create a new instance of its own.
 
 The container owns all _single instance_, _instance per container_ and matching _instance per named container_ components that were created during its lifetime and keeps a strong reference to them. It is supposed that they are deallocated together with the owning container. 
 
@@ -455,12 +434,6 @@ let container = try Container { builder in
 You has to specify at least one service for each component registered in the container. A registration without services is considered incomplete and invalid.
 One component may be registered by several services. In contrast, you can not register two or more components by the same service in one container. This is not supported at the moment.
 
-#### Listing writeable keypaths that are used for the property injection 
-
-You instruct the container to inject dependencies into properties by calling `injectDependency(into:)` or `injectOptionalDependency(into:)` method of the registration builder.
-
-All properties listed during component registration must be declared optional or implicitly unwrapped optional, and could not be private.
-
 ### Resolving a service
 
 When the container is built and ready, you can start resolving services from it. 
@@ -476,13 +449,6 @@ For example:
         appModule.listen(atPort: 3000)
 ```
 
-Most probably you will only resolve root services directly from the container and all other services will be injected automatically using _initializer injection_ or _property injection_.
-
-Whenever you resolve services manually or not, the resolution process follows three simple steps:
-
-1. First, Juice looks for a matching component registration, starting from the container you are resolving form and going up in the container hierarchy.
-2. When a registration is found, Juice returns back to the container it started from and repeats the process but now looking for a correct container to create and store the component.
-3. Finally, after it finds the matching storage, Juice resolves all component dependencies from it, and then creates an instance and, if needed, stores it in the container.
 
 #### Resolving a Service With Additional Arguments
 
@@ -497,7 +463,7 @@ For _single instance_, _instance per container_ and _instance per named containe
 
 #### Initializer injection
 
-When a component confirms to one of InjectableWithParameters protocols,  Juice resolves all parameters of the`init(...)` method and uses them to create an instance. When a component has too many dependencies, you can inject _CurrentScope_ protocol and resolve everything needed from it:
+When a component confirms to one of InjectableWithParameters protocols,  Juice resolves all parameters of the`init(...)` method and uses them to create an instance. When a component has too many dependencies, it can inject _CurrentScope_ protocol and resolve everything needed from it:
 
 ```swift
 class TeaBlend: InjectableWithParameter {
@@ -518,21 +484,6 @@ class TeaBlend: InjectableWithParameter {
     }
 }
 ```
-
-CurrentScope is a protocol that represents a scope that the component is resolved from. Behind CurrentScope could be a simple container wrapper or a parameterized container wrapper that holds additional arguments.
-Your component may keep a reference to CurrentScope to resolve dependencies later on. It supposed that components have the same or shorter lifetime then the container, so keeping reference to CurrentScope should not be a problem. However, CurrentScope itself keeps a weak reference to the container. It means that if a component is designed to have a longer lifetime than the container, CurrentScope may become invalid and will throw an error if you try to resolve services from it. If this is the case, you need to check the _.isValid_ property of CurrentScope to determine if it still valid.
-
-Please note that when a component keeps a reference to its CurrentScope, it also creates a references to all arguments in it, if any were passed.
-
-CurrentScope could also be used to create a child container, using one of the _createChildContainer_ methods. In this case additional arguments that might  present in the CurrentScope are not inherited buy child containers, only component registrations are.
-
-#### Property Injection
-
-After the instance of injectable component is initialized, but before it becomes accessible to other components (could be injected or returned as a result of resolve method) the container injects all properties if any were registered for injection. 
-You are free to combine initializer injection and property injection or you may use only one of them — it's up to you. However, you should keep in mind some limitations that come together with property injection: 
-
-1. When using writeable keypaths, all properties that dependencies are injected into must be declared optional or implicitly unwrapped optional, and could not be private. 
-2. @Inject wrapper allow you to inject dependencies even into private properties. However, classes and structures that use the @Inject wrapper can not be simply created by calling _init_ method, they can only be resolved from the container. Creating them in a traditional way will cause a runtime error.
 
 #### Resolving an optional dependency
 
@@ -587,39 +538,9 @@ class SushiRoll: InjectableWith4Parameters {
 
 Either way, Juice will resolve a service if it is registered or will put/return _nil_ if it is not.
 
-There is one more situation to consider: when an optional service _is_ registered in the container, but it has missing dependencies (required). This situation is treated as a erroneous, and Juice does not try to hide it and, instead, reports an error.
-For example:
-
-```swift
-class FreshJuice: InjectableWithParameter, Juice {
-    let fruit: Fruit
-
-    required init(_ fruit: Fruit) {
-        self.fruit = fruit
-    }
-}
-
-// ...
-
-let container = try Container { builder in
-            builder.register(injectable: FreshJuice.self)
-                .instancePerDependency()
-                .as(Juice.self)
-        }
-
-let freshJuice = try container.resolveOptional(Juice.self)
-```
-
-Here, _freshJuice_ is not set to _nil_, an error is thrown instead. If optional component’s init method throws an error it is also rethrown. 
-
-Summarizing, Juice uses following algorithm when resolving an optional service:
-
-1. Search for a registration. If not found - return nil. If found go to step 2.
-2. Try to resolve registered component. Resolved successfully? Then return an instance of component; else throw an error.
-
 ### Lazy dependencies
 
-_Lazy\<T\>_ allows to postpone resolution of service until the moment when it is really needed. For example:
+_Lazy\<T\>_ allows to postpone resolution of service until the moment when it is  needed. For example:
 
 ```swift
 class TripPlanningService: Injectable {
@@ -636,12 +557,6 @@ class TripPlanningService: Injectable {
     }    
 }
 ```
-
-Here, _HotelBookingService_ will be resolved — and, probably, created — only when and if a trip is planned for at least two days.
-
-_Lazy\<T\>_ is a special wrapper class. You don’t need to register it manually in the container, instead it is registered and created automatically when needed.
-
-Please note, that _Lazy\<T\> _ keeps a reference to the component’s context until _getValue()_ method is called for the first time. After that, _Lazy\<T\>_ releases reference to the context and, instead, stores a reference to the component instance. If you use _Lazy\<T\>_ to resolve circular dependencies, additional measures are required to avoid strong reference cycle.
 
 ### Auto factories
 
@@ -704,16 +619,6 @@ Parent container does not keep any reference to child container, and your code i
 
 Thread safety is not implemented yet. All access to the container from multiple threads must be synchronized by calling code.
 
-### Fail-fast
-
-Any _resolve()_ method and many other methods working with container may throw a _ContainerError_ , that is because Juice follows [Fail-fast](https://en.wikipedia.org/wiki/Fail-fast) principle. When it can not find required dependencies, when a component registration is incomplete or incorrect or when any other possibly erroneous situation occurs it immediately reports the problem to the user code.
-
-## Roadmap to Version 1.0
-
-1. Thread safety.
-2. Dynamic registrations.
-3. Weak references to a single instance component.
-4. Allow multiple components implementing the same service.
 
 ## License
 
