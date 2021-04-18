@@ -1,7 +1,7 @@
-<p align="left">
-    <a href="https://swift.org"><img src="https://img.shields.io/badge/Swift-5.2-orange" alt="Swift-5.2" /></a>
-    <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-green" alt="license-MIT" /></a>
-</p>
+[![license-MIT](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT)
+[![Swift-5.2](https://img.shields.io/badge/Swift-5.2-orange)](https://swift.org)
+![Tests](https://github.com/andrey-shavelev/Juice/actions/workflows/tests.yml/badge.svg)
+
 
 # Juice
 Juice is a Swift dependency injection container. 
