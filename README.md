@@ -4,7 +4,7 @@
 </p>
 
 # Juice
-Juice is a Swift dependency injection container. It is a new project, but it already has basic features needed to refresh an app with DI.
+Juice is a Swift dependency injection container. 
 
 ## Installing
 
