@@ -143,4 +143,16 @@ extension ContainerBuilder {
     public func register<Type: InjectableWithFiveParameters>(injectable type: Type.Type) -> DynamicInstanceLifetimeBuilder<Type> {
         return register(type: type, createdWith: InjectableFactoryWithFiveParameters<Type>())
     }
+    
+    public func register<Type>(initializer: @escaping () throws -> Type) -> DynamicInstanceLifetimeBuilder<Type> {
+        return register(type: Type.self, createdWith: DelegatingFactory { scope in try initializer() } )
+    }
+    
+    public func register<Type, Parameter>(initializer: @escaping (Parameter) throws -> Type) -> DynamicInstanceLifetimeBuilder<Type> {
+        return register(type: Type.self, createdWith: DelegatingFactory { scope in try initializer(scope.resolve(Parameter.self)) } )
+    }
+
+    public func register<Type, Parameter1, Parameter2>(initializer: @escaping (Parameter1, Parameter2) throws -> Type) -> DynamicInstanceLifetimeBuilder<Type> {
+        return register(type: Type.self, createdWith: DelegatingFactory { scope in try initializer(scope.resolve(Parameter1.self), scope.resolve(Parameter2.self)) } )
+    }
 }
