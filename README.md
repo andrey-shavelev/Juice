@@ -214,7 +214,7 @@ Current version of Juice does not support resolving services from concurrent thr
 
 ## Registration options
 
-```
+```swift
 let container = try Container { builder in
 
 // Instance per depenedency
