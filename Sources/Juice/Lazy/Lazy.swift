@@ -15,7 +15,7 @@ public class Lazy<T> : LazyProtocol {
         Lazy<T>(scope)
     }
     
-    var state: LazyState<T>
+    var state: State
     
     private init(_ currentScope: CurrentScope) {
         self.state = .uninitialized(currentScope: currentScope)
@@ -35,11 +35,11 @@ public class Lazy<T> : LazyProtocol {
             return value
         }
     }
-}
-
-enum LazyState<T> {
-    case uninitialized(currentScope: CurrentScope)
-    case initialized(value: T)
+    
+    enum State {
+        case uninitialized(currentScope: CurrentScope)
+        case initialized(value: T)
+    }
 }
 
 protocol LazyProtocol {
