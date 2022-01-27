@@ -4,7 +4,7 @@
 
 
 # Juice
-Juice is a Swift dependency injection container. 
+Lightweight dependency injection container with simple fluent interface.
 
 ## Installing
 
