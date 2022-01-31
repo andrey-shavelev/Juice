@@ -2,6 +2,8 @@
 // Copyright © 2019 Juice Project. All rights reserved.
 //
 
+import Foundation
+
 /// Dependency injection container.
 ///
 /// Register components using one of `init` methods:
@@ -27,6 +29,7 @@ public class Container: Scope {
     var instances = [StorageKey: Any]()
     let key: ScopeKey
     let parent: Container?
+    var globalScopeUuid: UUID?
 
     /// Creates an empty `Container`
     public convenience init () {
@@ -94,7 +97,15 @@ public class Container: Scope {
     }
     
     public func setAsGlobalScope() {
-        ScopeStack.setGlobalScope(self)
+        globalScopeUuid = ScopeStack.setGlobalScope(self)
+    }
+    
+    public func resignGlobalScope() {
+        guard let globalScopeUuid = globalScopeUuid else {
+            return
+        }
+        
+        ScopeStack.resignGlobalScope(withUuid: globalScopeUuid)
     }
     
     // MARK: Private
